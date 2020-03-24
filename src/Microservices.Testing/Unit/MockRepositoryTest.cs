@@ -1,10 +1,9 @@
 ﻿using Arch.EntityFrameworkCore.UnitOfWork;
 using Core.Plugins.NUnit.Unit;
-using Microservices.Testing.Unit;
 using System;
 using System.Collections.Generic;
 
-namespace Plugins.NUnit.Unit
+namespace Microservices.Testing.Unit
 {
     public class MockRepositoryTest<TCUT> : MockTest<TCUT> where TCUT : class
     {
