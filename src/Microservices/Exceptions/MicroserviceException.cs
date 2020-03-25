@@ -14,7 +14,7 @@ namespace Microservices.Exceptions
             HttpStatusCode = HttpStatusCode.InternalServerError;
         }
 
-        protected MicroserviceException(Exception innerException, string message)
+        public MicroserviceException(Exception innerException, string message)
             : base(innerException, message)
         {
             HttpStatusCode = HttpStatusCode.InternalServerError;
