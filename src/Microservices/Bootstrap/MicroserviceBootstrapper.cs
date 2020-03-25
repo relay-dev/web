@@ -78,8 +78,8 @@ namespace Microservices.Bootstrap
             services.AddTransient<ICacheHelper, DistributedCacheHelper>();
             services.AddTransient<IDatabaseFactory, SQLServerDatabaseFactory>();
             services.AddTransient<IJsonSerializer, NewtonsoftJsonSerializer>();
-            services.AddSingleton<IConnectionStringProvider, AzureConnectionStringByConfigurationProvider>();
-            services.AddSingleton<IApplicationContextProvider>(sp => new ApplicationContextProvider(_microserviceConfiguration.ApplicationContext));
+            services.AddTransient<IConnectionStringProvider, AzureConnectionStringByConfigurationProvider>();
+            services.AddTransient<IApplicationContextProvider>(sp => new ApplicationContextProvider(_microserviceConfiguration.ApplicationContext));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
