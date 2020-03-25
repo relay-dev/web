@@ -1,6 +1,7 @@
-﻿using Core.Exceptions;
-using Core.Plugins.Providers;
+﻿using Core.Plugins.Providers;
+using Microservices.Exceptions;
 using Microsoft.Extensions.Configuration;
+using System.Net;
 
 namespace Microservices.Providers
 {
@@ -18,10 +19,10 @@ namespace Microservices.Providers
             string connectionString = _configuration.GetConnectionString(connectionName);
 
             if (connectionString == null)
-                throw new CoreException(ErrorCode.INVA, $"ConnectionName '{connectionName}' not found");
+                throw new MicroserviceException(HttpStatusCode.InternalServerError, $"ConnectionName '{connectionName}' not found");
 
             if (connectionString == string.Empty)
-                throw new CoreException(ErrorCode.INVA, $"ConnectionName '{connectionName}' cannot be an empty string");
+                throw new MicroserviceException(HttpStatusCode.InternalServerError, $"ConnectionName '{connectionName}' cannot be an empty string");
 
             if (connectionString.Contains("{{DatabaseUsername}}"))
             {

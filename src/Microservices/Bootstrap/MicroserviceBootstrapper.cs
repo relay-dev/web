@@ -1,5 +1,4 @@
-﻿using Microservices.Warmup;
-using AutoMapper;
+﻿using AutoMapper;
 using Core.Caching;
 using Core.Data;
 using Microservices.Caching;
@@ -73,13 +72,13 @@ namespace Microservices.Bootstrap
                 .Where(type => type.UnlessAutoWiringOptOut())
                 .AsPublicImplementedInterfaces();
 
+            services.AddScoped<Warmup.Warmup>();
             services.AddScoped(typeof(LookupDataKeyResolver<>));
             services.AddScoped(typeof(LookupDataValueResolver<>));
             services.AddScoped<ICacheHelper, DistributedCacheHelper>();
-            services.AddScoped<IJsonSerializer, NewtonsoftJsonSerializer>();
             services.AddScoped<IDatabaseFactory, SQLServerDatabaseFactory>();
+            services.AddTransient<IJsonSerializer, NewtonsoftJsonSerializer>();
             services.AddSingleton<IConnectionStringProvider, AzureConnectionStringByConfigurationProvider>();
-            services.AddScoped<Warmup.Warmup>();
             services.AddSingleton<IApplicationContextProvider>(sp => new ApplicationContextProvider(_microserviceConfiguration.ApplicationContext));
         }
 
