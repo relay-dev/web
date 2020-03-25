@@ -24,5 +24,5 @@ build:
   verbosity: normal
 test: off
 artifacts:
-- path: src\Core\bin\Release\*.nupkg
+- path: src\Microservices\bin\Release\*.nupkg
   name: NuGet
