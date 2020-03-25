@@ -72,11 +72,11 @@ namespace Microservices.Bootstrap
                 .Where(type => type.UnlessAutoWiringOptOut())
                 .AsPublicImplementedInterfaces();
 
-            services.AddScoped<Warmup.Warmup>();
-            services.AddScoped(typeof(LookupDataKeyResolver<>));
-            services.AddScoped(typeof(LookupDataValueResolver<>));
-            services.AddScoped<ICacheHelper, DistributedCacheHelper>();
-            services.AddScoped<IDatabaseFactory, SQLServerDatabaseFactory>();
+            services.AddTransient<Warmup.Warmup>();
+            services.AddTransient(typeof(LookupDataKeyResolver<>));
+            services.AddTransient(typeof(LookupDataValueResolver<>));
+            services.AddTransient<ICacheHelper, DistributedCacheHelper>();
+            services.AddTransient<IDatabaseFactory, SQLServerDatabaseFactory>();
             services.AddTransient<IJsonSerializer, NewtonsoftJsonSerializer>();
             services.AddSingleton<IConnectionStringProvider, AzureConnectionStringByConfigurationProvider>();
             services.AddSingleton<IApplicationContextProvider>(sp => new ApplicationContextProvider(_microserviceConfiguration.ApplicationContext));
