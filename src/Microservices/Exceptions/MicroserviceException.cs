@@ -8,7 +8,7 @@ namespace Microservices.Exceptions
     {
         public HttpStatusCode HttpStatusCode { get; protected set; }
 
-        protected MicroserviceException(string message)
+        public MicroserviceException(string message)
             : base(message)
         {
             HttpStatusCode = HttpStatusCode.InternalServerError;
