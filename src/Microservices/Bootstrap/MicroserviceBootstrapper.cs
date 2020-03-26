@@ -74,15 +74,15 @@ namespace Microservices.Bootstrap
                 .Where(type => type.UnlessAutoWiringOptOut())
                 .AsPublicImplementedInterfaces();
 
-            services.AddScoped<Warmup.Warmup>();
             services.AddScoped(typeof(LookupDataKeyResolver<>));
             services.AddScoped(typeof(LookupDataValueResolver<>));
             services.AddScoped<ICacheHelper, DistributedCacheHelper>();
             services.AddScoped<IDatabaseFactory, SQLServerDatabaseFactory>();
-            services.AddScoped<IJsonSerializer, NewtonsoftJsonSerializer>();
-            services.AddScoped<IConnectionStringProvider, AzureConnectionStringByConfigurationProvider>();
             services.AddScoped<IStorageAccountFactory, AzureStorageAccountFactory>();
-            services.AddScoped<IApplicationContextProvider>(sp => new ApplicationContextProvider(_microserviceConfiguration.ApplicationContext));
+            services.AddScoped<IConnectionStringProvider, AzureConnectionStringByConfigurationProvider>();
+            services.AddTransient<IJsonSerializer, NewtonsoftJsonSerializer>();
+            services.AddSingleton<Warmup.Warmup>();
+            services.AddSingleton<IApplicationContextProvider>(sp => new ApplicationContextProvider(_microserviceConfiguration.ApplicationContext));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
