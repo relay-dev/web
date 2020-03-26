@@ -23,6 +23,8 @@ using Microsoft.OpenApi.Models;
 using NetCore.AutoRegisterDi;
 using System.Linq;
 using Core.Plugins.Providers;
+using Core.Plugins.Microsoft.Azure.Storage.Impl;
+using Core.Plugins.Microsoft.Azure.Storage;
 
 namespace Microservices.Bootstrap
 {
@@ -72,14 +74,15 @@ namespace Microservices.Bootstrap
                 .Where(type => type.UnlessAutoWiringOptOut())
                 .AsPublicImplementedInterfaces();
 
-            services.AddTransient<Warmup.Warmup>();
-            services.AddTransient(typeof(LookupDataKeyResolver<>));
-            services.AddTransient(typeof(LookupDataValueResolver<>));
-            services.AddTransient<ICacheHelper, DistributedCacheHelper>();
-            services.AddTransient<IDatabaseFactory, SQLServerDatabaseFactory>();
-            services.AddTransient<IJsonSerializer, NewtonsoftJsonSerializer>();
-            services.AddTransient<IConnectionStringProvider, AzureConnectionStringByConfigurationProvider>();
-            services.AddTransient<IApplicationContextProvider>(sp => new ApplicationContextProvider(_microserviceConfiguration.ApplicationContext));
+            services.AddScoped<Warmup.Warmup>();
+            services.AddScoped(typeof(LookupDataKeyResolver<>));
+            services.AddScoped(typeof(LookupDataValueResolver<>));
+            services.AddScoped<ICacheHelper, DistributedCacheHelper>();
+            services.AddScoped<IDatabaseFactory, SQLServerDatabaseFactory>();
+            services.AddScoped<IJsonSerializer, NewtonsoftJsonSerializer>();
+            services.AddScoped<IConnectionStringProvider, AzureConnectionStringByConfigurationProvider>();
+            services.AddScoped<IStorageAccountFactory, AzureStorageAccountFactory>();
+            services.AddScoped<IApplicationContextProvider>(sp => new ApplicationContextProvider(_microserviceConfiguration.ApplicationContext));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
