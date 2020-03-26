@@ -23,7 +23,7 @@ namespace Microservices.Bootstrap
 
         public static IServiceCollection AddWarmupType<TWarmup>(this IServiceCollection services)
         {
-            services.AddTransient(typeof(TWarmup));
+            services.AddSingleton(typeof(TWarmup));
 
             WarmupTasks.AddWarmupType(typeof(TWarmup));
 
