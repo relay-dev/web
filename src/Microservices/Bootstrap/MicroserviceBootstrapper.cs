@@ -1,19 +1,22 @@
 ﻿using AutoMapper;
 using Core.Caching;
 using Core.Data;
-using Microservices.Caching;
-using Microservices.Filters;
-using Microservices.Middleware;
-using Microservices.Providers;
-using Microservices.Serialization;
-using Microservices.Serialization.Impl;
 using Core.Plugins.AutoMapper.Data.Resolvers.DatabaseResolver;
 using Core.Plugins.Extensions;
+using Core.Plugins.Microsoft.Azure.Storage;
+using Core.Plugins.Microsoft.Azure.Storage.Impl;
+using Core.Plugins.Microsoft.Azure.Wrappers;
+using Core.Plugins.Providers;
 using Core.Plugins.SQLServer.Wrappers;
 using Core.Providers;
 using FluentValidation.AspNetCore;
 using HealthChecks.UI.Client;
 using MediatR;
+using Microservices.Caching;
+using Microservices.Filters;
+using Microservices.Middleware;
+using Microservices.Serialization;
+using Microservices.Serialization.Impl;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
@@ -22,9 +25,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using NetCore.AutoRegisterDi;
 using System.Linq;
-using Core.Plugins.Providers;
-using Core.Plugins.Microsoft.Azure.Storage.Impl;
-using Core.Plugins.Microsoft.Azure.Storage;
 
 namespace Microservices.Bootstrap
 {

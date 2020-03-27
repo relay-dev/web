@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Microservices.Testing.Unit
 {
-    public class MockRepositoryTest<TCUT> : MockTest<TCUT> where TCUT : class
+    public class AutoMockRepositoryTest<TCUT> : AutoMockTest<TCUT> where TCUT : class
     {
         public override void Setup()
         {
