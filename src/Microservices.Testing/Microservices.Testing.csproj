@@ -10,7 +10,7 @@
     <Description>A microservice testing framework built for .NET Core</Description>
     <Copyright>Copyright ©2019</Copyright>
     <PackageProjectUrl>https://github.com/relay-dev/microservices</PackageProjectUrl>
-    <PackageIconUrl>https://i.imgur.com/ptZKdWs.png</PackageIconUrl>
+    <PackageIconUrl>https://imgur.com/fDu6Ncd.png</PackageIconUrl>
     <RepositoryUrl>https://github.com/relay-dev/microservices.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageReleaseNotes>Initial release</PackageReleaseNotes>
@@ -38,13 +38,13 @@
     <PackageReference Include="NetCore.AutoRegisterDi" Version="1.1.0" />
     <PackageReference Include="NUnit" Version="3.12.0" />
     <PackageReference Include="Relay.Core" Version="1.0.91" />
-    <PackageReference Include="Relay.Core.Plugins" Version="1.0.73" />
-    <PackageReference Include="Relay.Core.Plugins.AutoMapper" Version="1.0.73" />
-    <PackageReference Include="Relay.Core.Plugins.AutoMapper.Data" Version="1.0.73" />
-    <PackageReference Include="Relay.Core.Plugins.FluentValidation" Version="1.0.73" />
-    <PackageReference Include="Relay.Core.Plugins.Microsoft.Azure" Version="1.0.73" />
-    <PackageReference Include="Relay.Core.Plugins.NUnit" Version="1.0.73" />
-    <PackageReference Include="Relay.Core.Plugins.SQLServer" Version="1.0.73" />
+    <PackageReference Include="Relay.Core.Plugins" Version="1.0.75" />
+    <PackageReference Include="Relay.Core.Plugins.AutoMapper" Version="1.0.75" />
+    <PackageReference Include="Relay.Core.Plugins.AutoMapper.Data" Version="1.0.75" />
+    <PackageReference Include="Relay.Core.Plugins.FluentValidation" Version="1.0.75" />
+    <PackageReference Include="Relay.Core.Plugins.Microsoft.Azure" Version="1.0.75" />
+    <PackageReference Include="Relay.Core.Plugins.NUnit" Version="1.0.75" />
+    <PackageReference Include="Relay.Core.Plugins.SQLServer" Version="1.0.75" />
     <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="5.2.1" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="5.2.1" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="5.2.1" />
