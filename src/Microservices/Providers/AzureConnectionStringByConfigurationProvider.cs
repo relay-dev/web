@@ -1,7 +1,11 @@
-﻿using Core.Plugins.Providers;
+﻿using Core.Plugins.Extensions;
+using Core.Plugins.Providers;
 using Microservices.Exceptions;
 using Microsoft.Extensions.Configuration;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
+using System.Text.RegularExpressions;
 
 namespace Microservices.Providers
 {
@@ -24,14 +28,24 @@ namespace Microservices.Providers
             if (connectionString == string.Empty)
                 throw new MicroserviceException(HttpStatusCode.InternalServerError, $"ConnectionName '{connectionName}' cannot be an empty string");
 
-            if (connectionString.Contains("{{DatabaseUsername}}"))
+            if (!connectionString.Contains("{{"))
             {
-                connectionString = connectionString.Replace("{{DatabaseUsername}}", _configuration["DatabaseUsername"]);
+                return connectionString;
             }
 
-            if (connectionString.Contains("{{DatabasePassword}}"))
+            var regex = new Regex(@"{{(.*?)}}", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+            Dictionary<string, string> connectionStringVariables = regex.Matches(connectionString)
+                .Select(match => match.ToString())
+                .OrderBy(s => s)
+                .ToDictionary(s => s, s => s.Remove("{{").Remove("}}"));
+
+            foreach (KeyValuePair<string, string> connectionStringVariable in connectionStringVariables)
             {
-                connectionString = connectionString.Replace("{{DatabasePassword}}", _configuration["DatabasePassword"]);
+                if (connectionString.Contains(connectionStringVariable.Key))
+                {
+                    connectionString = connectionString.Replace(connectionStringVariable.Key, _configuration[connectionStringVariable.Value]);
+                }
             }
 
             return connectionString;
