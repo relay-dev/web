@@ -70,7 +70,8 @@ namespace Microservices.Bootstrap
                         });
                 });
 
-            services.RegisterAssemblyPublicNonGenericClasses(_microserviceConfiguration.AssembliesToScan)
+            services
+                .RegisterAssemblyPublicNonGenericClasses(_microserviceConfiguration.AssembliesToScan)
                 .Where(type => type.UnlessAutoWiringOptOut())
                 .AsPublicImplementedInterfaces();
 
