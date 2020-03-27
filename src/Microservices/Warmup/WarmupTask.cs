@@ -7,9 +7,9 @@ namespace Microservices.Warmup
     {
         private readonly ILogger _logger;
 
-        public WarmupTask(ILoggerFactory loggerFactory)
+        public WarmupTask(ILogger<WarmupTask> logger)
         {
-            _logger = loggerFactory.CreateLogger("Default");
+            _logger = logger;
         }
 
         protected abstract void OnWarmup();

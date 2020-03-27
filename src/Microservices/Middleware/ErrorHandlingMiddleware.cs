@@ -13,16 +13,16 @@ namespace Microservices.Filters
     {
         private readonly RequestDelegate _next;
         private readonly IJsonSerializer _jsonSerializer;
-        private readonly ILogger _logger;
+        private readonly ILogger<ErrorHandlingMiddleware> _logger;
 
         public ErrorHandlingMiddleware(
             RequestDelegate next,
             IJsonSerializer jsonSerializer,
-            ILoggerFactory loggerFactory)
+            ILogger<ErrorHandlingMiddleware> logger)
         {
             _next = next;
             _jsonSerializer = jsonSerializer;
-            _logger = loggerFactory.CreateLogger("Default");
+            _logger = logger;
         }
 
         public async Task Invoke(HttpContext context)
