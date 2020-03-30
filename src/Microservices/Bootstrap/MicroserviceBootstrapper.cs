@@ -20,11 +20,11 @@ using Microservices.Serialization.Impl;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using NetCore.AutoRegisterDi;
-using System.Linq;
 
 namespace Microservices.Bootstrap
 {
@@ -37,7 +37,7 @@ namespace Microservices.Bootstrap
             _microserviceConfiguration = microserviceConfiguration;
         }
 
-        public void ConfigureServices(IServiceCollection services)
+        public IServiceCollection ConfigureServices(IServiceCollection services)
         {
             services
                 .AddControllers()
@@ -59,6 +59,15 @@ namespace Microservices.Bootstrap
                 .AddHealthChecks();
 
             services
+                .AddApiVersioning(cfg =>
+                {
+                    cfg.DefaultApiVersion = new ApiVersion(_microserviceConfiguration.SwaggerConfiguration.MajorVersion, _microserviceConfiguration.SwaggerConfiguration.MinorVersion);
+                    cfg.AssumeDefaultVersionWhenUnspecified = true;
+                    cfg.ReportApiVersions = true;
+                    cfg.ApiVersionReader = new HeaderApiVersionReader("X-Version");
+                });
+
+            services
                 .AddSwaggerGen(options =>
                 {
                     options.SwaggerDoc(_microserviceConfiguration.ServiceName,
@@ -70,11 +79,6 @@ namespace Microservices.Bootstrap
                         });
                 });
 
-            services
-                .RegisterAssemblyPublicNonGenericClasses(_microserviceConfiguration.AssembliesToScan)
-                .Where(type => type.UnlessAutoWiringOptOut())
-                .AsPublicImplementedInterfaces();
-
             services.AddScoped(typeof(LookupDataKeyResolver<>));
             services.AddScoped(typeof(LookupDataValueResolver<>));
             services.AddScoped<ICacheHelper, DistributedCacheHelper>();
@@ -84,9 +88,11 @@ namespace Microservices.Bootstrap
             services.AddTransient<IJsonSerializer, NewtonsoftJsonSerializer>();
             services.AddSingleton<Warmup.Warmup>();
             services.AddSingleton<IApplicationContextProvider>(sp => new ApplicationContextProvider(_microserviceConfiguration.ApplicationContext));
+
+            return services;
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public IApplicationBuilder Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -135,6 +141,8 @@ namespace Microservices.Bootstrap
             {
                 Predicate = r => r.Name.Contains("self")
             });
+
+            return app;
         }
     }
 }

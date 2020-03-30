@@ -16,7 +16,15 @@ namespace Microservices.Bootstrap
     public class SwaggerConfiguration
     {
         public string Title { get; set; }
-        public string Version { get; set; }
+        public int MajorVersion { get; set; }
+        public int MinorVersion { get; set; }
         public string Description { get; set; }
+        public string Version
+        {
+            get
+            {
+                return $"{MajorVersion}.{MinorVersion}";
+            }
+        }
     }
 }

@@ -5,20 +5,16 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Microservices.Bootstrap
 {
-    public static class IntegrationExtensions
+    public static class ServiceCollectionExtensions
     {
         public static IServiceCollection AddMicroserviceFramework(this IServiceCollection services, MicroserviceConfiguration config)
         {
-            new MicroserviceBootstrapper(config).ConfigureServices(services);
-
-            return services;
+            return new MicroserviceBootstrapper(config).ConfigureServices(services);
         }
 
         public static IApplicationBuilder UseMicroserviceFramework(this IApplicationBuilder app, MicroserviceConfiguration config, IWebHostEnvironment env)
         {
-            new MicroserviceBootstrapper(config).Configure(app, env);
-
-            return app;
+            return new MicroserviceBootstrapper(config).Configure(app, env);
         }
 
         public static IServiceCollection AddWarmupType<TWarmup>(this IServiceCollection services)
