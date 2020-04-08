@@ -85,8 +85,8 @@ namespace Microservices.Bootstrap
             services.AddScoped<IDatabaseFactory, SQLServerDatabaseFactory>();
             services.AddScoped<IStorageAccountFactory, AzureStorageAccountFactory>();
             services.AddScoped<IConnectionStringProvider, AzureConnectionStringByConfigurationProvider>();
+            services.AddTransient<IntegrationTestConnectionStringProvider>();
             services.AddTransient<IJsonSerializer, NewtonsoftJsonSerializer>();
-            services.AddTransient<IConnectionStringProvider, IntegrationTestConnectionStringProvider>();
             services.AddSingleton<Warmup.Warmup>();
             services.AddSingleton<IApplicationContextProvider>(sp => new ApplicationContextProvider(_microserviceConfiguration.ApplicationContext));
 
