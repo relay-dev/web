@@ -58,14 +58,14 @@ namespace Microservices.Bootstrap
             services
                 .AddHealthChecks();
 
-            services
-                .AddApiVersioning(cfg =>
-                {
-                    cfg.DefaultApiVersion = new ApiVersion(_microserviceConfiguration.SwaggerConfiguration.MajorVersion, _microserviceConfiguration.SwaggerConfiguration.MinorVersion);
-                    cfg.AssumeDefaultVersionWhenUnspecified = true;
-                    cfg.ReportApiVersions = true;
-                    cfg.ApiVersionReader = new HeaderApiVersionReader("X-Version");
-                });
+            //services
+            //    .AddApiVersioning(cfg =>
+            //    {
+            //        cfg.DefaultApiVersion = new ApiVersion(_microserviceConfiguration.SwaggerConfiguration.MajorVersion, _microserviceConfiguration.SwaggerConfiguration.MinorVersion);
+            //        cfg.AssumeDefaultVersionWhenUnspecified = true;
+            //        cfg.ReportApiVersions = true;
+            //        cfg.ApiVersionReader = new HeaderApiVersionReader("x-api-version");
+            //    });
 
             services
                 .AddSwaggerGen(options =>
