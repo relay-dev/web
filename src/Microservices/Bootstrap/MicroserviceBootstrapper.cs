@@ -28,7 +28,7 @@ namespace Microservices.Bootstrap
 {
     public class MicroserviceBootstrapper
     {
-        private readonly MicroserviceConfiguration _microserviceConfiguration;
+        protected readonly MicroserviceConfiguration _microserviceConfiguration;
 
         public MicroserviceBootstrapper(MicroserviceConfiguration microserviceConfiguration)
         {

@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <PackageId>Relay.Microservices.AzureFunctions</PackageId>
+    <Version>1.0.1</Version>
+    <Authors>Scott Ferguson</Authors>
+    <Company>Relay Technologies</Company>
+    <Product>Microservices Azure Functions</Product>
+    <Description>A microservice framework built for Azure Functions</Description>
+    <Copyright>Copyright ©2019</Copyright>
+    <PackageProjectUrl>https://github.com/relay-dev/microservices</PackageProjectUrl>
+    <PackageIconUrl>https://imgur.com/fDu6Ncd.png</PackageIconUrl>
+    <RepositoryUrl>https://github.com/relay-dev/microservices.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageReleaseNotes>Initial release</PackageReleaseNotes>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Azure.Functions.Extensions" Version="1.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Microservices\Microservices.csproj" />
+  </ItemGroup>
+
+</Project>

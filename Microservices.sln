@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microservices.Testing", "sr
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{A3338366-A85B-4035-8346-90B028D3F882}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "tests\UnitTests\UnitTests.csproj", "{D5F501E9-7D01-4998-8592-CA10D818BEC2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTests", "tests\UnitTests\UnitTests.csproj", "{D5F501E9-7D01-4998-8592-CA10D818BEC2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microservices.AzureFunctions", "src\Microservices.AzureFunctions\Microservices.AzureFunctions.csproj", "{9A3C49A5-9EC5-4F74-9C52-A4DF434B3C4E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,6 +31,10 @@ Global
 		{D5F501E9-7D01-4998-8592-CA10D818BEC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D5F501E9-7D01-4998-8592-CA10D818BEC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D5F501E9-7D01-4998-8592-CA10D818BEC2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9A3C49A5-9EC5-4F74-9C52-A4DF434B3C4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A3C49A5-9EC5-4F74-9C52-A4DF434B3C4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A3C49A5-9EC5-4F74-9C52-A4DF434B3C4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A3C49A5-9EC5-4F74-9C52-A4DF434B3C4E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
