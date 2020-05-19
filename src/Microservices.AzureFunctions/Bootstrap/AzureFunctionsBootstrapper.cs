@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Core.Caching;
 using Core.Data;
-using Core.Plugins.AutoMapper.Data.Resolvers.DatabaseResolver;
+//using Core.Plugins.AutoMapper.Data.Resolvers.DatabaseResolver;
 using Core.Plugins.Microsoft.Azure.Storage;
 using Core.Plugins.Microsoft.Azure.Storage.Impl;
 using Core.Plugins.Microsoft.Azure.Wrappers;
@@ -40,10 +40,9 @@ namespace Microservices.AzureFunctions.Bootstrap
                 }, _azureFunctionsConfiguration.AssembliesToScan)
                 .AddDistributedMemoryCache();
 
-            services.AddScoped(typeof(LookupDataKeyResolver<>));
-            services.AddScoped(typeof(LookupDataValueResolver<>));
+            //services.AddScoped(typeof(LookupDataKeyResolver<>));
+            //services.AddScoped(typeof(LookupDataValueResolver<>));
             services.AddScoped<ICacheHelper, DistributedCacheHelper>();
-            services.AddScoped<IDatabaseFactory, SQLServerDatabaseFactory>();
             services.AddScoped<IStorageAccountFactory, AzureStorageAccountFactory>();
             services.AddScoped<IConnectionStringProvider, AzureConnectionStringByConfigurationProvider>();
             services.AddTransient<IntegrationTestConnectionStringProvider>();

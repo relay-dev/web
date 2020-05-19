@@ -1,14 +1,13 @@
 ﻿using AutoMapper;
 using Core.Caching;
-using Core.Data;
-using Core.Plugins.AutoMapper.Data.Resolvers.DatabaseResolver;
+//using Core.Plugins.AutoMapper.Data.Resolvers.DatabaseResolver;
 using Core.Plugins.Extensions;
 using Core.Plugins.Microsoft.Azure.Storage;
 using Core.Plugins.Microsoft.Azure.Storage.Impl;
 using Core.Plugins.Microsoft.Azure.Wrappers;
 using Core.Plugins.Providers;
-using Core.Plugins.SQLServer.Wrappers;
 using Core.Providers;
+using FluentCommander.Database.SqlServer;
 using FluentValidation.AspNetCore;
 using HealthChecks.UI.Client;
 using MediatR;
@@ -77,10 +76,12 @@ namespace Microservices.Bootstrap
                         });
                 });
 
-            services.AddScoped(typeof(LookupDataKeyResolver<>));
-            services.AddScoped(typeof(LookupDataValueResolver<>));
+            services
+                .AddDatabaseCommander(_microserviceConfiguration.Configuration);
+
+            //services.AddScoped(typeof(LookupDataKeyResolver<>));
+            //services.AddScoped(typeof(LookupDataValueResolver<>));
             services.AddScoped<ICacheHelper, DistributedCacheHelper>();
-            services.AddScoped<IDatabaseFactory, SQLServerDatabaseFactory>();
             services.AddScoped<IStorageAccountFactory, AzureStorageAccountFactory>();
             services.AddScoped<IConnectionStringProvider, AzureConnectionStringByConfigurationProvider>();
             services.AddTransient<IntegrationTestConnectionStringProvider>();
