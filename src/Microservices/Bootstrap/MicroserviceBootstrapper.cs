@@ -12,7 +12,6 @@ using FluentValidation.AspNetCore;
 using HealthChecks.UI.Client;
 using MediatR;
 using Microservices.Caching;
-using Microservices.Filters;
 using Microservices.Middleware;
 using Microservices.Serialization;
 using Microservices.Serialization.Impl;
@@ -119,7 +118,6 @@ namespace Microservices.Bootstrap
 
             app.UseMiddleware(typeof(RequestCultureMiddleware));
             app.UseMiddleware(typeof(ErrorHandlingMiddleware));
-            app.UseMiddleware(typeof(OperationCancelledExceptionFilter));
 
             app.UseHttpsRedirection();
 

@@ -1,11 +1,11 @@
-﻿using System;
-using System.Net;
-using System.Threading.Tasks;
-using Core.Exceptions;
+﻿using Core.Exceptions;
 using Microservices.Exceptions;
 using Microservices.Serialization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace Microservices.Middleware
 {
@@ -31,9 +31,14 @@ namespace Microservices.Middleware
             {
                 await _next(context);
             }
-            catch (Exception ex)
+            catch (OperationCanceledException)
             {
-                await HandleExceptionAsync(context, ex);
+                _logger.LogInformation("Request was cancelled");
+                context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+            }
+            catch (Exception e)
+            {
+                await HandleExceptionAsync(context, e);
             }
         }
 
