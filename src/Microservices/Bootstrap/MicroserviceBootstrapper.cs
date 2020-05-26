@@ -119,6 +119,7 @@ namespace Microservices.Bootstrap
 
             app.UseMiddleware(typeof(RequestCultureMiddleware));
             app.UseMiddleware(typeof(ErrorHandlingMiddleware));
+            app.UseMiddleware(typeof(OperationCancelledExceptionFilter));
 
             app.UseHttpsRedirection();
 

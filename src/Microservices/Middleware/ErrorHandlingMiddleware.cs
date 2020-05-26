@@ -1,13 +1,13 @@
-﻿using Core.Exceptions;
+﻿using System;
+using System.Net;
+using System.Threading.Tasks;
+using Core.Exceptions;
 using Microservices.Exceptions;
 using Microservices.Serialization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Net;
-using System.Threading.Tasks;
 
-namespace Microservices.Filters
+namespace Microservices.Middleware
 {
     public class ErrorHandlingMiddleware
     {
