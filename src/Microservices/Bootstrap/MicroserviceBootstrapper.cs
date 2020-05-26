@@ -7,7 +7,7 @@ using Core.Plugins.Microsoft.Azure.Storage.Impl;
 using Core.Plugins.Microsoft.Azure.Wrappers;
 using Core.Plugins.Providers;
 using Core.Providers;
-using FluentCommander.Database.SqlServer;
+using FluentCommander.SqlServer;
 using FluentValidation.AspNetCore;
 using HealthChecks.UI.Client;
 using MediatR;
