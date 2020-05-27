@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Core.Caching;
-//using Core.Plugins.AutoMapper.Data.Resolvers.DatabaseResolver;
+using Core.Plugins.AutoMapper.Data.Resolvers.DatabaseResolver;
 using Core.Plugins.Extensions;
 using Core.Plugins.Microsoft.Azure.Storage;
 using Core.Plugins.Microsoft.Azure.Storage.Impl;
@@ -26,7 +26,7 @@ namespace Microservices.Bootstrap
 {
     public class MicroserviceBootstrapper
     {
-        protected readonly MicroserviceConfiguration _microserviceConfiguration;
+        private readonly MicroserviceConfiguration _microserviceConfiguration;
 
         public MicroserviceBootstrapper(MicroserviceConfiguration microserviceConfiguration)
         {
@@ -78,8 +78,8 @@ namespace Microservices.Bootstrap
             services
                 .AddDatabaseCommander(_microserviceConfiguration.Configuration);
 
-            //services.AddScoped(typeof(LookupDataKeyResolver<>));
-            //services.AddScoped(typeof(LookupDataValueResolver<>));
+            services.AddScoped(typeof(LookupDataKeyResolver<>));
+            services.AddScoped(typeof(LookupDataValueResolver<>));
             services.AddScoped<ICacheHelper, DistributedCacheHelper>();
             services.AddScoped<IStorageAccountFactory, AzureStorageAccountFactory>();
             services.AddScoped<IConnectionStringProvider, AzureConnectionStringByConfigurationProvider>();
