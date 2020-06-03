@@ -46,7 +46,7 @@ namespace Microservices.AzureFunctions.Bootstrap
             services.AddScoped<IStorageAccountFactory, AzureStorageAccountFactory>();
             services.AddScoped<IConnectionStringProvider, AzureConnectionStringByConfigurationProvider>();
             services.AddTransient<IntegrationTestConnectionStringProvider>();
-            services.AddTransient<IJsonSerializer, NewtonsoftJsonSerializer>();
+            services.AddTransient<IJsonSerializer, SystemJsonSerializer>();
             services.AddSingleton<Warmup.Warmup>();
             services.AddSingleton<IApplicationContextProvider>(sp => new ApplicationContextProvider(_azureFunctionsConfiguration.ApplicationContext));
 
