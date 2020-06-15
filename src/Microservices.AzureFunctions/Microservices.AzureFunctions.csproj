@@ -17,7 +17,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentCommander.SqlServer" Version="1.0.38" />
+    <PackageReference Include="FluentCommander.SqlServer" Version="1.0.61" />
     <PackageReference Include="Microsoft.Azure.Functions.Extensions" Version="1.0.0" />
   </ItemGroup>
 

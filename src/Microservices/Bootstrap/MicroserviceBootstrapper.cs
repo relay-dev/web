@@ -76,7 +76,7 @@ namespace Microservices.Bootstrap
                 });
 
             services
-                .AddDatabaseCommander(_microserviceConfiguration.Configuration);
+                .AddSqlServerDatabaseCommander(_microserviceConfiguration.Configuration);
 
             services.AddScoped(typeof(LookupDataKeyResolver<>));
             services.AddScoped(typeof(LookupDataValueResolver<>));
