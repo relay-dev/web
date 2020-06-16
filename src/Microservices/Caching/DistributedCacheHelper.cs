@@ -1,5 +1,6 @@
 ﻿using Core.Caching;
 using Microservices.Serialization;
+using Microservices.Serialization.Impl;
 using Microsoft.Extensions.Caching.Distributed;
 using System;
 using System.Collections.Concurrent;
@@ -14,12 +15,10 @@ namespace Microservices.Caching
         private readonly IDistributedCache _cache;
         private readonly IJsonSerializer _jsonSerializer;
 
-        public DistributedCacheHelper(
-            IDistributedCache cache,
-            IJsonSerializer jsonSerializer)
+        public DistributedCacheHelper(IDistributedCache cache)
         {
             _cache = cache;
-            _jsonSerializer = jsonSerializer;
+            _jsonSerializer = NewtonsoftJsonSerializer.New;
         }
 
         public T GetOrSet<T>(string key, DistributedCacheEntryOptions options, Func<T> valueFactory)
@@ -120,13 +119,8 @@ namespace Microservices.Caching
             return _jsonSerializer.Deserialize<T>(itemAsJson);
         }
 
-        #region Static
-
         private const int DefaultExpirationInHours = 24;
         private static readonly string _delimeter = "::";
-
-        #endregion
-
     }
 
     public static class CacheKeyManager
