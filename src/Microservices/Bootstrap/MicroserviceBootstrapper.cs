@@ -39,41 +39,41 @@ namespace Microservices.Bootstrap
                 .AddControllers()
                 .AddFluentValidation();
 
-            services
-                .AddAutoMapper(cfg =>
-                {
-                    services.AddSingleton(provider =>
-                    {
-                        cfg.ConstructServicesUsing(type => ActivatorUtilities.CreateInstance(provider, type));
-                        return cfg;
-                    });
-                }, _microserviceConfiguration.AssembliesToScan)
-                .AddMediatR(_microserviceConfiguration.AssembliesToScan)
-                .AddDistributedMemoryCache();
-
-            services
-                .AddHealthChecks();
+            //services
+            //    .AddAutoMapper(cfg =>
+            //    {
+            //        services.AddSingleton(provider =>
+            //        {
+            //            cfg.ConstructServicesUsing(type => ActivatorUtilities.CreateInstance(provider, type));
+            //            return cfg;
+            //        });
+            //    }, _microserviceConfiguration.AssembliesToScan)
+            //    .AddMediatR(_microserviceConfiguration.AssembliesToScan)
+            //    .AddDistributedMemoryCache();
 
             //services
-            //    .AddApiVersioning(cfg =>
-            //    {
-            //        cfg.DefaultApiVersion = new ApiVersion(_microserviceConfiguration.SwaggerConfiguration.MajorVersion, _microserviceConfiguration.SwaggerConfiguration.MinorVersion);
-            //        cfg.AssumeDefaultVersionWhenUnspecified = true;
-            //        cfg.ReportApiVersions = true;
-            //        cfg.ApiVersionReader = new HeaderApiVersionReader("x-api-version");
-            //    });
+            //    .AddHealthChecks();
 
-            services
-                .AddSwaggerGen(options =>
-                {
-                    options.SwaggerDoc(_microserviceConfiguration.ServiceName,
-                        new OpenApiInfo
-                        {
-                            Title = _microserviceConfiguration.SwaggerConfiguration.Title,
-                            Version = _microserviceConfiguration.SwaggerConfiguration.Version,
-                            Description = _microserviceConfiguration.SwaggerConfiguration.Description
-                        });
-                });
+            ////services
+            ////    .AddApiVersioning(cfg =>
+            ////    {
+            ////        cfg.DefaultApiVersion = new ApiVersion(_microserviceConfiguration.SwaggerConfiguration.MajorVersion, _microserviceConfiguration.SwaggerConfiguration.MinorVersion);
+            ////        cfg.AssumeDefaultVersionWhenUnspecified = true;
+            ////        cfg.ReportApiVersions = true;
+            ////        cfg.ApiVersionReader = new HeaderApiVersionReader("x-api-version");
+            ////    });
+
+            //services
+            //    .AddSwaggerGen(options =>
+            //    {
+            //        options.SwaggerDoc(_microserviceConfiguration.ServiceName,
+            //            new OpenApiInfo
+            //            {
+            //                Title = _microserviceConfiguration.SwaggerConfiguration.Title,
+            //                Version = _microserviceConfiguration.SwaggerConfiguration.Version,
+            //                Description = _microserviceConfiguration.SwaggerConfiguration.Description
+            //            });
+            //    });
 
             services
                 .AddSqlServerDatabaseCommander(_microserviceConfiguration.Configuration);

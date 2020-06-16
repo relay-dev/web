@@ -11,7 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{A3338366
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTests", "tests\UnitTests\UnitTests.csproj", "{D5F501E9-7D01-4998-8592-CA10D818BEC2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microservices.AzureFunctions", "src\Microservices.AzureFunctions\Microservices.AzureFunctions.csproj", "{9A3C49A5-9EC5-4F74-9C52-A4DF434B3C4E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microservices.AzureFunctions", "src\Microservices.AzureFunctions\Microservices.AzureFunctions.csproj", "{9A3C49A5-9EC5-4F74-9C52-A4DF434B3C4E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
