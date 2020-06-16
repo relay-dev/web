@@ -45,6 +45,7 @@
     <PackageReference Include="Relay.Core.Plugins.Microsoft.Azure" Version="1.0.101" />
     <PackageReference Include="Relay.Core.Plugins.NUnit" Version="1.0.101" />
     <PackageReference Include="Relay.Core.Plugins.SQLServer" Version="1.0.86" />
+    <PackageReference Include="Shouldly" Version="3.0.2" />
     <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="5.2.1" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="5.2.1" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="5.2.1" />

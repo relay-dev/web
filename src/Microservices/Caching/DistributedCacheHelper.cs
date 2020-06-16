@@ -37,7 +37,7 @@ namespace Microservices.Caching
                         .SetAbsoluteExpiration(TimeSpan.FromHours(DefaultExpirationInHours));
                 }
 
-                Set<T>(key, value, options);
+                Set(key, value, options);
             }
 
             return cacheItem.Value;
