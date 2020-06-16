@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>
     <PackageId>Relay.Microservices.Testing</PackageId>
     <Version>1.0.1</Version>
     <Authors>Scott Ferguson</Authors>
@@ -36,8 +36,8 @@
     <PackageReference Include="Moq.AutoMock" Version="2.0.1" />
     <PackageReference Include="NetCore.AutoRegisterDi" Version="1.1.0" />
     <PackageReference Include="NUnit" Version="3.12.0" />
-    <PackageReference Include="Relay.Core" Version="1.0.103" />
-    <PackageReference Include="Relay.Core.Plugins" Version="1.0.101" />
+    <PackageReference Include="Relay.Core" Version="1.0.104" />
+    <PackageReference Include="Relay.Core.Plugins" Version="1.0.106" />
     <PackageReference Include="Relay.Core.Plugins.AutoMapper" Version="1.0.101" />
     <PackageReference Include="Relay.Core.Plugins.AutoMapper.Data" Version="1.0.101" />
     <PackageReference Include="Relay.Core.Plugins.FluentValidation" Version="1.0.101" />
