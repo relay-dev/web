@@ -1,9 +1,10 @@
-﻿using Microservices.Warmup;
+﻿using Microservices.Bootstrap;
+using Microservices.Warmup;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Microservices.Bootstrap
+namespace Microservices
 {
     public static class ServiceCollectionExtensions
     {
