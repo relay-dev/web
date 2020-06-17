@@ -13,9 +13,10 @@ namespace UnitTests.Microservices
         public void GetOrSet_ShouldCallSet_WhenThereIsNoMatchOnKey()
         {
             // Arrange
+            const int valueToCache = 100;
 
             // Act
-            CUT.GetOrSet("CacheKey", () => 100);
+            CUT.GetOrSet("CacheKey", () => valueToCache);
 
             // Assert
             ResolveMock<IDistributedCache>()
