@@ -20,7 +20,7 @@ before_build:
 - cmd: dotnet restore
 build:
   publish_nuget: true
-  publish_nuget_symbols: true
+  publish_nuget_symbols: false
   verbosity: normal
 test: off
 artifacts:
@@ -29,3 +29,4 @@ artifacts:
 deploy:
 - provider: Environment
   name: NuGet
+  skip_symbols: true
