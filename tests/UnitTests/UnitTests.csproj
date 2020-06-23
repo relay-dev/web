@@ -14,7 +14,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.6.1" />
-    <PackageReference Include="Relay.Core.Plugins" Version="1.0.111" />
+    <PackageReference Include="Relay.Core.Plugins" Version="1.0.112" />
     <PackageReference Include="Relay.Core.Plugins.NUnit" Version="1.0.101" />
     <PackageReference Include="Shouldly" Version="3.0.2" />
   </ItemGroup>
