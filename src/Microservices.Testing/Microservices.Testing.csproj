@@ -17,7 +17,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="3.0.2" />
+    <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="3.1.1" />
     <PackageReference Include="AutoBogus" Version="2.8.2" />
     <PackageReference Include="AutoMapper" Version="9.0.0" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
@@ -29,26 +29,26 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.UnitOfWork" Version="3.1.0" />
     <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="3.1.5" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.5" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.AzureKeyVault" Version="3.1.4" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.AzureKeyVault" Version="3.1.5" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.1.5" />
     <PackageReference Include="Microsoft.Extensions.Logging.AzureAppServices" Version="3.1.5" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.1.5" />
-    <PackageReference Include="Moq" Version="4.14.1" />
+    <PackageReference Include="Moq" Version="4.14.3" />
     <PackageReference Include="Moq.AutoMock" Version="2.0.1" />
-    <PackageReference Include="NetCore.AutoRegisterDi" Version="1.1.0" />
+    <PackageReference Include="NetCore.AutoRegisterDi" Version="2.0.0" />
     <PackageReference Include="NUnit" Version="3.12.0" />
-    <PackageReference Include="Relay.Core" Version="1.0.104" />
-    <PackageReference Include="Relay.Core.Plugins" Version="1.0.112" />
-    <PackageReference Include="Relay.Core.Plugins.AutoMapper" Version="1.0.101" />
-    <PackageReference Include="Relay.Core.Plugins.AutoMapper.Data" Version="1.0.101" />
-    <PackageReference Include="Relay.Core.Plugins.FluentValidation" Version="1.0.101" />
-    <PackageReference Include="Relay.Core.Plugins.Microsoft.Azure" Version="1.0.101" />
-    <PackageReference Include="Relay.Core.Plugins.NUnit" Version="1.0.101" />
+    <PackageReference Include="Relay.Core" Version="1.0.105" />
+    <PackageReference Include="Relay.Core.Plugins" Version="1.0.113" />
+    <PackageReference Include="Relay.Core.Plugins.AutoMapper" Version="1.0.113" />
+    <PackageReference Include="Relay.Core.Plugins.AutoMapper.Data" Version="1.0.113" />
+    <PackageReference Include="Relay.Core.Plugins.FluentValidation" Version="1.0.113" />
+    <PackageReference Include="Relay.Core.Plugins.Microsoft.Azure" Version="1.0.113" />
+    <PackageReference Include="Relay.Core.Plugins.NUnit" Version="1.0.113" />
     <PackageReference Include="Relay.Core.Plugins.SQLServer" Version="1.0.86" />
     <PackageReference Include="Shouldly" Version="3.0.2" />
-    <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="5.2.1" />
-    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="5.2.1" />
-    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="5.2.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="5.5.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="5.5.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="5.5.0" />
     <PackageReference Include="System.Collections" Version="4.3.0" />
   </ItemGroup>
 
