@@ -34,12 +34,12 @@
     <PackageReference Include="Microsoft.Extensions.Logging.AzureAppServices" Version="3.1.5" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.1.5" />
     <PackageReference Include="NetCore.AutoRegisterDi" Version="2.0.0" />
-    <PackageReference Include="Relay.Core" Version="1.0.105" />
-    <PackageReference Include="Relay.Core.Plugins" Version="1.0.115" />
-    <PackageReference Include="Relay.Core.Plugins.AutoMapper" Version="1.0.115" />
-    <PackageReference Include="Relay.Core.Plugins.AutoMapper.Data" Version="1.0.115" />
-    <PackageReference Include="Relay.Core.Plugins.FluentValidation" Version="1.0.115" />
-    <PackageReference Include="Relay.Core.Plugins.Microsoft.Azure" Version="1.0.115" />
+    <PackageReference Include="Relay.Core" Version="1.0.107" />
+    <PackageReference Include="Relay.Core.Plugins" Version="1.0.116" />
+    <PackageReference Include="Relay.Core.Plugins.AutoMapper" Version="1.0.116" />
+    <PackageReference Include="Relay.Core.Plugins.AutoMapper.Data" Version="1.0.116" />
+    <PackageReference Include="Relay.Core.Plugins.FluentValidation" Version="1.0.116" />
+    <PackageReference Include="Relay.Core.Plugins.Microsoft.Azure" Version="1.0.116" />
     <PackageReference Include="Relay.Core.Plugins.SQLServer" Version="1.0.86" />
     <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="5.5.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="5.5.0" />
