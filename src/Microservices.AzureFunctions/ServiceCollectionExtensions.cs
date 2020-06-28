@@ -1,10 +1,11 @@
-﻿using Microservices.Warmup;
+﻿using Microservices.AzureFunctions.Bootstrap;
+using Microservices.Warmup;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Microservices.AzureFunctions.Bootstrap
+namespace Microservices.AzureFunctions
 {
-    public static class FunctionsHostBuilderExtensions
+    public static class ServiceCollectionExtensions
     {
         public static IFunctionsHostBuilder AddAzureFunctionsFramework(this IFunctionsHostBuilder builder, AzureFunctionsConfiguration config)
         {
