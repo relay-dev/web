@@ -6,6 +6,7 @@ using Core.Plugins.Microsoft.Azure.Storage.Impl;
 using Core.Plugins.Microsoft.Azure.Wrappers;
 using Core.Plugins.Providers;
 using Core.Providers;
+using FluentCommander.Core.Impl;
 using FluentCommander.SqlServer;
 using FluentValidation.AspNetCore;
 using MediatR;
@@ -58,6 +59,13 @@ namespace Microservices.AzureFunctions.Bootstrap
             services.AddTransient<IJsonSerializer, SystemJsonSerializer>();
             services.AddSingleton<Warmup.Warmup>();
             services.AddSingleton<IApplicationContextProvider>(sp => new ApplicationContextProvider(_azureFunctionsConfiguration.ApplicationContext));
+
+            var connectionStringCollection = new ConnectionStringCollection(_azureFunctionsConfiguration.Configuration);
+
+            if (connectionStringCollection.ConnectionStringNames.Contains("DefaultStorageConnection"))
+            {
+                services.AddTransient<IStorageAccount>(sp => new AzureStorageAccount(sp.GetService<IConnectionStringProvider>().Get("DefaultStorageConnection")));
+            }
 
             return builder;
         }
