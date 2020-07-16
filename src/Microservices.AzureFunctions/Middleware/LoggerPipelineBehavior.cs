@@ -14,6 +14,7 @@ namespace Microservices.AzureFunctions.Middleware
         {
             _logger = logger;
         }
+
         public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
         {
             try
@@ -28,7 +29,7 @@ namespace Microservices.AzureFunctions.Middleware
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "");
+                _logger.LogError(e, "Operation failed");
 
                 throw;
             }
