@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Linq;
+using AutoMapper;
 using Core.Caching;
 using Core.Plugins.AutoMapper.Data.Resolvers.DatabaseResolver;
 using Core.Plugins.Microsoft.Azure.Storage;
@@ -45,8 +46,12 @@ namespace Microservices.AzureFunctions.Bootstrap
                         return cfg;
                     });
                 }, _azureFunctionsConfiguration.MapperTypes.ToArray())
-                .AddMediatR(_azureFunctionsConfiguration.MapperTypes.ToArray())
                 .AddDistributedMemoryCache();
+
+            if (_azureFunctionsConfiguration.CommandHandlerTypes.Any())
+            {
+                services.AddMediatR(_azureFunctionsConfiguration.CommandHandlerTypes.ToArray());
+            }
 
             services
                 .AddSqlServerDatabaseCommander(_azureFunctionsConfiguration.Configuration);
