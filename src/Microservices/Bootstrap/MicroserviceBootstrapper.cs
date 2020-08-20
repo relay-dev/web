@@ -49,8 +49,8 @@ namespace Microservices.Bootstrap
                         cfg.ConstructServicesUsing(type => ActivatorUtilities.CreateInstance(provider, type));
                         return cfg;
                     });
-                }, _microserviceConfiguration.AssembliesToScan)
-                .AddMediatR(_microserviceConfiguration.AssembliesToScan)
+                }, _microserviceConfiguration.MapperTypes.ToArray())
+                .AddMediatR(_microserviceConfiguration.CommandHandlerTypes.ToArray())
                 .AddDistributedMemoryCache();
 
             services

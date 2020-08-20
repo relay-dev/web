@@ -1,6 +1,7 @@
-﻿using System.Reflection;
-using Core.Application;
+﻿using Core.Application;
 using Microsoft.Extensions.Configuration;
+using System;
+using System.Collections.Generic;
 
 namespace Microservices.Bootstrap
 {
@@ -8,9 +9,10 @@ namespace Microservices.Bootstrap
     {
         public string ServiceName { get; set; }
         public IConfiguration Configuration { get; set; }
-        public Assembly[] AssembliesToScan { get; set; }
         public SwaggerConfiguration SwaggerConfiguration { get; set; }
         public ApplicationContext ApplicationContext { get; set; }
+        public List<Type> MapperTypes { get; set; }
+        public List<Type> CommandHandlerTypes { get; set; }
     }
 
     public class SwaggerConfiguration
@@ -19,12 +21,6 @@ namespace Microservices.Bootstrap
         public int MajorVersion { get; set; }
         public int MinorVersion { get; set; }
         public string Description { get; set; }
-        public string Version
-        {
-            get
-            {
-                return $"{MajorVersion}.{MinorVersion}";
-            }
-        }
+        public string Version => $"{MajorVersion}.{MinorVersion}";
     }
 }

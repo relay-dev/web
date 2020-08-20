@@ -44,8 +44,8 @@ namespace Microservices.AzureFunctions.Bootstrap
                         cfg.ConstructServicesUsing(type => ActivatorUtilities.CreateInstance(provider, type));
                         return cfg;
                     });
-                }, _azureFunctionsConfiguration.AssembliesToScan)
-                .AddMediatR(_azureFunctionsConfiguration.AssembliesToScan)
+                }, _azureFunctionsConfiguration.MapperTypes.ToArray())
+                .AddMediatR(_azureFunctionsConfiguration.MapperTypes.ToArray())
                 .AddDistributedMemoryCache();
 
             services
