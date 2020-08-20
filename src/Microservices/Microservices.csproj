@@ -20,7 +20,7 @@
     <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="3.1.1" />
     <PackageReference Include="AutoMapper" Version="9.0.0" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
-    <PackageReference Include="FluentCommander.SqlServer" Version="1.0.115" />
+    <PackageReference Include="FluentCommander.SqlServer" Version="1.0.123" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="8.6.2" />
     <PackageReference Include="MediatR" Version="8.0.1" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="8.0.0" />
@@ -34,12 +34,12 @@
     <PackageReference Include="Microsoft.Extensions.Logging.AzureAppServices" Version="3.1.5" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.1.5" />
     <PackageReference Include="NetCore.AutoRegisterDi" Version="2.0.0" />
-    <PackageReference Include="Relay.Core" Version="1.0.108" />
-    <PackageReference Include="Relay.Core.Plugins" Version="1.0.120" />
-    <PackageReference Include="Relay.Core.Plugins.AutoMapper" Version="1.0.120" />
-    <PackageReference Include="Relay.Core.Plugins.AutoMapper.Data" Version="1.0.120" />
-    <PackageReference Include="Relay.Core.Plugins.FluentValidation" Version="1.0.120" />
-    <PackageReference Include="Relay.Core.Plugins.Microsoft.Azure" Version="1.0.120" />
+    <PackageReference Include="Relay.Core" Version="1.0.109" />
+    <PackageReference Include="Relay.Core.Plugins" Version="1.0.124" />
+    <PackageReference Include="Relay.Core.Plugins.AutoMapper" Version="1.0.124" />
+    <PackageReference Include="Relay.Core.Plugins.AutoMapper.Data" Version="1.0.121" />
+    <PackageReference Include="Relay.Core.Plugins.FluentValidation" Version="1.0.124" />
+    <PackageReference Include="Relay.Core.Plugins.Microsoft.Azure" Version="1.0.124" />
     <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="5.5.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="5.5.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="5.5.0" />
