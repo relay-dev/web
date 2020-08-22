@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using AutoMapper;
+﻿using AutoMapper;
 using Core.Caching;
 using Core.Plugins.AutoMapper.Data.Resolvers.DatabaseResolver;
 using Core.Plugins.Microsoft.Azure.Storage;
@@ -7,8 +6,6 @@ using Core.Plugins.Microsoft.Azure.Storage.Impl;
 using Core.Plugins.Microsoft.Azure.Wrappers;
 using Core.Plugins.Providers;
 using Core.Providers;
-using FluentCommander.Core.Impl;
-using FluentCommander.SqlServer;
 using FluentValidation.AspNetCore;
 using MediatR;
 using Microservices.Caching;
@@ -17,6 +14,7 @@ using Microservices.Serialization.Impl;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
+using System.Linq;
 
 namespace Microservices.AzureFunctions.Bootstrap
 {
@@ -53,9 +51,6 @@ namespace Microservices.AzureFunctions.Bootstrap
                 services.AddMediatR(_azureFunctionsConfiguration.CommandHandlerTypes.ToArray());
             }
 
-            services
-                .AddSqlServerDatabaseCommander(_azureFunctionsConfiguration.Configuration);
-
             services.AddScoped(typeof(LookupDataKeyResolver<>));
             services.AddScoped(typeof(LookupDataValueResolver<>));
             services.AddScoped<ICacheHelper, DistributedCacheHelper>();
@@ -64,13 +59,6 @@ namespace Microservices.AzureFunctions.Bootstrap
             services.AddTransient<IJsonSerializer, SystemJsonSerializer>();
             services.AddSingleton<Warmup.Warmup>();
             services.AddSingleton<IApplicationContextProvider>(sp => new ApplicationContextProvider(_azureFunctionsConfiguration.ApplicationContext));
-
-            var connectionStringCollection = new ConnectionStringCollection(_azureFunctionsConfiguration.Configuration);
-
-            if (connectionStringCollection.ConnectionStringNames.Contains("DefaultStorageConnection"))
-            {
-                services.AddTransient<IStorageAccount>(sp => new AzureStorageAccount(sp.GetService<IConnectionStringProvider>().Get("DefaultStorageConnection")));
-            }
 
             return builder;
         }

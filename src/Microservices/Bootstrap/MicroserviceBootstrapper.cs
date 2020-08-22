@@ -7,7 +7,6 @@ using Core.Plugins.Microsoft.Azure.Storage.Impl;
 using Core.Plugins.Microsoft.Azure.Wrappers;
 using Core.Plugins.Providers;
 using Core.Providers;
-using FluentCommander.SqlServer;
 using FluentValidation.AspNetCore;
 using HealthChecks.UI.Client;
 using MediatR;
@@ -76,9 +75,6 @@ namespace Microservices.Bootstrap
                             Description = _microserviceConfiguration.SwaggerConfiguration.Description
                         });
                 });
-
-            services
-                .AddSqlServerDatabaseCommander(_microserviceConfiguration.Configuration);
             
             services.AddScoped(typeof(LookupDataKeyResolver<>));
             services.AddScoped(typeof(LookupDataValueResolver<>));
