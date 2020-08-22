@@ -13,6 +13,7 @@ namespace Microservices.Bootstrap
         public ApplicationContext ApplicationContext { get; set; }
         public List<Type> MapperTypes { get; set; }
         public List<Type> CommandHandlerTypes { get; set; }
+        public Dictionary<Type, Type> ValidatorTypes { get; set; }
     }
 
     public class SwaggerConfiguration

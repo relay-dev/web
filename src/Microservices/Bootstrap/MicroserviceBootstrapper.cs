@@ -1,4 +1,6 @@
-﻿using AutoMapper;
+﻿using System;
+using System.Collections.Generic;
+using AutoMapper;
 using Core.Caching;
 using Core.Plugins.AutoMapper.Data.Resolvers.DatabaseResolver;
 using Core.Plugins.Extensions;
@@ -75,6 +77,8 @@ namespace Microservices.Bootstrap
                             Description = _microserviceConfiguration.SwaggerConfiguration.Description
                         });
                 });
+
+            _microserviceConfiguration.ValidatorTypes.ForEach(v => services.AddTransient(v.Key, v.Value));
             
             services.AddScoped(typeof(LookupDataKeyResolver<>));
             services.AddScoped(typeof(LookupDataValueResolver<>));

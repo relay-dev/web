@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Core.Caching;
 using Core.Plugins.AutoMapper.Data.Resolvers.DatabaseResolver;
+using Core.Plugins.Extensions;
 using Core.Plugins.Microsoft.Azure.Storage;
 using Core.Plugins.Microsoft.Azure.Storage.Impl;
 using Core.Plugins.Microsoft.Azure.Wrappers;
@@ -50,6 +51,8 @@ namespace Microservices.AzureFunctions.Bootstrap
             {
                 services.AddMediatR(_azureFunctionsConfiguration.CommandHandlerTypes.ToArray());
             }
+
+            _azureFunctionsConfiguration.ValidatorTypes.ForEach(v => services.AddTransient(v.Key, v.Value));
 
             services.AddScoped(typeof(LookupDataKeyResolver<>));
             services.AddScoped(typeof(LookupDataValueResolver<>));
