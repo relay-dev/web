@@ -7,7 +7,10 @@ using Core.Plugins.Microsoft.Azure.Storage;
 using Core.Plugins.Microsoft.Azure.Storage.Impl;
 using Core.Plugins.Microsoft.Azure.Wrappers;
 using Core.Plugins.Providers;
+using Core.Plugins.Utilities;
+using Core.Plugins.Validation;
 using Core.Providers;
+using Core.Utilities;
 using FluentValidation.AspNetCore;
 using HealthChecks.UI.Client;
 using MediatR;
@@ -120,6 +123,7 @@ namespace Microservices.Bootstrap
             // Add Event Grid client
             if (_microserviceConfiguration.Configuration.GetConnectionString("DefaultEventGridConnection") != null)
             {
+                services.AddScoped<EventGridSubscriber>();
                 services.AddScoped<IEventGridClient>(sp =>
                 {
                     var parser = new ConnectionStringParser(sp.GetRequiredService<IConnectionStringProvider>().Get("DefaultEventGridConnection"));
@@ -132,13 +136,15 @@ namespace Microservices.Bootstrap
             services.AddDistributedMemoryCache();
 
             // Add other common utilities
+            services.AddSingleton<Warmup.Warmup>();
             services.AddScoped(typeof(LookupDataKeyResolver<>));
             services.AddScoped(typeof(LookupDataValueResolver<>));
             services.AddScoped<ICacheHelper, DistributedCacheHelper>();
+            services.AddScoped<IGlobalHelper, GlobalHelperWrapper>();
+            services.AddScoped<IInlineValidator, InlineValidator>();
             services.AddScoped<IStorageAccountFactory, AzureStorageAccountFactory>();
             services.AddScoped<IConnectionStringProvider, AzureConnectionStringByConfigurationProvider>();
             services.AddTransient<IJsonSerializer, SystemJsonSerializer>();
-            services.AddSingleton<Warmup.Warmup>();
             services.AddSingleton<IApplicationContextProvider>(sp => new ApplicationContextProvider(_microserviceConfiguration.ApplicationContext));
 
             return services;
