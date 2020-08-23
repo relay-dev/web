@@ -1,4 +1,5 @@
 ﻿using Core.Exceptions;
+using FluentValidation;
 using Microservices.Exceptions;
 using Microservices.Serialization;
 using Microsoft.AspNetCore.Http;
@@ -56,7 +57,7 @@ namespace Microservices.Middleware
             else if (ex is ValidationException validationException)
             {
                 httpStatusCode = HttpStatusCode.BadRequest;
-                errorMessage = _jsonSerializer.Serialize(validationException.ValidationFailureResult);
+                errorMessage = validationException.Message;
             }
 
             Log(ex, httpStatusCode, errorMessage);
@@ -99,24 +100,32 @@ namespace Microservices.Middleware
         {
             if (errorCode == ErrorCode.BADR)
                 return HttpStatusCode.BadRequest;
-            else if (errorCode == ErrorCode.AUTH)
+
+            if (errorCode == ErrorCode.AUTH)
                 return HttpStatusCode.Unauthorized;
-            else if (errorCode == ErrorCode.FRBD)
+
+            if (errorCode == ErrorCode.FRBD)
                 return HttpStatusCode.Forbidden;
-            else if (errorCode == ErrorCode.NTFD)
+
+            if (errorCode == ErrorCode.NTFD)
                 return HttpStatusCode.NotFound;
-            else if (errorCode == ErrorCode.EROR)
+
+            if (errorCode == ErrorCode.EROR)
                 return HttpStatusCode.InternalServerError;
-            else if (errorCode == ErrorCode.NTIM)
+
+            if (errorCode == ErrorCode.NTIM)
                 return HttpStatusCode.NotImplemented;
-            else if (errorCode == ErrorCode.BDGW)
+
+            if (errorCode == ErrorCode.BDGW)
                 return HttpStatusCode.BadGateway;
-            else if (errorCode == ErrorCode.SVCU)
+
+            if (errorCode == ErrorCode.SVCU)
                 return HttpStatusCode.ServiceUnavailable;
-            else if (errorCode == ErrorCode.TIME)
+
+            if (errorCode == ErrorCode.TIME)
                 return HttpStatusCode.GatewayTimeout;
-            else
-                return HttpStatusCode.InternalServerError;
+            
+            return HttpStatusCode.InternalServerError;
         }
     }
 }

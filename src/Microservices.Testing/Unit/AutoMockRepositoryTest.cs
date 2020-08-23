@@ -24,7 +24,14 @@ namespace Microservices.Testing.Unit
 
             var fakeRepositories = (Dictionary<string, object>)CurrentTestProperties.Get(RepositoryKey);
 
-            fakeRepositories.Add(typeof(TToMock).FullName, fakeRepository);
+            string key = typeof(TToMock).FullName;
+
+            if (string.IsNullOrEmpty(key))
+            {
+                throw new Exception("Could not resolve a key for that mock type");
+            }
+
+            fakeRepositories.Add(key, fakeRepository);
 
             CurrentTestProperties.Set(RepositoryKey, fakeRepositories);
         }
@@ -35,8 +42,15 @@ namespace Microservices.Testing.Unit
 
             string key = typeof(TToMock).FullName;
 
+            if (string.IsNullOrEmpty(key))
+            {
+                throw new Exception("Could not resolve a key for that mock type");
+            }
+
             if (!fakeRepositories.ContainsKey(key))
+            {
                 throw new Exception("Cannot call GetTestData() without calling InitTestData() or InjectTestData() with the same generic type");
+            }
 
             var fakeRepository = (FakeRepository<TToMock>)fakeRepositories[key];
 
