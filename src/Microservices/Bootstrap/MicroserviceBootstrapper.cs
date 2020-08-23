@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using AutoMapper;
+﻿using AutoMapper;
 using Core.Caching;
+using Core.Plugins.Application;
 using Core.Plugins.AutoMapper.Data.Resolvers.DatabaseResolver;
 using Core.Plugins.Extensions;
 using Core.Plugins.Microsoft.Azure.Storage;
@@ -19,10 +18,14 @@ using Microservices.Serialization.Impl;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Azure.EventGrid;
+using Microsoft.Azure.EventGrid.Models;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
+using System.Linq;
 
 namespace Microservices.Bootstrap
 {
@@ -37,26 +40,13 @@ namespace Microservices.Bootstrap
 
         public IServiceCollection ConfigureServices(IServiceCollection services)
         {
-            services
-                .AddControllers()
-                .AddFluentValidation()
-                .AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
+            // Configure services common to both Microservices and Azure Functions
+            ConfigureCommonServices(services);
 
-            services
-                .AddAutoMapper(cfg =>
-                {
-                    services.AddSingleton(provider =>
-                    {
-                        cfg.ConstructServicesUsing(type => ActivatorUtilities.CreateInstance(provider, type));
-                        return cfg;
-                    });
-                }, _microserviceConfiguration.MapperTypes.ToArray())
-                .AddMediatR(_microserviceConfiguration.CommandHandlerTypes.ToArray())
-                .AddDistributedMemoryCache();
+            // Add Health Checks
+            services.AddHealthChecks();
 
-            services
-                .AddHealthChecks();
-
+            // Add Api Versioning
             //services
             //    .AddApiVersioning(cfg =>
             //    {
@@ -66,6 +56,7 @@ namespace Microservices.Bootstrap
             //        cfg.ApiVersionReader = new HeaderApiVersionReader("x-api-version");
             //    });
 
+            // Add Swagger
             services
                 .AddSwaggerGen(options =>
                 {
@@ -78,8 +69,65 @@ namespace Microservices.Bootstrap
                         });
                 });
 
-            _microserviceConfiguration.ValidatorTypes.ForEach(v => services.AddTransient(v.Key, v.Value));
-            
+            return services;
+        }
+
+        public IServiceCollection ConfigureCommonServices(IServiceCollection services)
+        {
+            // Add MVC and Newtonsoft
+            IMvcCoreBuilder mvcBuilder = services
+                .AddMvcCore()
+                .AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
+
+            // Add AutoMapper
+            if (_microserviceConfiguration.MapperTypes.Any())
+            {
+                services
+                    .AddAutoMapper(cfg =>
+                    {
+                        services.AddSingleton(provider =>
+                        {
+                            cfg.ConstructServicesUsing(type => ActivatorUtilities.CreateInstance(provider, type));
+                            return cfg;
+                        });
+                    }, _microserviceConfiguration.MapperTypes.ToArray());
+            }
+
+            // Add Fluent Validators
+            if (_microserviceConfiguration.ValidatorTypes.Any())
+            {
+                mvcBuilder.AddFluentValidation();
+
+                _microserviceConfiguration.ValidatorTypes.ForEach(v => services.AddTransient(v.Key, v.Value));
+            }
+
+            // Add MediatR
+            if (_microserviceConfiguration.CommandHandlerTypes.Any())
+            {
+                services.AddMediatR(_microserviceConfiguration.CommandHandlerTypes.ToArray());
+            }
+
+            // Add Storage Account client
+            if (_microserviceConfiguration.Configuration.GetConnectionString("DefaultStorageConnection") != null)
+            {
+                services.AddTransient<IStorageAccount>(sp => new AzureStorageAccount(sp.GetService<IConnectionStringProvider>().Get("DefaultStorageConnection")));
+            }
+
+            // Add Event Grid client
+            if (_microserviceConfiguration.Configuration.GetConnectionString("DefaultEventGridConnection") != null)
+            {
+                services.AddScoped<IEventGridClient>(sp =>
+                {
+                    var parser = new ConnectionStringParser(sp.GetRequiredService<IConnectionStringProvider>().Get("DefaultEventGridConnection"));
+
+                    return new EventGridClient(new TopicCredentials(parser.Segment.Key));
+                });
+            }
+
+            // Add Caching
+            services.AddDistributedMemoryCache();
+
+            // Add other common utilities
             services.AddScoped(typeof(LookupDataKeyResolver<>));
             services.AddScoped(typeof(LookupDataValueResolver<>));
             services.AddScoped<ICacheHelper, DistributedCacheHelper>();

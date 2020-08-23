@@ -8,7 +8,7 @@ namespace Microservices.Testing.Integration
 {
     public abstract class AspIntegrationTest<TToTest> : IntegrationTest<TToTest>
     {
-        public IHostBuilder CreateTestHostBuilder<TStartup>(string basePath = "") where TStartup : class =>
+        protected IHostBuilder CreateTestHostBuilder<TStartup>(string basePath = "") where TStartup : class =>
             Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder(new string[0])
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
