@@ -188,6 +188,7 @@ namespace Microservices.Bootstrap
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHealthChecks("/health");
             });
 
             app.UseHealthChecks("/hc", new HealthCheckOptions
