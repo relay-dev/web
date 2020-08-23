@@ -1,12 +1,14 @@
 ﻿using Core.Plugins.NUnit.Integration;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
 
 namespace Microservices.Testing.Integration
 {
-    public abstract class AspIntegrationTest<TToTest> : IntegrationTest<TToTest>
+    public abstract class HostedIntegrationTest<TToTest> : IntegrationTest<TToTest>
     {
         protected IHostBuilder CreateTestHostBuilder<TStartup>(string basePath = "") where TStartup : class =>
             Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder(new string[0])
@@ -29,5 +31,32 @@ namespace Microservices.Testing.Integration
                         .AddJsonFile("appsettings.Development.json", false, true)
                         .AddEnvironmentVariables();
                 });
+
+        protected HttpRequest CreateHttpRequest()
+        {
+            return new DefaultHttpContext().Request;
+        }
+
+        protected HttpRequest CreateHttpRequest(string key, string val)
+        {
+            HttpRequest request = CreateHttpRequest();
+
+            request.QueryString = QueryString.Create(
+                new Dictionary<string, string>
+                {
+                    {key, val}
+                });
+
+            return request;
+        }
+
+        protected HttpRequest CreateHttpRequest(Dictionary<string, string> queryStringParameters)
+        {
+            HttpRequest request = CreateHttpRequest();
+
+            request.QueryString = QueryString.Create(queryStringParameters);
+
+            return request;
+        }
     }
 }

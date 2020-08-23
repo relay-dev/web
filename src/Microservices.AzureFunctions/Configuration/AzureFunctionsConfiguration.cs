@@ -1,6 +1,6 @@
-﻿using Microservices.Bootstrap;
+﻿using Microservices.Configuration;
 
-namespace Microservices.AzureFunctions.Bootstrap
+namespace Microservices.AzureFunctions.Configuration
 {
     public class AzureFunctionsConfiguration : MicroserviceConfiguration
     {

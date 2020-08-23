@@ -1,4 +1,5 @@
 ﻿using Microservices.Bootstrap;
+using Microservices.Configuration;
 using Microservices.Warmup;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;

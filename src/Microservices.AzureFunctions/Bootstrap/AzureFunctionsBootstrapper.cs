@@ -1,5 +1,7 @@
-﻿using Microservices.Bootstrap;
+﻿using Microservices.AzureFunctions.Configuration;
+using Microservices.Bootstrap;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Microservices.AzureFunctions.Bootstrap
 {
@@ -16,6 +18,9 @@ namespace Microservices.AzureFunctions.Bootstrap
         {
             new MicroserviceBootstrapper(_azureFunctionsConfiguration)
                 .ConfigureCommonServices(builder.Services);
+
+            // Add the Azure Functions configuration
+            builder.Services.AddSingleton(_azureFunctionsConfiguration);
 
             return builder;
         }

@@ -1,4 +1,5 @@
 ﻿using Microservices.AzureFunctions.Bootstrap;
+using Microservices.AzureFunctions.Configuration;
 using Microservices.Warmup;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;

@@ -12,6 +12,7 @@ using FluentValidation.AspNetCore;
 using HealthChecks.UI.Client;
 using MediatR;
 using Microservices.Caching;
+using Microservices.Configuration;
 using Microservices.Middleware;
 using Microservices.Serialization;
 using Microservices.Serialization.Impl;
@@ -46,16 +47,6 @@ namespace Microservices.Bootstrap
             // Add Health Checks
             services.AddHealthChecks();
 
-            // Add Api Versioning
-            //services
-            //    .AddApiVersioning(cfg =>
-            //    {
-            //        cfg.DefaultApiVersion = new ApiVersion(_microserviceConfiguration.SwaggerConfiguration.MajorVersion, _microserviceConfiguration.SwaggerConfiguration.MinorVersion);
-            //        cfg.AssumeDefaultVersionWhenUnspecified = true;
-            //        cfg.ReportApiVersions = true;
-            //        cfg.ApiVersionReader = new HeaderApiVersionReader("x-api-version");
-            //    });
-
             // Add Swagger
             services
                 .AddSwaggerGen(options =>
@@ -68,6 +59,19 @@ namespace Microservices.Bootstrap
                             Description = _microserviceConfiguration.SwaggerConfiguration.Description
                         });
                 });
+
+            // Add Api Versioning
+            //services
+            //    .AddApiVersioning(cfg =>
+            //    {
+            //        cfg.DefaultApiVersion = new ApiVersion(_microserviceConfiguration.SwaggerConfiguration.MajorVersion, _microserviceConfiguration.SwaggerConfiguration.MinorVersion);
+            //        cfg.AssumeDefaultVersionWhenUnspecified = true;
+            //        cfg.ReportApiVersions = true;
+            //        cfg.ApiVersionReader = new HeaderApiVersionReader("x-api-version");
+            //    });
+
+            // Add the microservice configuration
+            services.AddSingleton(_microserviceConfiguration);
 
             return services;
         }

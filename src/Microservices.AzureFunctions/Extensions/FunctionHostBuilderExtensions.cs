@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Microservices.AzureFunctions
+namespace Microservices.AzureFunctions.Extensions
 {
     public static class FunctionHostBuilderExtensions
     {
