@@ -180,26 +180,12 @@ namespace Microservices.Bootstrap
             app.UseMiddleware(typeof(ErrorHandlingMiddleware));
 
             app.UseHttpsRedirection();
-
             app.UseRouting();
-
-            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
                 endpoints.MapHealthChecks("/health");
-            });
-
-            app.UseHealthChecks("/hc", new HealthCheckOptions
-            {
-                Predicate = _ => true,
-                ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-            });
-
-            app.UseHealthChecks("/liveness", new HealthCheckOptions
-            {
-                Predicate = r => r.Name.Contains("self")
             });
 
             return app;
