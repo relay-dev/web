@@ -84,6 +84,7 @@ namespace Microservices.Bootstrap
             // Add MVC and Newtonsoft
             IMvcCoreBuilder mvcBuilder = services
                 .AddMvcCore()
+                .AddApiExplorer()
                 .AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
 
             // Add AutoMapper
