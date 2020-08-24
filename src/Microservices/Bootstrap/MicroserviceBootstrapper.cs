@@ -177,13 +177,13 @@ namespace Microservices.Bootstrap
             {
                 app.UsePathBase(pathBase);
             }
-
+            
             app.UseSwagger()
                .UseSwaggerUI(c =>
                {
                    c.SwaggerEndpoint($"{ (!string.IsNullOrEmpty(pathBase) ? pathBase : string.Empty) }/swagger/{_microserviceConfiguration.SwaggerConfiguration.Name}/swagger.json", _microserviceConfiguration.SwaggerConfiguration.Name);
-                   c.OAuthClientId($"{_microserviceConfiguration.SwaggerConfiguration.Name.ToLower()}swaggerui");
-                   c.OAuthAppName($"{_microserviceConfiguration.SwaggerConfiguration.Name} Swagger UI");
+                   //c.OAuthClientId($"{_microserviceConfiguration.SwaggerConfiguration.Name.ToLower()}swaggerui");
+                   //c.OAuthAppName($"{_microserviceConfiguration.SwaggerConfiguration.Name} Swagger UI");
                });
 
             app.UseMiddleware(typeof(ErrorHandlingMiddleware));
