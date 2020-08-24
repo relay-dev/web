@@ -181,7 +181,7 @@ namespace Microservices.Bootstrap
             app.UseSwagger()
                .UseSwaggerUI(c =>
                {
-                   c.SwaggerEndpoint($"{ (!string.IsNullOrEmpty(pathBase) ? pathBase : string.Empty) }/swagger/{_microserviceConfiguration.ServiceName}/swagger.json", _microserviceConfiguration.ServiceName);
+                   c.SwaggerEndpoint($"{ (!string.IsNullOrEmpty(pathBase) ? pathBase : string.Empty) }/swagger/{_microserviceConfiguration.ServiceName.Remove(" ")}/swagger.json", _microserviceConfiguration.ServiceName);
                    c.OAuthClientId($"{_microserviceConfiguration.ServiceName.ToLower().Remove(" ")}swaggerui");
                    c.OAuthAppName($"{_microserviceConfiguration.ServiceName} Swagger UI");
                });
