@@ -55,7 +55,7 @@ namespace Microservices.Bootstrap
             services
                 .AddSwaggerGen(options =>
                 {
-                    options.SwaggerDoc(_microserviceConfiguration.ServiceName,
+                    options.SwaggerDoc(_microserviceConfiguration.SwaggerConfiguration.Name,
                         new OpenApiInfo
                         {
                             Title = _microserviceConfiguration.SwaggerConfiguration.Title,
@@ -181,9 +181,9 @@ namespace Microservices.Bootstrap
             app.UseSwagger()
                .UseSwaggerUI(c =>
                {
-                   c.SwaggerEndpoint($"{ (!string.IsNullOrEmpty(pathBase) ? pathBase : string.Empty) }/swagger/{_microserviceConfiguration.ServiceName.Remove(" ")}/swagger.json", _microserviceConfiguration.ServiceName);
-                   c.OAuthClientId($"{_microserviceConfiguration.ServiceName.ToLower().Remove(" ")}swaggerui");
-                   c.OAuthAppName($"{_microserviceConfiguration.ServiceName} Swagger UI");
+                   c.SwaggerEndpoint($"{ (!string.IsNullOrEmpty(pathBase) ? pathBase : string.Empty) }/swagger/{_microserviceConfiguration.SwaggerConfiguration.Name}/swagger.json", _microserviceConfiguration.SwaggerConfiguration.Name);
+                   c.OAuthClientId($"{_microserviceConfiguration.SwaggerConfiguration.Name.ToLower()}swaggerui");
+                   c.OAuthAppName($"{_microserviceConfiguration.SwaggerConfiguration.Name} Swagger UI");
                });
 
             app.UseMiddleware(typeof(ErrorHandlingMiddleware));
