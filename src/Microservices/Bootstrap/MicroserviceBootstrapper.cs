@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Core.Application;
 using Core.Caching;
 using Core.Plugins.Application;
 using Core.Plugins.AutoMapper.Data.Resolvers.DatabaseResolver;
@@ -12,15 +13,15 @@ using Core.Plugins.Validation;
 using Core.Providers;
 using Core.Utilities;
 using FluentValidation.AspNetCore;
-using HealthChecks.UI.Client;
 using MediatR;
 using Microservices.Caching;
 using Microservices.Configuration;
+using Microservices.Data;
+using Microservices.Data.Impl;
 using Microservices.Middleware;
 using Microservices.Serialization;
 using Microservices.Serialization.Impl;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Azure.EventGrid;
 using Microsoft.Azure.EventGrid.Models;
@@ -127,9 +128,11 @@ namespace Microservices.Bootstrap
                 services.AddScoped<EventGridSubscriber>();
                 services.AddScoped<IEventGridClient>(sp =>
                 {
-                    var parser = new ConnectionStringParser(sp.GetRequiredService<IConnectionStringProvider>().Get("DefaultEventGridConnection"));
+                    var connectionStringParser = sp.GetRequiredService<IConnectionStringParser>();
+                    var connectionStringProvider = sp.GetRequiredService<IConnectionStringProvider>();
+                    var connectionStringSegments = connectionStringParser.Parse(connectionStringProvider.Get("DefaultEventGridConnection"));
 
-                    return new EventGridClient(new TopicCredentials(parser.Segment.Key));
+                    return new EventGridClient(new TopicCredentials(connectionStringSegments.ToDynamic().Key));
                 });
             }
 
@@ -138,14 +141,19 @@ namespace Microservices.Bootstrap
 
             // Add other common utilities
             services.AddSingleton<Warmup.Warmup>();
+            services.AddTransient<IJsonSerializer, SystemJsonSerializer>();
             services.AddScoped(typeof(LookupDataKeyResolver<>));
             services.AddScoped(typeof(LookupDataValueResolver<>));
-            services.AddScoped<ICacheHelper, DistributedCacheHelper>();
-            services.AddScoped<IGlobalHelper, GlobalHelperWrapper>();
             services.AddScoped<IInlineValidator, InlineValidator>();
+            services.AddScoped<IGlobalHelper, GlobalHelperWrapper>();
+            services.AddScoped<ICacheHelper, DistributedCacheHelper>();
+            services.AddScoped<IUsernameProvider, UsernameProvider>();
+            services.AddScoped<IDateTimeProvider, DateTimeUtcProvider>();
+            services.AddScoped<IConnectionStringParser, ConnectionStringParser>();
+            services.AddScoped<IEntityAuditor, EntityFrameworkEntityAuditor>();
+            services.AddScoped<IStorageAccountFactory, AzureStorageAccountFactory>();
             services.AddScoped<IStorageAccountFactory, AzureStorageAccountFactory>();
             services.AddScoped<IConnectionStringProvider, AzureConnectionStringByConfigurationProvider>();
-            services.AddTransient<IJsonSerializer, SystemJsonSerializer>();
             services.AddSingleton<IApplicationContextProvider>(sp => new ApplicationContextProvider(_microserviceConfiguration.ApplicationContext));
 
             return services;
@@ -163,6 +171,7 @@ namespace Microservices.Bootstrap
             }
 
             var pathBase = _microserviceConfiguration.Configuration["PATH_BASE"];
+
             if (!string.IsNullOrEmpty(pathBase))
             {
                 app.UsePathBase(pathBase);
@@ -176,7 +185,6 @@ namespace Microservices.Bootstrap
                    c.OAuthAppName($"{_microserviceConfiguration.ServiceName} Swagger UI");
                });
 
-            app.UseMiddleware(typeof(RequestCultureMiddleware));
             app.UseMiddleware(typeof(ErrorHandlingMiddleware));
 
             app.UseHttpsRedirection();
