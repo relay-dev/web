@@ -125,7 +125,6 @@ namespace Microservices.Bootstrap
             // Add Event Grid client
             if (_microserviceConfiguration.Configuration.GetConnectionString("DefaultEventGridConnection") != null)
             {
-                services.AddScoped<EventGridSubscriber>();
                 services.AddScoped<IEventGridClient>(sp =>
                 {
                     var connectionStringParser = sp.GetRequiredService<IConnectionStringParser>();
