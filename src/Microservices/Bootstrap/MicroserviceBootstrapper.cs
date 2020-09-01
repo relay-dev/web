@@ -31,6 +31,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using System.Linq;
+using Microservices.Mappers;
 
 namespace Microservices.Bootstrap
 {
@@ -91,6 +92,10 @@ namespace Microservices.Bootstrap
             // Add AutoMapper
             if (_microserviceConfiguration.MapperTypes.Any())
             {
+                // If the consumer is using AutoMapper, then add common mappers
+                _microserviceConfiguration.MapperTypes.Add(typeof(PrimitiveMappers));
+                _microserviceConfiguration.MapperTypes.Add(typeof(SystemMappers));
+
                 services
                     .AddAutoMapper(cfg =>
                     {
@@ -151,7 +156,6 @@ namespace Microservices.Bootstrap
             services.AddScoped<IEntityAuditor, EntityFrameworkEntityAuditor>();
             services.AddScoped<ICommandContextProvider, CommandContextProvider>();
             services.AddScoped<IConnectionStringParser, ConnectionStringParser>();
-            services.AddScoped<IStorageAccountFactory, AzureStorageAccountFactory>();
             services.AddScoped<IStorageAccountFactory, AzureStorageAccountFactory>();
             services.AddScoped<IConnectionStringProvider, AzureConnectionStringByConfigurationProvider>();
             services.AddSingleton<IApplicationContextProvider>(sp => new ApplicationContextProvider(_microserviceConfiguration.ApplicationContext));
