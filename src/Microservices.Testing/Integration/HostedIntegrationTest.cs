@@ -1,16 +1,19 @@
-﻿using Core.Plugins.NUnit.Integration;
+﻿using System;
+using Core.Plugins.NUnit.Integration;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
+using System.IO;
+using Core.Plugins.Extensions;
 
 namespace Microservices.Testing.Integration
 {
     public abstract class HostedIntegrationTest<TToTest> : IntegrationTest<TToTest>
     {
-        protected IHostBuilder CreateTestHostBuilder<TStartup>(string basePath = "") where TStartup : class =>
+        protected IHostBuilder CreateTestHostBuilder<TStartup>(string basePath = null) where TStartup : class =>
             Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder(new string[0])
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
@@ -23,12 +26,14 @@ namespace Microservices.Testing.Integration
                 })
                 .ConfigureAppConfiguration((webBuilder, configBuilder) =>
                 {
-                    configBuilder.AddUserSecrets<TStartup>();
+                    basePath ??= Path.Combine(AppDomain.CurrentDomain.BaseDirectory.SubstringBefore("tests"), "src", typeof(TStartup).Namespace);
 
                     configBuilder
                         .SetBasePath(basePath)
-                        .AddJsonFile("appsettings.json", false, true)
-                        .AddJsonFile("appsettings.Development.json", false, true)
+                        .AddJsonFile("appsettings.json", true, true)
+                        .AddJsonFile("appsettings.Development.json", true, true)
+                        .AddJsonFile("local.settings.json", true, true)
+                        .AddUserSecrets<TStartup>()
                         .AddEnvironmentVariables();
                 });
 
