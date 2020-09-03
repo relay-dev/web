@@ -1,7 +1,7 @@
-﻿using Core.Providers;
+﻿using Core.Framework;
+using Core.Providers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 
@@ -11,16 +11,13 @@ namespace Microservices.Data.Impl
     {
         private readonly IUsernameProvider _usernameProvider;
         private readonly IDateTimeProvider _dateTimeProvider;
-        private readonly ILogger<EntityFrameworkEntityAuditor> _logger;
 
         public EntityFrameworkEntityAuditor(
             IUsernameProvider usernameProvider,
-            IDateTimeProvider dateTimeProvider,
-            ILogger<EntityFrameworkEntityAuditor> logger)
+            IDateTimeProvider dateTimeProvider)
         {
             _usernameProvider = usernameProvider;
             _dateTimeProvider = dateTimeProvider;
-            _logger = logger;
         }
 
         public void Audit(IEnumerable<EntityEntry> entities)
@@ -33,25 +30,17 @@ namespace Microservices.Data.Impl
                 switch (entry.State)
                 {
                     case EntityState.Added:
-                        try
+                        if (entry.Entity is IHaveCreatedFields createdEntity)
                         {
-                            ((dynamic)entry.Entity).CreatedBy = username;
-                            ((dynamic)entry.Entity).CreatedDate = serverDateTime;
-                        }
-                        catch (Exception)
-                        {
-                            _logger.LogWarning($"Could not audit entity without Created fields. Type: {entry.Entity.GetType().Namespace}");
+                            createdEntity.CreatedBy = username;
+                            createdEntity.CreatedDate = serverDateTime;
                         }
                         break;
                     case EntityState.Modified:
-                        try
+                        if (entry.Entity is IHaveModifiedFields modifiedEntity)
                         {
-                            ((dynamic)entry.Entity).ModifiedBy = username;
-                            ((dynamic)entry.Entity).ModifiedDate = serverDateTime;
-                        }
-                        catch (Exception)
-                        {
-                            _logger.LogWarning($"Could not audit entity without Modified fields. Type: {entry.Entity.GetType().Namespace}");
+                            modifiedEntity.ModifiedBy = username;
+                            modifiedEntity.ModifiedDate = serverDateTime;
                         }
                         break;
                 }
