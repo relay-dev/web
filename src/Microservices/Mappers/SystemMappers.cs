@@ -7,6 +7,15 @@ namespace Microservices.Mappers
     {
         public SystemMappers()
         {
+            CreateMap<bool, bool?>().ConvertUsing(src => src);
+            CreateMap<bool?, bool>().ConvertUsing(src => src.GetValueOrDefault());
+            CreateMap<int, int?>().ConvertUsing(src => src);
+            CreateMap<int?, int>().ConvertUsing(src => src.GetValueOrDefault());
+            CreateMap<long, long?>().ConvertUsing(src => src);
+            CreateMap<long?, long>().ConvertUsing(src => src.GetValueOrDefault());
+            CreateMap<DateTime, DateTime?>().ConvertUsing(src => src);
+            CreateMap<DateTime?, DateTime>().ConvertUsing(src => src.GetValueOrDefault());
+
             CreateMap<DateTimeOffset, DateTime>().ConvertUsing(src => src.DateTime);
             CreateMap<DateTimeOffset, DateTime?>().ConvertUsing(src => src.DateTime);
             CreateMap<DateTimeOffset?, DateTime>().ConvertUsing(src => src.GetValueOrDefault().DateTime);
