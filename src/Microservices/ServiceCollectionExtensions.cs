@@ -33,6 +33,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Microservices
 {
@@ -100,20 +102,21 @@ namespace Microservices
             // Add Warmup
             if (configuration.WarmupTypes.Any())
             {
-                services.AddTransient<Warmup.WarmupTaskExecutor>();
+                services.AddTransient<WarmupTaskExecutor>();
 
                 configuration.WarmupTypes.ForEach(warmupType =>
                 {
                     services.AddTransient(warmupType);
-                    WarmupTaskCollection.AddWarmupType(warmupType);
                 });
             }
 
             // Add Caching
             services.AddDistributedMemoryCache();
 
-            // Add other common utilities
-            services.AddTransient<IJsonSerializer, SystemJsonSerializer>();
+            // Add the microservice configuration
+            services.AddSingleton(configuration);
+
+            // Add common utilities
             services.AddScoped(typeof(LookupDataKeyResolver<>));
             services.AddScoped(typeof(LookupDataValueResolver<>));
             services.AddScoped<IInlineValidator, InlineValidator>();
@@ -129,6 +132,7 @@ namespace Microservices
             services.AddScoped<IStorageAccountFactory, AzureStorageAccountFactory>();
             services.AddScoped<IConnectionStringProvider, AzureConnectionStringByConfigurationProvider>();
             services.AddSingleton<IApplicationContextProvider>(sp => new ApplicationContextProvider(configuration.ApplicationContext));
+            services.AddTransient<IJsonSerializer, SystemJsonSerializer>();
 
             return services;
         }
@@ -163,9 +167,6 @@ namespace Microservices
             //        cfg.ReportApiVersions = true;
             //        cfg.ApiVersionReader = new HeaderApiVersionReader("x-api-version");
             //    });
-
-            // Add the microservice configuration
-            services.AddSingleton(configuration);
 
             return services;
         }
@@ -206,6 +207,13 @@ namespace Microservices
                 endpoints.MapControllers();
                 endpoints.MapHealthChecks("/health");
             });
+
+            if (configuration.WarmupTypes.Any())
+            {
+                var warmupExecutor = app.ApplicationServices.GetRequiredService<WarmupTaskExecutor>();
+
+                Task.Factory.StartNew(() => warmupExecutor.RunAsync(new CancellationToken()));
+            }
 
             return app;
         }
