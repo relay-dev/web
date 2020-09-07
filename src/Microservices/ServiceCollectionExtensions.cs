@@ -32,6 +32,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -208,7 +209,7 @@ namespace Microservices
                 endpoints.MapHealthChecks("/health");
             });
 
-            if (configuration.WarmupTypes.Any())
+            if (configuration.WarmupTypes.Any() && !IsLocal)
             {
                 var warmupExecutor = app.ApplicationServices.GetRequiredService<WarmupTaskExecutor>();
 
@@ -217,5 +218,7 @@ namespace Microservices
 
             return app;
         }
+
+        private static bool IsLocal => bool.Parse(Environment.GetEnvironmentVariable("IS_LOCAL") ?? false.ToString());
     }
 }
