@@ -56,6 +56,11 @@ namespace Microservices.Caching
             return GetOrSet(key, options, valueFactory);
         }
 
+        public List<string> GetAllKeys()
+        {
+            return CacheKeyManager.GetAllKeys();
+        }
+
         public object Remove(string key)
         {
             CacheEntry<object> cacheEntry = Get<object>(key);
