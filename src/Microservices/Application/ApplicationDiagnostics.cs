@@ -2,7 +2,7 @@
 
 namespace Microservices.Application
 {
-    public class Diagnostics
+    public class ApplicationDiagnostics
     {
         /// <summary>
         /// The unique Id of the application
