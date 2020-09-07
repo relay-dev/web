@@ -153,6 +153,8 @@ namespace Microservices.Bootstrap
             services.AddScoped<ICacheHelper, DistributedCacheHelper>();
             services.AddScoped<IUsernameProvider, UsernameProvider>();
             services.AddScoped<IDateTimeProvider, DateTimeUtcProvider>();
+            services.AddScoped<IRandomCodeProvider, RandomCodeProvider>();
+            services.AddScoped<IRandomLongProvider, RandomLongProvider>();
             services.AddScoped<IEntityAuditor, EntityFrameworkEntityAuditor>();
             services.AddScoped<ICommandContextProvider, CommandContextProvider>();
             services.AddScoped<IConnectionStringParser, ConnectionStringParser>();
