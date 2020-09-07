@@ -2,7 +2,7 @@
 using Core.Application;
 using Core.Caching;
 using Core.Plugins.Application;
-using Core.Plugins.AutoMapper.Data.Resolvers.DatabaseResolver;
+using Core.Plugins.AutoMapper.Resolvers.Database;
 using Core.Plugins.Extensions;
 using Core.Plugins.Microsoft.Azure.Storage;
 using Core.Plugins.Microsoft.Azure.Storage.Impl;
@@ -18,6 +18,7 @@ using Microservices.Caching;
 using Microservices.Configuration;
 using Microservices.Data;
 using Microservices.Data.Impl;
+using Microservices.Mappers;
 using Microservices.Middleware;
 using Microservices.Serialization;
 using Microservices.Serialization.Impl;
@@ -31,7 +32,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using System.Linq;
-using Microservices.Mappers;
 
 namespace Microservices.Bootstrap
 {
