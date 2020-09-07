@@ -7,19 +7,13 @@ namespace Microservices.Warmup
 {
     public static class WarmupTasks
     {
-        private static ConcurrentDictionary<string, Type> _warmupTypes = new ConcurrentDictionary<string, Type>();
+        private static readonly ConcurrentDictionary<string, Type> WarmupTypes = new ConcurrentDictionary<string, Type>();
 
         public static void AddWarmupType(Type type)
         {
-            _warmupTypes.TryAdd(type.Name, type);
+            WarmupTypes.TryAdd(type.Name, type);
         }
 
-        public static List<Type> All
-        {
-            get
-            {
-                return _warmupTypes.Values.ToList();
-            }
-        }
+        public static List<Type> All => WarmupTypes.Values.ToList();
     }
 }

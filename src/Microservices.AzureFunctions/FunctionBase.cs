@@ -25,4 +25,29 @@ namespace Microservices.AzureFunctions
             }
         }
     }
+
+//    public abstract class FunctionStartupBase : FunctionsStartup
+//    {
+//        public override void ConfigureAppConfiguration(IFunctionsConfigurationBuilder builder)
+//        {
+//            FunctionsHostBuilderContext context = builder.GetContext();
+
+//            string basePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory.SubstringBefore("tests"), "src", typeof(TStartup).Namespace);
+
+//            configBuilder
+//                .SetBasePath(basePath)
+//                .AddJsonFile("appsettings.json", true, true)
+//                .AddJsonFile("appsettings.Development.json", true, true)
+//                .AddJsonFile("local.settings.json", true, true)
+//                .AddUserSecrets<TStartup>()
+//                .AddEnvironmentVariables();
+
+//            builder.ConfigurationBuilder
+//                .AddJsonFile(Path.Combine(context.ApplicationRootPath, "appsettings.json"), optional: true, reloadOnChange: false)
+//                .AddJsonFile(Path.Combine(context.ApplicationRootPath, $"appsettings.{context.EnvironmentName}.json"), optional: true, reloadOnChange: false)
+//                .AddEnvironmentVariables();
+
+//            base.ConfigureAppConfiguration(builder);
+//        }
+//    }
 }
