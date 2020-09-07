@@ -38,96 +38,7 @@ namespace Microservices
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddMicroserviceFramework(this IServiceCollection services, MicroserviceConfiguration configuration)
-        {
-            // Configure services common to both Microservices and Azure Functions
-            new MicroserviceBootstrapper().ConfigureCommonServices(services, configuration);
-
-            // Add Health Checks
-            services.AddHealthChecks();
-
-            // Add Swagger
-            services
-                .AddSwaggerGen(options =>
-                {
-                    options.SwaggerDoc(configuration.SwaggerConfiguration.Name,
-                        new OpenApiInfo
-                        {
-                            Title = configuration.SwaggerConfiguration.Title,
-                            Version = configuration.SwaggerConfiguration.Version,
-                            Description = configuration.SwaggerConfiguration.Description
-                        });
-                });
-
-            // Add Api Versioning
-            //services
-            //    .AddApiVersioning(cfg =>
-            //    {
-            //        cfg.DefaultApiVersion = new ApiVersion(_microserviceConfiguration.SwaggerConfiguration.MajorVersion, _microserviceConfiguration.SwaggerConfiguration.MinorVersion);
-            //        cfg.AssumeDefaultVersionWhenUnspecified = true;
-            //        cfg.ReportApiVersions = true;
-            //        cfg.ApiVersionReader = new HeaderApiVersionReader("x-api-version");
-            //    });
-
-            // Add the microservice configuration
-            services.AddSingleton(configuration);
-
-            return services;
-        }
-
-        public static IApplicationBuilder UseMicroserviceFramework(this IApplicationBuilder app, MicroserviceConfiguration configuration, IWebHostEnvironment env)
-        {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseHsts();
-            }
-
-            var pathBase = configuration.Configuration["PATH_BASE"];
-
-            if (!string.IsNullOrEmpty(pathBase))
-            {
-                app.UsePathBase(pathBase);
-            }
-
-            app.UseSwagger()
-                .UseSwaggerUI(c =>
-                {
-                    c.SwaggerEndpoint($"{ (!string.IsNullOrEmpty(pathBase) ? pathBase : string.Empty) }/swagger/{configuration.SwaggerConfiguration.Name}/swagger.json", configuration.SwaggerConfiguration.Name);
-                    //c.OAuthClientId($"{_microserviceConfiguration.SwaggerConfiguration.Name.ToLower()}swaggerui");
-                    //c.OAuthAppName($"{_microserviceConfiguration.SwaggerConfiguration.Name} Swagger UI");
-                });
-
-            app.UseMiddleware(typeof(ErrorHandlingMiddleware));
-
-            app.UseHttpsRedirection();
-            app.UseRouting();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-                endpoints.MapHealthChecks("/health");
-            });
-
-            return app;
-        }
-
-        public static IServiceCollection AddWarmupType<TWarmup>(this IServiceCollection services)
-        {
-            services.AddSingleton(typeof(TWarmup));
-
-            WarmupTasks.AddWarmupType(typeof(TWarmup));
-
-            return services;
-        }
-    }
-
-    public class MicroserviceBootstrapper
-    {
-        public IServiceCollection ConfigureCommonServices(IServiceCollection services, MicroserviceConfiguration configuration)
+        public static IServiceCollection AddWebFramework(this IServiceCollection services, MicroserviceConfiguration configuration)
         {
             // Add MVC and Newtonsoft
             IMvcCoreBuilder mvcBuilder = services
@@ -207,6 +118,92 @@ namespace Microservices
             services.AddScoped<IStorageAccountFactory, AzureStorageAccountFactory>();
             services.AddScoped<IConnectionStringProvider, AzureConnectionStringByConfigurationProvider>();
             services.AddSingleton<IApplicationContextProvider>(sp => new ApplicationContextProvider(configuration.ApplicationContext));
+
+            return services;
+        }
+
+        public static IServiceCollection AddMicroserviceFramework(this IServiceCollection services, MicroserviceConfiguration configuration)
+        {
+            // Configure services common to both Microservices and Azure Functions
+            services.AddWebFramework(configuration);
+
+            // Add Health Checks
+            services.AddHealthChecks();
+
+            // Add Swagger
+            services
+                .AddSwaggerGen(options =>
+                {
+                    options.SwaggerDoc(configuration.SwaggerConfiguration.Name,
+                        new OpenApiInfo
+                        {
+                            Title = configuration.SwaggerConfiguration.Title,
+                            Version = configuration.SwaggerConfiguration.Version,
+                            Description = configuration.SwaggerConfiguration.Description
+                        });
+                });
+
+            // Add Api Versioning
+            //services
+            //    .AddApiVersioning(cfg =>
+            //    {
+            //        cfg.DefaultApiVersion = new ApiVersion(_microserviceConfiguration.SwaggerConfiguration.MajorVersion, _microserviceConfiguration.SwaggerConfiguration.MinorVersion);
+            //        cfg.AssumeDefaultVersionWhenUnspecified = true;
+            //        cfg.ReportApiVersions = true;
+            //        cfg.ApiVersionReader = new HeaderApiVersionReader("x-api-version");
+            //    });
+
+            // Add the microservice configuration
+            services.AddSingleton(configuration);
+
+            return services;
+        }
+
+        public static IApplicationBuilder UseMicroserviceFramework(this IApplicationBuilder app, MicroserviceConfiguration configuration, IWebHostEnvironment env)
+        {
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseHsts();
+            }
+
+            var pathBase = configuration.Configuration["PATH_BASE"];
+
+            if (!string.IsNullOrEmpty(pathBase))
+            {
+                app.UsePathBase(pathBase);
+            }
+
+            app.UseSwagger()
+                .UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint($"{ (!string.IsNullOrEmpty(pathBase) ? pathBase : string.Empty) }/swagger/{configuration.SwaggerConfiguration.Name}/swagger.json", configuration.SwaggerConfiguration.Name);
+                    //c.OAuthClientId($"{_microserviceConfiguration.SwaggerConfiguration.Name.ToLower()}swaggerui");
+                    //c.OAuthAppName($"{_microserviceConfiguration.SwaggerConfiguration.Name} Swagger UI");
+                });
+
+            app.UseMiddleware(typeof(ErrorHandlingMiddleware));
+
+            app.UseHttpsRedirection();
+            app.UseRouting();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+                endpoints.MapHealthChecks("/health");
+            });
+
+            return app;
+        }
+
+        public static IServiceCollection AddWarmupType<TWarmup>(this IServiceCollection services)
+        {
+            services.AddSingleton(typeof(TWarmup));
+
+            WarmupTasks.AddWarmupType(typeof(TWarmup));
 
             return services;
         }
