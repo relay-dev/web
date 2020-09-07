@@ -131,6 +131,7 @@ namespace Microservices
             services.AddScoped<ICommandContextProvider, CommandContextProvider>();
             services.AddScoped<IConnectionStringParser, ConnectionStringParser>();
             services.AddScoped<IStorageAccountFactory, AzureStorageAccountFactory>();
+            services.AddScoped<IApplicationContextProvider, ApplicationContextProvider>();
             services.AddScoped<IConnectionStringProvider, AzureConnectionStringByConfigurationProvider>();
             services.AddSingleton<IApplicationContextProvider>(sp => new ApplicationContextProvider(configuration.ApplicationContext));
             services.AddTransient<IJsonSerializer, SystemJsonSerializer>();
