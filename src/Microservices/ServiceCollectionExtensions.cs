@@ -114,8 +114,9 @@ namespace Microservices
             // Add Caching
             services.AddDistributedMemoryCache();
 
-            // Add the microservice configuration
+            // Add the microservice configuration and context
             services.AddSingleton(configuration);
+            services.AddSingleton(configuration.ApplicationContext);
 
             // Add common utilities
             services.AddScoped(typeof(LookupDataKeyResolver<>));
