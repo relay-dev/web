@@ -97,11 +97,22 @@ namespace Microservices
                 });
             }
 
+            // Add Warmup
+            if (configuration.WarmupTypes.Any())
+            {
+                services.AddTransient<Warmup.WarmupTaskExecutor>();
+
+                configuration.WarmupTypes.ForEach(warmupType =>
+                {
+                    services.AddTransient(warmupType);
+                    WarmupTaskCollection.AddWarmupType(warmupType);
+                });
+            }
+
             // Add Caching
             services.AddDistributedMemoryCache();
 
             // Add other common utilities
-            services.AddSingleton<Warmup.Warmup>();
             services.AddTransient<IJsonSerializer, SystemJsonSerializer>();
             services.AddScoped(typeof(LookupDataKeyResolver<>));
             services.AddScoped(typeof(LookupDataValueResolver<>));
@@ -197,15 +208,6 @@ namespace Microservices
             });
 
             return app;
-        }
-
-        public static IServiceCollection AddWarmupType<TWarmup>(this IServiceCollection services)
-        {
-            services.AddSingleton(typeof(TWarmup));
-
-            WarmupTasks.AddWarmupType(typeof(TWarmup));
-
-            return services;
         }
     }
 }

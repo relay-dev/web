@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Microservices.Warmup
 {
-    public static class WarmupTasks
+    public static class WarmupTaskCollection
     {
         private static readonly ConcurrentDictionary<string, Type> WarmupTypes = new ConcurrentDictionary<string, Type>();
 

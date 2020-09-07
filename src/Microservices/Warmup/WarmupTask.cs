@@ -1,28 +1,30 @@
 ﻿using Microsoft.Extensions.Logging;
 using System.Diagnostics;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Microservices.Warmup
 {
     public abstract class WarmupTask : IWarmup
     {
-        private readonly ILogger _logger;
+        protected readonly ILogger Logger;
 
-        public WarmupTask(ILogger<WarmupTask> logger)
+        protected WarmupTask(ILogger logger)
         {
-            _logger = logger;
+            Logger = logger;
         }
 
-        protected abstract void OnWarmup();
+        protected abstract Task OnWarmupAsync(CancellationToken cancellationToken);
 
-        public void Run()
+        public async Task RunAsync(CancellationToken cancellationToken)
         {
             var stopwatch = Stopwatch.StartNew();
 
-            OnWarmup();
+            await OnWarmupAsync(cancellationToken);
 
             stopwatch.Stop();
 
-            _logger.LogInformation($"Warmup Task of type '{GetType().Name}' completed in {stopwatch.ElapsedMilliseconds}ms");
+            Logger.LogInformation($"WarmupTask '{GetType().Name}' completed in {stopwatch.ElapsedMilliseconds}ms");
         }
     }
 }

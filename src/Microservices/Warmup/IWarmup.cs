@@ -1,7 +1,10 @@
-﻿namespace Microservices.Warmup
+﻿using System.Threading;
+using System.Threading.Tasks;
+
+namespace Microservices.Warmup
 {
     public interface IWarmup
     {
-        void Run();
+        Task RunAsync(CancellationToken cancellationToken);
     }
 }

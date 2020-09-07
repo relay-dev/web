@@ -1,28 +1,29 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Microservices.Warmup
 {
-    public class Warmup
+    public class WarmupTaskExecutor
     {
         private readonly IServiceProvider _serviceProvider;
 
-        public Warmup(IServiceProvider serviceProvider)
+        public WarmupTaskExecutor(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
         }
 
-        public async Task Run()
+        public async Task RunAsync(CancellationToken cancellationToken)
         {
             var tasks = new List<Task>();
 
-            foreach (Type warmupType in WarmupTasks.All)
+            foreach (Type warmupType in WarmupTaskCollection.All)
             {
-                WarmupTask warmupTask = _serviceProvider.GetRequiredService(warmupType) as WarmupTask;
+                var warmupTask = (WarmupTask)_serviceProvider.GetRequiredService(warmupType);
 
-                tasks.Add(Task.Run(() => warmupTask.Run()));
+                tasks.Add(warmupTask.RunAsync(cancellationToken));
             }
 
             await Task.WhenAll(tasks);
