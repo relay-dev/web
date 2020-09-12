@@ -24,7 +24,7 @@ build:
   verbosity: normal
 test: off
 artifacts:
-- path: src\Microservices\bin\Release\*.nupkg
+- path: src\Web\bin\Release\*.nupkg
   name: NuGet
 deploy:
 - provider: Environment

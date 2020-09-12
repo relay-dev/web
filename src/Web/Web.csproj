@@ -1,0 +1,46 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <PackageId>Relay.Web</PackageId>
+    <Version>1.0.1</Version>
+    <Authors>Scott Ferguson</Authors>
+    <Company>Relay Technologies</Company>
+    <Product>Web</Product>
+    <Description>A web framework built for .NET Core</Description>
+    <Copyright>Copyright ©2020</Copyright>
+    <PackageProjectUrl>https://github.com/relay-dev/web</PackageProjectUrl>
+    <PackageIconUrl>https://imgur.com/fDu6Ncd.png</PackageIconUrl>
+    <RepositoryUrl>https://github.com/relay-dev/web.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageReleaseNotes>Initial release</PackageReleaseNotes>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="3.1.1" />
+    <PackageReference Include="AutoMapper" Version="10.0.0" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.0.1" />
+    <PackageReference Include="FluentValidation" Version="9.2.0" />
+    <PackageReference Include="FluentValidation.AspNetCore" Version="9.2.0" />
+    <PackageReference Include="MediatR" Version="8.1.0" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="8.1.0" />
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.14.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.8" />
+    <PackageReference Include="Microsoft.Azure.EventGrid" Version="3.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="3.1.8" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.8" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.AzureKeyVault" Version="3.1.8" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.1.8" />
+    <PackageReference Include="Microsoft.Extensions.Logging.AzureAppServices" Version="3.1.8" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.1.8" />
+    <PackageReference Include="Relay.Core" Version="1.0.142" />
+    <PackageReference Include="Relay.Core.Plugins" Version="1.0.156" />
+    <PackageReference Include="Relay.Core.Plugins.AutoMapper" Version="1.0.156" />
+    <PackageReference Include="Relay.Core.Plugins.Azure" Version="1.0.156" />
+    <PackageReference Include="Relay.Core.Plugins.EntityFramework" Version="1.0.156" />
+    <PackageReference Include="Relay.Core.Plugins.FluentValidation" Version="1.0.156" />
+    <PackageReference Include="Relay.Core.Plugins.MediatR" Version="1.0.156" />
+    <PackageReference Include="System.Collections" Version="4.3.0" />
+  </ItemGroup>
+
+</Project>
