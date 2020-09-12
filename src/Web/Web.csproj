@@ -40,6 +40,7 @@
     <PackageReference Include="Relay.Core.Plugins.EntityFramework" Version="1.0.156" />
     <PackageReference Include="Relay.Core.Plugins.FluentValidation" Version="1.0.156" />
     <PackageReference Include="Relay.Core.Plugins.MediatR" Version="1.0.156" />
+    <PackageReference Include="Relay.Extensions" Version="1.0.1" />
     <PackageReference Include="System.Collections" Version="4.3.0" />
   </ItemGroup>
 
