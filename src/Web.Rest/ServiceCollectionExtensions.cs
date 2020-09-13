@@ -2,20 +2,19 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
-using Web.Configuration;
 using Web.Rest.Configuration;
 
 namespace Web.Rest
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddRestFramework(this IServiceCollection services, RestConfiguration config, IMvcCoreBuilder mvcBuilder)
+        public static IServiceCollection AddRestFramework(this IServiceCollection services, RestConfiguration config)
         {
             // Add Web Framework
             services.AddWebFramework(config);
 
             // Add ApiExplorer
-            mvcBuilder.AddApiExplorer();
+            //mvcBuilder.AddApiExplorer();
 
             // Add Health Checks
             services.AddHealthChecks();
