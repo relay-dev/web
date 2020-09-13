@@ -2,9 +2,9 @@
 using Core.Plugins.AutoMapper;
 using Core.Plugins.Azure;
 using Core.Plugins.EntityFramework;
-using Core.Plugins.FluentValidation;
 using Core.Plugins.Framework;
 using Core.Plugins.MediatR;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,7 +21,7 @@ namespace Web
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddWebFramework(this IServiceCollection services, WebConfiguration config)
+        public static IServiceCollection AddWebFramework<TStartup>(this IServiceCollection services, WebConfiguration config)
         {
             // Add MVC and Newtonsoft
             IMvcCoreBuilder mvcBuilder = services
@@ -34,7 +34,7 @@ namespace Web
             services.AddAzureBlobStoragePlugin(config.Configuration);
             services.AddAzureEventGridPlugin(config.Configuration);
             services.AddEntityFrameworkPlugin();
-            services.AddFluentValidationPlugin(mvcBuilder, config.ValidatorTypes);
+            services.AddFluentValidationPlugin(mvcBuilder, typeof(TStartup));
             services.AddMediatRPlugin(config.CommandHandlerTypes);
 
             // Add application configuration and context
@@ -81,6 +81,14 @@ namespace Web
             }
 
             return app;
+        }
+
+        public static IServiceCollection AddFluentValidationPlugin(this IServiceCollection services, IMvcCoreBuilder mvcCoreBuilder, Type typeInAssembly)
+        {
+            // Add FluentValidation (using type parameter)
+            mvcCoreBuilder.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining(typeInAssembly));
+
+            return services;
         }
 
         private static bool IsLocal => bool.Parse(Environment.GetEnvironmentVariable("IS_LOCAL") ?? false.ToString());
