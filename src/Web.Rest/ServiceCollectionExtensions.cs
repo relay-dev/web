@@ -11,7 +11,7 @@ namespace Web.Rest
         public static IServiceCollection AddRestFramework(this IServiceCollection services, RestConfiguration config)
         {
             // Add Web Framework
-            services.AddWebFramework(config);
+            services.AddWebFramework(config.WebConfiguration);
 
             // Add ApiExplorer
             //mvcBuilder.AddApiExplorer();
@@ -48,9 +48,9 @@ namespace Web.Rest
         public static IApplicationBuilder UseRestFramework(this IApplicationBuilder app, RestConfiguration configuration, IWebHostEnvironment env)
         {
             // Use Web Framework
-            app.UseWebFramework(configuration, env);
+            app.UseWebFramework(configuration.WebConfiguration, env);
 
-            var pathBase = configuration.Configuration["PATH_BASE"];
+            var pathBase = configuration.WebConfiguration.Configuration["PATH_BASE"];
 
             app.UseSwagger()
                 .UseSwaggerUI(c =>

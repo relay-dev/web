@@ -8,7 +8,7 @@ namespace Web.AzureFunctions
         public static IFunctionsHostBuilder AddAzureFunctionsFramework(this IFunctionsHostBuilder builder, AzureFunctionsConfiguration config)
         {
             // Add Web Framework
-            builder.Services.AddWebFramework(config);
+            builder.Services.AddWebFramework(config.WebConfiguration);
 
             return builder;
         }
