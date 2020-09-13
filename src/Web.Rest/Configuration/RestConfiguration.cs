@@ -17,7 +17,18 @@ namespace Web.Rest.Configuration
             SwaggerConfiguration = swaggerConfiguration;
         }
 
-        public WebConfiguration WebConfiguration { get; set; }
+        private WebConfiguration _webConfiguration;
+        public WebConfiguration WebConfiguration
+        {
+            get
+            {
+                _webConfiguration.IsAddApiExplorer = true;
+
+                return _webConfiguration;
+            }
+            set => _webConfiguration = value;
+        }
+
         public SwaggerConfiguration SwaggerConfiguration { get; set; }
     }
 }

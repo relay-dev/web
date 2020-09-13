@@ -14,9 +14,6 @@ namespace Web.Rest
             // Add Web Framework
             services.AddWebFramework(config.WebConfiguration);
 
-            // Add ApiExplorer
-            //mvcBuilder.AddApiExplorer();
-
             // Add Health Checks
             services.AddHealthChecks();
 

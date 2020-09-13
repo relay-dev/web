@@ -44,6 +44,12 @@ namespace Web
             services.AddSingleton(config.Configuration);
             services.AddSingleton(config.ApplicationContext);
 
+            // Add ApiExplorer
+            if (config.IsAddApiExplorer)
+            {
+                mvcBuilder.AddApiExplorer();
+            }
+
             return services;
         }
 
