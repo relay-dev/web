@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
+using System;
 using Web.Rest.Configuration;
 
 namespace Web.Rest
@@ -47,6 +48,8 @@ namespace Web.Rest
 
         public static IApplicationBuilder UseRestFramework(this IApplicationBuilder app, RestConfiguration configuration, IWebHostEnvironment env)
         {
+            Validate(configuration);
+
             // Use Web Framework
             app.UseWebFramework(configuration.WebConfiguration, env);
 
@@ -66,6 +69,19 @@ namespace Web.Rest
             });
 
             return app;
+        }
+
+        private static void Validate(RestConfiguration configuration)
+        {
+            if (configuration == null)
+            {
+                throw new Exception("RestConfiguration cannot be null");
+            }
+
+            if (configuration.SwaggerConfiguration == null)
+            {
+                throw new Exception("RestConfiguration.SwaggerConfiguration cannot be null");
+            }
         }
     }
 }
