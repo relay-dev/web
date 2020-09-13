@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using System;
 
-namespace Web.AzureFunctions
+namespace Web.AzureFunctions.Framework
 {
     public class FunctionBase
     {
