@@ -26,6 +26,7 @@ namespace Web.Configuration
         public List<Type> MapperTypes { get; set; }
         public List<Type> WarmupTypes { get; set; }
         public Dictionary<Type, Type> ValidatorTypes { get; set; }
+        public Assembly ValidatorsAssembly { get; set; }
 
         /// <notes>
         /// Limiting this to 1 assembly. Assembly scanning can become expensive in a cloud-based environment where applications need to auto-scale fast

@@ -12,6 +12,7 @@ using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using System;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Web.Configuration;
@@ -21,7 +22,7 @@ namespace Web
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddWebFramework<TStartup>(this IServiceCollection services, WebConfiguration config)
+        public static IServiceCollection AddWebFramework(this IServiceCollection services, WebConfiguration config)
         {
             // Add MVC and Newtonsoft
             IMvcCoreBuilder mvcBuilder = services
@@ -34,10 +35,11 @@ namespace Web
             services.AddAzureBlobStoragePlugin(config.Configuration);
             services.AddAzureEventGridPlugin(config.Configuration);
             services.AddEntityFrameworkPlugin();
-            services.AddFluentValidationPlugin(mvcBuilder, typeof(TStartup));
+            services.AddFluentValidationPlugin(mvcBuilder, config.ValidatorsAssembly);
             services.AddMediatRPlugin(config.CommandHandlerTypes);
+            services.AddWarmup(config.WarmupTypes);
 
-            // Add application configuration and context
+            // Add WebConfiguration and ApplicationContext
             services.AddSingleton(config);
             services.AddSingleton(config.ApplicationContext);
 
@@ -83,10 +85,10 @@ namespace Web
             return app;
         }
 
-        public static IServiceCollection AddFluentValidationPlugin(this IServiceCollection services, IMvcCoreBuilder mvcCoreBuilder, Type typeInAssembly)
+        public static IServiceCollection AddFluentValidationPlugin(this IServiceCollection services, IMvcCoreBuilder mvcCoreBuilder, Assembly assemblyToScan)
         {
-            // Add FluentValidation (using type parameter)
-            mvcCoreBuilder.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining(typeInAssembly));
+            // Add FluentValidation
+            mvcCoreBuilder.AddFluentValidation(fv => fv.RegisterValidatorsFromAssembly(assemblyToScan));
 
             return services;
         }
