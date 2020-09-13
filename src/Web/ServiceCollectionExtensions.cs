@@ -41,6 +41,7 @@ namespace Web
 
             // Add WebConfiguration and ApplicationContext
             services.AddSingleton(config);
+            services.AddSingleton(config.Configuration);
             services.AddSingleton(config.ApplicationContext);
 
             return services;
