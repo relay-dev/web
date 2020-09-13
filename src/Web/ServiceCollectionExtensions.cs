@@ -88,6 +88,11 @@ namespace Web
 
         public static IServiceCollection AddFluentValidationPlugin(this IServiceCollection services, IMvcCoreBuilder mvcCoreBuilder, Assembly assemblyToScan)
         {
+            if (assemblyToScan == null)
+            {
+                return services;
+            }
+
             // Add FluentValidation
             mvcCoreBuilder.AddFluentValidation(fv => fv.RegisterValidatorsFromAssembly(assemblyToScan));
 
