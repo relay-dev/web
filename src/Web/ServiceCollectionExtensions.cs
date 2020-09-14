@@ -4,6 +4,7 @@ using Core.Plugins.Azure;
 using Core.Plugins.EntityFramework;
 using Core.Plugins.Framework;
 using Core.Plugins.MediatR;
+using Core.Utilities;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -17,6 +18,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Web.Configuration;
 using Web.Middleware;
+using Web.Serialization;
 
 namespace Web
 {
@@ -43,6 +45,10 @@ namespace Web
             services.AddSingleton(config);
             services.AddSingleton(config.Configuration);
             services.AddSingleton(config.ApplicationContext);
+
+            // Add DistributedCache (NewtonsoftJsonSerializer is needed for the cache utility)
+            services.AddDistributedMemoryCache();
+            services.AddScoped<IJsonSerializer, NewtonsoftJsonSerializer>();
 
             // Add ApiExplorer
             if (config.IsAddApiExplorer)
