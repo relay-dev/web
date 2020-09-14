@@ -1,4 +1,5 @@
 ﻿using Core.Plugins.NUnit.Integration;
+using Extensions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -25,7 +26,7 @@ namespace Web.Testing.Integration
                 })
                 .ConfigureAppConfiguration((webBuilder, configBuilder) =>
                 {
-                    basePath ??= Path.Combine(SubstringBefore(AppDomain.CurrentDomain.BaseDirectory, "tests"), "src", typeof(TStartup).Namespace);
+                    basePath ??= Path.Combine(AppDomain.CurrentDomain.BaseDirectory.SubstringBefore("tests"), "src", typeof(TStartup).Namespace);
 
                     configBuilder
                         .SetBasePath(basePath)
@@ -61,23 +62,6 @@ namespace Web.Testing.Integration
             request.QueryString = QueryString.Create(queryStringParameters);
 
             return request;
-        }
-
-        private static string SubstringBefore(string str, string removeAfter, bool includeRemoveAfterString = false)
-        {
-            if (str == null)
-            {
-                return null;
-            }
-
-            try
-            {
-                return str.Substring(0, str.IndexOf(removeAfter, StringComparison.Ordinal) + (includeRemoveAfterString ? 1 : 0));
-            }
-            catch
-            {
-                return str;
-            }
         }
     }
 }
