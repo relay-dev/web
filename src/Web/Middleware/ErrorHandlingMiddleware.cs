@@ -34,7 +34,7 @@ namespace Web.Middleware
             catch (OperationCanceledException)
             {
                 _logger.LogInformation("Request was cancelled");
-                context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
             }
             catch (Exception e)
             {
