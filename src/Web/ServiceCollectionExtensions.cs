@@ -90,7 +90,7 @@ namespace Web
 
             if (configuration.WarmupTypes.Any() && !IsLocal)
             {
-                var warmupExecutor = app.ApplicationServices.GetRequiredService<WarmupTaskExecutor>();
+                var warmupExecutor = new WarmupTaskExecutor(app.ApplicationServices, configuration.WarmupTypes);
 
                 Task.Factory.StartNew(() => warmupExecutor.RunAsync(new CancellationToken()));
             }
