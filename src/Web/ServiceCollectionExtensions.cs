@@ -8,11 +8,13 @@ using Core.Utilities;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using System;
 using System.Linq;
+using System.Net.Http;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -96,6 +98,23 @@ namespace Web
             }
 
             return app;
+        }
+
+        public static IServiceCollection AddScopedService<TService, TImplementation>(this IServiceCollection services, string baseUrlSettingName) where TService : class where TImplementation : class, TService
+        {
+            services.AddScoped(typeof(TService), sp =>
+            {
+                string apiBaseUrl = sp.GetRequiredService<IConfiguration>()[baseUrlSettingName];
+
+                var httpClient = new HttpClient
+                {
+                    BaseAddress = new Uri(apiBaseUrl)
+                };
+
+                return (TImplementation)Activator.CreateInstance(typeof(TImplementation), httpClient);
+            });
+
+            return services;
         }
 
         public static IServiceCollection AddFluentValidationPlugin(this IServiceCollection services, IMvcCoreBuilder mvcCoreBuilder, Assembly assemblyToScan)
