@@ -26,6 +26,9 @@ namespace Web.Testing.Unit
 
             dbContext.Database.EnsureCreated();
 
+            //TSUT sut = (TSUT)CurrentTestProperties.Get("_sut");
+            //var serviceProvider = (IServiceProvider)CurrentTestProperties.Get("_serviceProvider");
+
             CurrentTestProperties.Set(DbContextKey, dbContext);
 
             _dbContextsCreated.Add(dbContext);
