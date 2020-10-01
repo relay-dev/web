@@ -44,26 +44,23 @@ namespace Web.Middleware
 
         private Task HandleExceptionAsync(HttpContext context, Exception ex)
         {
-            string errorMessage = null;
-
+            string errorMessage = ex.Message;
             var httpStatusCode = HttpStatusCode.InternalServerError;
 
             if (ex is CoreException serviceException)
             {
                 httpStatusCode = GetHttpStatusCode(serviceException.ErrorCode);
-                errorMessage = serviceException.Message;
             }
-            else if (ex is ValidationException validationException)
+            else if (ex is ValidationException)
             {
                 httpStatusCode = HttpStatusCode.BadRequest;
-                errorMessage = validationException.Message;
             }
 
             Log(ex, httpStatusCode, errorMessage);
 
             var result = new
             {
-                error = errorMessage ?? ex.Message
+                error = errorMessage
             };
 
             context.Response.ContentType = "application/json";
