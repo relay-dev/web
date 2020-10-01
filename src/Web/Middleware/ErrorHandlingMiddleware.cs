@@ -38,11 +38,11 @@ namespace Web.Middleware
             }
             catch (Exception e)
             {
-                await HandleExceptionAsync(context, e);
+                HandleExceptionAsync(context, e);
             }
         }
 
-        private Task HandleExceptionAsync(HttpContext context, Exception ex)
+        private void HandleExceptionAsync(HttpContext context, Exception ex)
         {
             string errorMessage = ex.Message;
             var httpStatusCode = HttpStatusCode.InternalServerError;
@@ -68,7 +68,7 @@ namespace Web.Middleware
 
             string serializedResult = _jsonSerializer.Serialize(result);
 
-            return context.Response.WriteAsync(serializedResult);
+            context.Response.WriteAsync(serializedResult);
         }
 
         private void Log(Exception ex, HttpStatusCode httpStatusCode, string errorMessage)
