@@ -20,13 +20,12 @@ namespace Web.Rest.Configuration
         private WebConfiguration _webConfiguration;
         public WebConfiguration WebConfiguration
         {
-            get
+            get => _webConfiguration;
+            set
             {
+                _webConfiguration = value;
                 _webConfiguration.IsAddApiExplorer = true;
-
-                return _webConfiguration;
             }
-            set => _webConfiguration = value;
         }
 
         public SwaggerConfiguration SwaggerConfiguration { get; set; }

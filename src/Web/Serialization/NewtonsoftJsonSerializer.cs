@@ -34,7 +34,7 @@ namespace Web.Serialization
         /// This is here because the DistributedCacheHelper can't use SystemJsonSerializer, so it's new's up an instance of NewtonsoftJsonSerializer
         /// Since the constructors can change, let consumers use this method to do it. When the constructor changes the fix is only here and no consumers will break
         /// </remarks>
-        public static NewtonsoftJsonSerializer New => new NewtonsoftJsonSerializer();
+        public static NewtonsoftJsonSerializer Instance => new NewtonsoftJsonSerializer();
 
         private JsonSerializerSettings ToJsonSerializerSettings(SerializerOptions options)
         {

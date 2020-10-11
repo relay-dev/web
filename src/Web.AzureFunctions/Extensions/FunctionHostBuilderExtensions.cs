@@ -20,7 +20,7 @@ namespace Web.AzureFunctions.Extensions
             var providers = new List<IConfigurationProvider>();
 
             // Cache all current configuration provider
-            foreach (var descriptor in builder.Services.Where(d => d.ServiceType == typeof(IConfiguration)).ToList())
+            foreach (var descriptor in builder.Services.Where(d => d.ServiceType == typeof(IConfiguration)))
             {
                 if (!(descriptor.ImplementationInstance is IConfigurationRoot existingConfiguration))
                 {

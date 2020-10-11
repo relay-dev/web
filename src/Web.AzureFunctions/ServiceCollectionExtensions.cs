@@ -1,16 +1,16 @@
-﻿using Microsoft.Azure.Functions.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Web.AzureFunctions.Configuration;
 
 namespace Web.AzureFunctions
 {
     public static class ServiceCollectionExtensions
     {
-        public static IFunctionsHostBuilder AddAzureFunctionsFramework(this IFunctionsHostBuilder builder, AzureFunctionsConfiguration config)
+        public static IServiceCollection AddAzureFunctionsFramework(this IServiceCollection services, AzureFunctionsConfiguration config)
         {
             // Add Web Framework
-            builder.Services.AddWebFramework(config.WebConfiguration);
+            services.AddWebFramework(config.WebConfiguration);
 
-            return builder;
+            return services;
         }
     }
 }
