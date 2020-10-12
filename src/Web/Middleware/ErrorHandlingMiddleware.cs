@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Net;
 using System.Threading.Tasks;
+using Web.Serialization;
 
 namespace Web.Middleware
 {
@@ -17,11 +18,10 @@ namespace Web.Middleware
 
         public ErrorHandlingMiddleware(
             RequestDelegate next,
-            IJsonSerializer jsonSerializer,
             ILogger<ErrorHandlingMiddleware> logger)
         {
             _next = next;
-            _jsonSerializer = jsonSerializer;
+            _jsonSerializer = NewtonsoftJsonSerializer.Instance;
             _logger = logger;
         }
 

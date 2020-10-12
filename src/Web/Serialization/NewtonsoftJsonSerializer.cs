@@ -27,6 +27,15 @@ namespace Web.Serialization
             return Task.Run(() => Deserialize<TReturn>(obj, options), cancellationToken);
         }
 
+        /// <summary>
+        /// Gets a new instance of NewtonsoftJsonSerializer
+        /// </summary>
+        /// <remarks>
+        /// This is here because the DistributedCacheHelper can't use SystemJsonSerializer, so it's new's up an instance of NewtonsoftJsonSerializer
+        /// Since the constructors can change, let consumers use this method to do it. When the constructor changes the fix is only here and no consumers will break
+        /// </remarks>
+        public static NewtonsoftJsonSerializer Instance => new NewtonsoftJsonSerializer();
+
         private JsonSerializerSettings ToJsonSerializerSettings(SerializerOptions options)
         {
             if (options == null)
