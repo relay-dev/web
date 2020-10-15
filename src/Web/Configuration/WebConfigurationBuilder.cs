@@ -77,7 +77,7 @@ namespace Web.Configuration
         /// <notes>
         /// Limiting this to 1 assembly. Assembly scanning can become expensive in a cloud-based environment where applications need to auto-scale fast
         /// </notes>
-        public WebConfigurationBuilder DiscoverTypesFrom(Assembly assembly)
+        public WebConfigurationBuilder UseAssemblyToScan(Assembly assembly)
         {
             foreach (Type type in assembly.GetTypes())
             {
