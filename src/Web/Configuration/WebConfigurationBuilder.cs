@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
+using Core.Application;
 using Core.Framework;
+using Microsoft.Extensions.Configuration;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
@@ -8,30 +11,98 @@ namespace Web.Configuration
 {
     public class WebConfigurationBuilder
     {
+        private readonly WebConfiguration _webConfiguration;
+
+        public WebConfigurationBuilder()
+        {
+            _webConfiguration = new WebConfiguration();
+        }
+
+        public WebConfigurationBuilder UseConfiguration(IConfiguration configuration)
+        {
+            _webConfiguration.Configuration = configuration;
+
+            return this;
+        }
+
+        public WebConfigurationBuilder UseApplicationContext(ApplicationContext applicationContext)
+        {
+            _webConfiguration.ApplicationContext = applicationContext;
+
+            return this;
+        }
+
+        public WebConfigurationBuilder UseApplicationName(string applicationName)
+        {
+            _webConfiguration.ApplicationName = applicationName;
+
+            return this;
+        }
+
+        public WebConfigurationBuilder UseCommandHandlerTypes(List<Type> commandHandlerTypes)
+        {
+            _webConfiguration.CommandHandlerTypes = commandHandlerTypes;
+
+            return this;
+        }
+
+        public WebConfigurationBuilder UseMapperTypes(List<Type> mapperTypes)
+        {
+            _webConfiguration.MapperTypes = mapperTypes;
+
+            return this;
+        }
+
+        public WebConfigurationBuilder UseValidatorTypes(Dictionary<Type, Type> validatorTypes)
+        {
+            _webConfiguration.ValidatorTypes = validatorTypes;
+
+            return this;
+        }
+
+        public WebConfigurationBuilder UseValidatorTypesFromAssembly(Assembly validatorsAssembly)
+        {
+            _webConfiguration.ValidatorsAssembly = validatorsAssembly;
+
+            return this;
+        }
+
+        public WebConfigurationBuilder UseWarmupTypes(List<Type> warmupTypes)
+        {
+            _webConfiguration.WarmupTypes = warmupTypes;
+
+            return this;
+        }
+
         /// <notes>
         /// Limiting this to 1 assembly. Assembly scanning can become expensive in a cloud-based environment where applications need to auto-scale fast
         /// </notes>
-        public WebConfiguration Build(Assembly assembly)
+        public WebConfigurationBuilder DiscoverTypesFrom(Assembly assembly)
         {
-            var config = new WebConfiguration();
-
             foreach (Type type in assembly.GetTypes())
             {
                 if (type.GetInterfaces().Any(i => i.Name.Contains("IRequestHandler")))
                 {
-                    config.CommandHandlerTypes.Add(type);
+                    _webConfiguration.CommandHandlerTypes.Add(type);
                 }
                 else if (type.IsSubclassOf(typeof(Profile)))
                 {
-                    config.MapperTypes.Add(type);
+                    _webConfiguration.MapperTypes.Add(type);
                 }
                 else if (type.GetInterfaces().Contains(typeof(IWarmup)))
                 {
-                    config.WarmupTypes.Add(type);
+                    _webConfiguration.WarmupTypes.Add(type);
                 }
             }
 
-            return config;
+            return this;
+        }
+
+        public WebConfiguration Build()
+        {
+            _webConfiguration.ApplicationContext ??= new ApplicationContext(_webConfiguration.ApplicationName);
+
+            return _webConfiguration;
         }
     }
 }
