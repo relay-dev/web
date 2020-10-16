@@ -3,6 +3,7 @@ using Extensions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
@@ -34,6 +35,10 @@ namespace Web.Testing.Integration
                         logging.AddDebug();
                     });
                 })
+                .ConfigureServices((webBuilder, services) =>
+                {
+                    ConfigureTestServices(services);
+                })
                 .ConfigureAppConfiguration((webBuilder, configBuilder) =>
                 {
                     basePath ??= Path.Combine(AppDomain.CurrentDomain.BaseDirectory.SubstringBefore("tests"), "src", typeof(TStartup).Namespace);
@@ -46,6 +51,11 @@ namespace Web.Testing.Integration
                         .AddUserSecrets<TStartup>()
                         .AddEnvironmentVariables();
                 });
+
+        protected virtual IServiceCollection ConfigureTestServices(IServiceCollection services)
+        {
+            return services;
+        }
 
         protected HttpRequest CreateHttpRequest()
         {
