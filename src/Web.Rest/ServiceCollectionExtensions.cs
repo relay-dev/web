@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using System;
@@ -66,6 +67,15 @@ namespace Web.Rest
             });
 
             return app;
+        }
+
+        public static IServiceCollection AddRestFramework<TDbContext>(this IServiceCollection services, RestConfiguration config) where TDbContext : DbContext
+        {
+            services = AddRestFramework(services, config);
+
+            services.AddDbContext<TDbContext>();
+
+            return services;
         }
 
         private static void Validate(RestConfiguration configuration)

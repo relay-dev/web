@@ -8,6 +8,7 @@ using Core.Utilities;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -98,6 +99,15 @@ namespace Web
             }
 
             return app;
+        }
+
+        public static IServiceCollection AddWebFramework<TDbContext>(this IServiceCollection services, WebConfiguration config) where TDbContext : DbContext
+        {
+            services = AddWebFramework(services, config);
+
+            services.AddDbContext<TDbContext>();
+
+            return services;
         }
 
         public static IServiceCollection AddScopedService<TService, TImplementation>(this IServiceCollection services, string baseUrlSettingName) where TService : class where TImplementation : class, TService
