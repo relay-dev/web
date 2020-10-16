@@ -8,11 +8,14 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 
 namespace Web.Testing.Integration
 {
     public abstract class WebIntegrationTest<TToTest> : IntegrationTest<TToTest>
     {
+        protected ILogger Logger => ResolveService<ILogger<TToTest>>();
+
         protected IHostBuilder CreateTestHostBuilder<TStartup>(string basePath = null) where TStartup : class =>
             Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder(new string[0])
                 .ConfigureWebHostDefaults(webBuilder =>
@@ -62,6 +65,13 @@ namespace Web.Testing.Integration
             request.QueryString = QueryString.Create(queryStringParameters);
 
             return request;
+        }
+
+        protected string GetAssemblyDirectory(Assembly assembly)
+        {
+            string path = Uri.UnescapeDataString(new UriBuilder(assembly.CodeBase).Path);
+
+            return Path.GetDirectoryName(path);
         }
     }
 }
