@@ -1,4 +1,5 @@
-﻿using Web.Configuration;
+﻿using Microsoft.Extensions.Configuration;
+using Web.Configuration;
 
 namespace Web.AzureFunctions.Configuration
 {
@@ -12,5 +13,6 @@ namespace Web.AzureFunctions.Configuration
         }
 
         public WebConfiguration WebConfiguration { get; set; }
+        public IConfiguration ApplicationConfiguration => WebConfiguration.ApplicationConfiguration;
     }
 }

@@ -1,4 +1,5 @@
-﻿using Web.Configuration;
+﻿using Microsoft.Extensions.Configuration;
+using Web.Configuration;
 
 namespace Web.Rest.Configuration
 {
@@ -29,5 +30,6 @@ namespace Web.Rest.Configuration
         }
 
         public SwaggerConfiguration SwaggerConfiguration { get; set; }
+        public IConfiguration ApplicationConfiguration => WebConfiguration.ApplicationConfiguration;
     }
 }

@@ -28,7 +28,7 @@ namespace Web
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddWebFramework(this IServiceCollection services, WebConfiguration config)
+        public static IServiceCollection AddWebFramework(this IServiceCollection services, WebConfiguration webConfiguration)
         {
             // Add MVC and Newtonsoft
             IMvcCoreBuilder mvcBuilder = services
@@ -38,25 +38,25 @@ namespace Web
 
             // Add Core Plugins
             services.AddDefaultCorePlugins();
-            services.AddAutoMapperPlugin(config.MapperTypes);
-            services.AddAzureBlobStoragePlugin(config.Configuration);
-            services.AddAzureEventGridPlugin(config.Configuration);
+            services.AddAutoMapperPlugin(webConfiguration.MapperTypes);
+            services.AddAzureBlobStoragePlugin(webConfiguration.ApplicationConfiguration);
+            services.AddAzureEventGridPlugin(webConfiguration.ApplicationConfiguration);
             services.AddEntityFrameworkPlugin();
-            services.AddFluentValidationPlugin(mvcBuilder, config.ValidatorsAssembly);
-            services.AddMediatRPlugin(config.CommandHandlerTypes);
-            services.AddWarmup(config.WarmupTypes);
+            services.AddFluentValidationPlugin(mvcBuilder, webConfiguration.ValidatorsAssembly);
+            services.AddMediatRPlugin(webConfiguration.CommandHandlerTypes);
+            services.AddWarmup(webConfiguration.WarmupTypes);
 
             // Add WebConfiguration and ApplicationContext
-            services.AddSingleton(config);
-            services.AddSingleton(config.Configuration);
-            services.AddSingleton(config.ApplicationContext);
+            services.AddSingleton(webConfiguration);
+            services.AddSingleton(webConfiguration.ApplicationConfiguration);
+            services.AddSingleton(webConfiguration.ApplicationContext);
 
             // Add DistributedCache (NewtonsoftJsonSerializer is needed for the cache utility)
             services.AddDistributedMemoryCache();
             services.AddScoped<IJsonSerializer, NewtonsoftJsonSerializer>();
 
             // Add ApiExplorer
-            if (config.IsAddApiExplorer)
+            if (webConfiguration.IsAddApiExplorer)
             {
                 mvcBuilder.AddApiExplorer();
             }
@@ -64,7 +64,7 @@ namespace Web
             return services;
         }
 
-        public static IApplicationBuilder UseWebFramework(this IApplicationBuilder app, WebConfiguration configuration, IWebHostEnvironment env)
+        public static IApplicationBuilder UseWebFramework(this IApplicationBuilder app, WebConfiguration webConfiguration, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -75,7 +75,7 @@ namespace Web
                 app.UseHsts();
             }
 
-            var pathBase = configuration.Configuration["PATH_BASE"];
+            var pathBase = webConfiguration.ApplicationConfiguration["PATH_BASE"];
 
             if (!string.IsNullOrEmpty(pathBase))
             {
@@ -93,9 +93,9 @@ namespace Web
                 endpoints.MapHealthChecks("/health");
             });
 
-            if (configuration.WarmupTypes.Any() && !IsLocal)
+            if (webConfiguration.WarmupTypes.Any() && !IsLocal)
             {
-                var warmupExecutor = new WarmupTaskExecutor(app.ApplicationServices, configuration.WarmupTypes);
+                var warmupExecutor = new WarmupTaskExecutor(app.ApplicationServices, webConfiguration.WarmupTypes);
 
                 Task.Factory.StartNew(() => warmupExecutor.RunAsync(new CancellationToken()));
             }
@@ -103,9 +103,9 @@ namespace Web
             return app;
         }
 
-        public static IServiceCollection AddWebFramework<TDbContext>(this IServiceCollection services, WebConfiguration config) where TDbContext : DbContext
+        public static IServiceCollection AddWebFramework<TDbContext>(this IServiceCollection services, WebConfiguration webConfiguration) where TDbContext : DbContext
         {
-            services = AddWebFramework(services, config);
+            services = AddWebFramework(services, webConfiguration);
 
             services.AddDbContext<TDbContext>();
             services.AddScoped<DiagnosticsController<TDbContext>>();
@@ -137,7 +137,6 @@ namespace Web
                 return services;
             }
 
-            // Add FluentValidation
             mvcCoreBuilder.AddFluentValidation(fv => fv.RegisterValidatorsFromAssembly(assemblyToScan));
 
             return services;

@@ -10,10 +10,10 @@ namespace Web.Rest
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddRestFramework(this IServiceCollection services, RestConfiguration config)
+        public static IServiceCollection AddRestFramework(this IServiceCollection services, RestConfiguration restConfiguration)
         {
             // Add Web Framework
-            services.AddWebFramework(config.WebConfiguration);
+            services.AddWebFramework(restConfiguration.WebConfiguration);
 
             // Add Health Checks
             services.AddHealthChecks();
@@ -22,12 +22,12 @@ namespace Web.Rest
             services
                 .AddSwaggerGen(options =>
                 {
-                    options.SwaggerDoc(config.SwaggerConfiguration.Name,
+                    options.SwaggerDoc(restConfiguration.SwaggerConfiguration.Name,
                         new OpenApiInfo
                         {
-                            Title = config.SwaggerConfiguration.Title,
-                            Version = config.SwaggerConfiguration.Version,
-                            Description = config.SwaggerConfiguration.Description
+                            Title = restConfiguration.SwaggerConfiguration.Title,
+                            Version = restConfiguration.SwaggerConfiguration.Version,
+                            Description = restConfiguration.SwaggerConfiguration.Description
                         });
                 });
 
@@ -35,30 +35,33 @@ namespace Web.Rest
             //services
             //    .AddApiVersioning(cfg =>
             //    {
-            //        cfg.DefaultApiVersion = new ApiVersion(config.SwaggerConfiguration.MajorVersion, config.SwaggerConfiguration.MinorVersion);
+            //        cfg.DefaultApiVersion = new ApiVersion(restConfiguration.SwaggerConfiguration.MajorVersion, restConfiguration.SwaggerConfiguration.MinorVersion);
             //        cfg.AssumeDefaultVersionWhenUnspecified = true;
             //        cfg.ReportApiVersions = true;
             //        cfg.ApiVersionReader = new HeaderApiVersionReader("x-api-version");
             //    });
 
+            // Add RestConfiguration
+            services.AddSingleton(restConfiguration);
+
             return services;
         }
 
-        public static IApplicationBuilder UseRestFramework(this IApplicationBuilder app, RestConfiguration configuration, IWebHostEnvironment env)
+        public static IApplicationBuilder UseRestFramework(this IApplicationBuilder app, RestConfiguration restConfiguration, IWebHostEnvironment env)
         {
-            Validate(configuration);
+            Validate(restConfiguration);
 
             // Use Web Framework
-            app.UseWebFramework(configuration.WebConfiguration, env);
+            app.UseWebFramework(restConfiguration.WebConfiguration, env);
 
-            var pathBase = configuration.WebConfiguration.Configuration["PATH_BASE"];
+            var pathBase = restConfiguration.ApplicationConfiguration["PATH_BASE"];
 
             app.UseSwagger()
                 .UseSwaggerUI(c =>
                 {
-                    c.SwaggerEndpoint($"{ (!string.IsNullOrEmpty(pathBase) ? pathBase : string.Empty) }/swagger/{configuration.SwaggerConfiguration.Name}/swagger.json", configuration.SwaggerConfiguration.Name);
-                    //c.OAuthClientId($"{config.SwaggerConfiguration.Name.ToLower()}swaggerui");
-                    //c.OAuthAppName($"{config.SwaggerConfiguration.Name} Swagger UI");
+                    c.SwaggerEndpoint($"{ (!string.IsNullOrEmpty(pathBase) ? pathBase : string.Empty) }/swagger/{restConfiguration.SwaggerConfiguration.Name}/swagger.json", restConfiguration.SwaggerConfiguration.Name);
+                    //c.OAuthClientId($"{restConfiguration.SwaggerConfiguration.Name.ToLower()}swaggerui");
+                    //c.OAuthAppName($"{restConfiguration.SwaggerConfiguration.Name} Swagger UI");
                 });
 
             app.UseEndpoints(endpoints =>
@@ -69,23 +72,23 @@ namespace Web.Rest
             return app;
         }
 
-        public static IServiceCollection AddRestFramework<TDbContext>(this IServiceCollection services, RestConfiguration config) where TDbContext : DbContext
+        public static IServiceCollection AddRestFramework<TDbContext>(this IServiceCollection services, RestConfiguration restConfiguration) where TDbContext : DbContext
         {
-            services = AddRestFramework(services, config);
+            services = AddRestFramework(services, restConfiguration);
 
             services.AddDbContext<TDbContext>();
 
             return services;
         }
 
-        private static void Validate(RestConfiguration configuration)
+        private static void Validate(RestConfiguration restConfiguration)
         {
-            if (configuration == null)
+            if (restConfiguration == null)
             {
                 throw new Exception("RestConfiguration cannot be null");
             }
 
-            if (configuration.SwaggerConfiguration == null)
+            if (restConfiguration.SwaggerConfiguration == null)
             {
                 throw new Exception("RestConfiguration.SwaggerConfiguration cannot be null");
             }

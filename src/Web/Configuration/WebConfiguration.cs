@@ -18,7 +18,7 @@ namespace Web.Configuration
 
         public string ApplicationName { get; set; }
         public bool IsAddApiExplorer { get; set; }
-        public IConfiguration Configuration { get; set; }
+        public IConfiguration ApplicationConfiguration { get; set; }
         public ApplicationContext ApplicationContext { get; set; }
         public List<Type> CommandHandlerTypes { get; set; }
         public List<Type> MapperTypes { get; set; }

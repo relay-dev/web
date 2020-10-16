@@ -29,10 +29,10 @@ namespace Web.Rest.Configuration
         private SwaggerConfiguration DefaultSwaggerConfiguration =>
             new SwaggerConfiguration
             {
-                Title = _restConfiguration.WebConfiguration.Configuration["SwaggerConfiguration:Title"] ?? _restConfiguration.WebConfiguration.Configuration["ServiceName"],
-                MajorVersion = Convert.ToInt32(_restConfiguration.WebConfiguration.Configuration["SwaggerConfiguration:MajorVersion"]),
-                MinorVersion = Convert.ToInt32(_restConfiguration.WebConfiguration.Configuration["SwaggerConfiguration:MinorVersion"]),
-                Description = _restConfiguration.WebConfiguration.Configuration["SwaggerConfiguration:Description"]
+                Title = _restConfiguration.ApplicationConfiguration["SwaggerConfiguration:Title"] ?? _restConfiguration.ApplicationConfiguration["ServiceName"],
+                MajorVersion = Convert.ToInt32(_restConfiguration.ApplicationConfiguration["SwaggerConfiguration:MajorVersion"]),
+                MinorVersion = Convert.ToInt32(_restConfiguration.ApplicationConfiguration["SwaggerConfiguration:MinorVersion"]),
+                Description = _restConfiguration.ApplicationConfiguration["SwaggerConfiguration:Description"]
             };
     }
 }

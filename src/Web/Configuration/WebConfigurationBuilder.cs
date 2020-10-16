@@ -20,7 +20,7 @@ namespace Web.Configuration
 
         public WebConfigurationBuilder UseConfiguration(IConfiguration configuration)
         {
-            _webConfiguration.Configuration = configuration;
+            _webConfiguration.ApplicationConfiguration = configuration;
 
             return this;
         }
@@ -100,17 +100,17 @@ namespace Web.Configuration
 
         public WebConfiguration Build()
         {
-            if (_webConfiguration.Configuration == null)
+            if (_webConfiguration.ApplicationConfiguration == null)
             {
                 throw new InvalidOperationException("UseConfiguration() must be called before calling Build()");
             }
 
-            if (string.IsNullOrEmpty(_webConfiguration.Configuration["ApplicationName"]))
+            if (string.IsNullOrEmpty(_webConfiguration.ApplicationConfiguration["ApplicationName"]))
             {
                 throw new InvalidOperationException("ApplicationName not provided. You can create an appSetting called 'ApplicationName', or call UseApplicationName() before calling Build()");
             }
 
-            _webConfiguration.ApplicationName ??= _webConfiguration.Configuration["ApplicationName"];
+            _webConfiguration.ApplicationName ??= _webConfiguration.ApplicationConfiguration["ApplicationName"];
             _webConfiguration.ApplicationContext ??= new ApplicationContext(_webConfiguration.ApplicationName);
 
             return _webConfiguration;
