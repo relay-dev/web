@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 
 namespace Web.Testing.Integration
@@ -87,6 +88,11 @@ namespace Web.Testing.Integration
             request.QueryString = QueryString.Create(queryStringParameters);
 
             return request;
+        }
+
+        protected List<Type> GetControllersInAssembly(Assembly assembly)
+        {
+            return assembly.GetTypes().Where(t => t.Name.EndsWith("Controller")).ToList();
         }
 
         private string GetAssemblyDirectory(Assembly assembly)
