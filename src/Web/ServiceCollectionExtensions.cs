@@ -20,6 +20,7 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Web.Configuration;
+using Web.Controllers;
 using Web.Middleware;
 using Web.Serialization;
 
@@ -106,6 +107,7 @@ namespace Web
             services = AddWebFramework(services, config);
 
             services.AddDbContext<TDbContext>();
+            services.AddScoped<DiagnosticsController<TDbContext>>();
 
             return services;
         }
