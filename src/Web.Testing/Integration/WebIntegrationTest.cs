@@ -90,9 +90,12 @@ namespace Web.Testing.Integration
             return request;
         }
 
-        protected List<Type> GetControllersInAssembly(Assembly assembly)
+        protected void RegisterControllers<TStartup>(IServiceCollection services)
         {
-            return assembly.GetTypes().Where(t => t.Name.EndsWith("Controller")).ToList();
+            foreach (Type controllerType in typeof(TStartup).Assembly.GetTypes().Where(t => t.Name.EndsWith("Controller")))
+            {
+                services.AddScoped(controllerType);
+            }
         }
 
         private string GetAssemblyDirectory(Assembly assembly)
