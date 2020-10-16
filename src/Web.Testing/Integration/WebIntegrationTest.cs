@@ -16,6 +16,13 @@ namespace Web.Testing.Integration
     {
         protected ILogger Logger => ResolveService<ILogger<TToTest>>();
 
+        protected IHostBuilder CreateTestHostBuilder<TStartup>(Assembly assembly) where TStartup : class
+        {
+            string basePath = GetAssemblyDirectory(assembly);
+
+            return CreateTestHostBuilder<TStartup>(basePath);
+        }
+
         protected IHostBuilder CreateTestHostBuilder<TStartup>(string basePath = null) where TStartup : class =>
             Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder(new string[0])
                 .ConfigureWebHostDefaults(webBuilder =>
@@ -67,7 +74,7 @@ namespace Web.Testing.Integration
             return request;
         }
 
-        protected string GetAssemblyDirectory(Assembly assembly)
+        private string GetAssemblyDirectory(Assembly assembly)
         {
             string path = Uri.UnescapeDataString(new UriBuilder(assembly.CodeBase).Path);
 
