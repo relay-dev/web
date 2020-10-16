@@ -33,6 +33,7 @@ namespace Web
             // Add MVC and Newtonsoft
             IMvcCoreBuilder mvcBuilder = services
                 .AddMvcCore()
+                .AddApplicationPart(typeof(DiagnosticsController<>).Assembly)
                 .AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
 
             // Add Core Plugins
