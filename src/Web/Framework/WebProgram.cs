@@ -4,9 +4,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
 
-namespace Web.Rest.Framework
+namespace Web.Framework
 {
-    public class RestProgram<TStartup> where TStartup : class
+    public class WebProgram<TStartup> where TStartup : class
     {
         protected static void ConfigureWebHostDefaults(IWebHostBuilder webBuilder)
         {
