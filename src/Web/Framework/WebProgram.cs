@@ -46,6 +46,6 @@ namespace Web.Framework
             }
         }
 
-        private static bool IsLocal => bool.Parse(Environment.GetEnvironmentVariable("IS_LOCAL") ?? false.ToString());
+        public static bool IsLocal => bool.Parse(Environment.GetEnvironmentVariable("IS_LOCAL") ?? false.ToString());
     }
 }
