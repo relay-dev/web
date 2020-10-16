@@ -31,16 +31,6 @@ namespace Web.Rest
                         });
                 });
 
-            // Add Api Versioning
-            //services
-            //    .AddApiVersioning(cfg =>
-            //    {
-            //        cfg.DefaultApiVersion = new ApiVersion(restConfiguration.SwaggerConfiguration.MajorVersion, restConfiguration.SwaggerConfiguration.MinorVersion);
-            //        cfg.AssumeDefaultVersionWhenUnspecified = true;
-            //        cfg.ReportApiVersions = true;
-            //        cfg.ApiVersionReader = new HeaderApiVersionReader("x-api-version");
-            //    });
-
             // Add RestConfiguration
             services.AddSingleton(restConfiguration);
 

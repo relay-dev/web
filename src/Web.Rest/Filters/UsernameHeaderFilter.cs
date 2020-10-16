@@ -17,7 +17,7 @@ namespace Web.Rest.Filters
 
             var openApiParameter = new OpenApiParameter
             {
-                Name = "X-Username",
+                Name = "x-username",
                 In = ParameterLocation.Header,
                 Required = true,
                 Example = new OpenApiString("customer@email.com")
