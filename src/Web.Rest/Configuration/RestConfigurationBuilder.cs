@@ -19,6 +19,13 @@ namespace Web.Rest.Configuration
             return this;
         }
 
+        public RestConfigurationBuilder SuppressUsernameHeaderToken(bool flag)
+        {
+            _restConfiguration.IsSuppressUsernameHeaderToken = flag;
+
+            return this;
+        }
+
         public RestConfiguration Build()
         {
             _restConfiguration.SwaggerConfiguration ??= DefaultSwaggerConfiguration;

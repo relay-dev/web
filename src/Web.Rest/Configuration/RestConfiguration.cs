@@ -29,6 +29,7 @@ namespace Web.Rest.Configuration
             }
         }
 
+        public bool IsSuppressUsernameHeaderToken { get; set; }
         public SwaggerConfiguration SwaggerConfiguration { get; set; }
         public IConfiguration ApplicationConfiguration => WebConfiguration.ApplicationConfiguration;
     }
