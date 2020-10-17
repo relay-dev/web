@@ -57,7 +57,7 @@ namespace Web
             services.AddDistributedMemoryCache();
 
             // Add framework
-            services.AddTransient<UsernameReceiverMiddleware>();
+            //services.AddTransient<UsernameReceiverMiddleware>();
 
             // Add overwrites
             services.AddScoped<IUsernameProvider, HttpContextUsernameProvider>();
