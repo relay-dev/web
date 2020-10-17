@@ -90,8 +90,8 @@ namespace Web
                 app.UsePathBase(pathBase);
             }
 
-            app.UseMiddleware<UsernameReceiverMiddleware>();
             app.UseMiddleware<ErrorHandlingMiddleware>();
+            //app.UseMiddleware<UsernameReceiverMiddleware>();
 
             app.UseHttpsRedirection();
             app.UseRouting();
