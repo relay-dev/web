@@ -4,6 +4,7 @@ using Core.Plugins.Azure;
 using Core.Plugins.EntityFramework;
 using Core.Plugins.Framework;
 using Core.Plugins.MediatR;
+using Core.Providers;
 using Core.Utilities;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
@@ -19,7 +20,6 @@ using System.Net.Http;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using Core.Providers;
 using Web.Configuration;
 using Web.Controllers;
 using Web.Middleware;
@@ -56,6 +56,9 @@ namespace Web
             // Add DistributedCache (NewtonsoftJsonSerializer is needed for the cache utility)
             services.AddDistributedMemoryCache();
 
+            // Add framework
+            services.AddTransient<UsernameReceiverMiddleware>();
+
             // Add overwrites
             services.AddScoped<IUsernameProvider, HttpContextUsernameProvider>();
             services.AddScoped<IJsonSerializer, NewtonsoftJsonSerializer>();
@@ -87,7 +90,8 @@ namespace Web
                 app.UsePathBase(pathBase);
             }
 
-            app.UseMiddleware(typeof(ErrorHandlingMiddleware));
+            app.UseMiddleware<ErrorHandlingMiddleware>();
+            app.UseMiddleware<UsernameReceiverMiddleware>();
 
             app.UseHttpsRedirection();
             app.UseRouting();
