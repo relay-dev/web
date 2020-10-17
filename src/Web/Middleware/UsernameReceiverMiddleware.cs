@@ -7,22 +7,20 @@ namespace Web.Middleware
 {
     public class UsernameReceiverMiddleware
     {
-        private readonly IUsernameProvider _usernameProvider;
         private readonly RequestDelegate _next;
 
-        public UsernameReceiverMiddleware(IUsernameProvider usernameProvider, RequestDelegate next)
+        public UsernameReceiverMiddleware(RequestDelegate next)
         {
-            _usernameProvider = usernameProvider;
             _next = next;
         }
 
-        public async Task Invoke(HttpContext context)
+        public async Task Invoke(HttpContext context, IUsernameProvider usernameProvider)
         {
             string username = context.Request.Headers.TryGetValueOrDefault("X-Username");
 
             if (!string.IsNullOrEmpty(username))
             {
-                _usernameProvider.Set(username);
+                usernameProvider.Set(username);
             }
 
             await _next(context);

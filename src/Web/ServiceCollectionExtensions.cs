@@ -57,7 +57,7 @@ namespace Web
             services.AddDistributedMemoryCache();
 
             // Add framework
-            //services.AddTransient<UsernameReceiverMiddleware>();
+            services.AddTransient<UsernameReceiverMiddleware>();
 
             // Add overwrites
             services.AddScoped<IUsernameProvider, HttpContextUsernameProvider>();
@@ -91,7 +91,7 @@ namespace Web
             }
 
             app.UseMiddleware<ErrorHandlingMiddleware>();
-            //app.UseMiddleware<UsernameReceiverMiddleware>();
+            app.UseMiddleware<UsernameReceiverMiddleware>();
 
             app.UseHttpsRedirection();
             app.UseRouting();
