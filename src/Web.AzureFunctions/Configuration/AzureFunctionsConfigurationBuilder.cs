@@ -11,6 +11,13 @@ namespace Web.AzureFunctions.Configuration
             _azureFunctionsConfiguration = new AzureFunctionsConfiguration(webConfigurationBuilder.Build());
         }
 
+        public AzureFunctionsConfigurationBuilder AsEventHandler()
+        {
+            _azureFunctionsConfiguration.IsEventHandler = true;
+
+            return this;
+        }
+
         public AzureFunctionsConfiguration Build()
         {
             return _azureFunctionsConfiguration;

@@ -1,5 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Core.Plugins.Providers;
+using Core.Providers;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Web.AzureFunctions.Configuration;
 
 namespace Web.AzureFunctions
@@ -11,8 +14,17 @@ namespace Web.AzureFunctions
             // Add Web Framework
             services.AddWebFramework(azureFunctionsConfiguration.WebConfiguration);
 
+            // Add Logging
+            services.AddLogging(azureFunctionsConfiguration);
+
             // Add AzureFunctionsConfiguration
             services.AddSingleton(azureFunctionsConfiguration);
+
+            // Add Event Handler framework
+            if (azureFunctionsConfiguration.IsEventHandler)
+            {
+                services.AddUsernameProvider(azureFunctionsConfiguration.WebConfiguration.ApplicationContext.ApplicationName);
+            }
 
             return services;
         }
@@ -22,6 +34,38 @@ namespace Web.AzureFunctions
             services = AddAzureFunctionsFramework(services, azureFunctionsConfiguration);
 
             services.AddDbContext<TDbContext>();
+
+            return services;
+        }
+
+        public static IServiceCollection AddLogging(this IServiceCollection services, AzureFunctionsConfiguration azureFunctionsConfiguration)
+        {
+            services.AddLogging(logging =>
+            {
+                logging.AddConfiguration(azureFunctionsConfiguration.ApplicationConfiguration.GetSection("Logging"));
+
+                if (azureFunctionsConfiguration.IsLocal)
+                {
+                    logging.AddConsole();
+                    logging.AddDebug();
+                }
+                else
+                {
+                    logging.AddApplicationInsights();
+                    logging.AddAzureWebAppDiagnostics();
+                }
+            });
+
+            return services;
+        }
+
+        public static IServiceCollection AddUsernameProvider(this IServiceCollection services, string username)
+        {
+            var usernameProvider = new UsernameProvider();
+
+            usernameProvider.Set(username);
+
+            services.AddSingleton<IUsernameProvider>(usernameProvider);
 
             return services;
         }

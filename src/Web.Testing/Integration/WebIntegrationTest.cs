@@ -20,13 +20,13 @@ namespace Web.Testing.Integration
     {
         protected ILogger Logger => ResolveService<ILogger<TToTest>>();
 
-        public override void Setup()
+        public override void OneTimeSetUp()
         {
+            base.OneTimeSetUp();
+
             IUsernameProvider usernameProvider = ResolveService<IUsernameProvider>();
 
             usernameProvider.Set(TestUsername);
-
-            base.Setup();
         }
 
         protected IHostBuilder CreateTestHostBuilder<TStartup>() where TStartup : class
