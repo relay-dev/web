@@ -19,7 +19,7 @@ namespace Web.Middleware
 
         public async Task Invoke(HttpContext context)
         {
-            string username = context.Request.Headers.TryGetValueOrDefault("x-username");
+            string username = context.Request.Headers.TryGetValueOrDefault("X-Username");
 
             if (!string.IsNullOrEmpty(username))
             {
