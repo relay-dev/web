@@ -60,7 +60,6 @@ namespace Web
             services.AddTransient<UsernameReceiverMiddleware>();
 
             // Add overwrites
-            services.AddScoped<IUsernameProvider, HttpContextUsernameProvider>();
             services.AddScoped<IJsonSerializer, NewtonsoftJsonSerializer>();
 
             // Add ApiExplorer
