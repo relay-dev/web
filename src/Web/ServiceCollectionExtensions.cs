@@ -56,9 +56,6 @@ namespace Web
             // Add DistributedCache (NewtonsoftJsonSerializer is needed for the cache utility)
             services.AddDistributedMemoryCache();
 
-            // Add framework
-            services.AddTransient<UsernameReceiverMiddleware>();
-
             // Add overwrites
             services.AddScoped<IJsonSerializer, NewtonsoftJsonSerializer>();
 
