@@ -19,7 +19,7 @@ namespace Web.Rest.Configuration
             return this;
         }
 
-        public RestConfigurationBuilder SuppressUsernameHeaderToken(bool flag)
+        public RestConfigurationBuilder SuppressUsernameHeaderToken(bool flag = true)
         {
             _restConfiguration.IsSuppressUsernameHeaderToken = flag;
 
