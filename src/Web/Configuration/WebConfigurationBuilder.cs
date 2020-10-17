@@ -18,7 +18,7 @@ namespace Web.Configuration
             _webConfiguration = new WebConfiguration();
         }
 
-        public WebConfigurationBuilder UseConfiguration(IConfiguration configuration)
+        public WebConfigurationBuilder UseApplicationConfiguration(IConfiguration configuration)
         {
             _webConfiguration.ApplicationConfiguration = configuration;
 
@@ -102,7 +102,7 @@ namespace Web.Configuration
         {
             if (_webConfiguration.ApplicationConfiguration == null)
             {
-                throw new InvalidOperationException("UseConfiguration() must be called before calling Build()");
+                throw new InvalidOperationException("UseApplicationConfiguration() must be called before calling Build()");
             }
 
             if (string.IsNullOrEmpty(_webConfiguration.ApplicationConfiguration["ApplicationName"]))

@@ -19,9 +19,11 @@ using System.Net.Http;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using Core.Providers;
 using Web.Configuration;
 using Web.Controllers;
 using Web.Middleware;
+using Web.Providers;
 using Web.Serialization;
 
 namespace Web
@@ -53,6 +55,9 @@ namespace Web
 
             // Add DistributedCache (NewtonsoftJsonSerializer is needed for the cache utility)
             services.AddDistributedMemoryCache();
+
+            // Add overwrites
+            services.AddScoped<IUsernameProvider, HttpContextUsernameProvider>();
             services.AddScoped<IJsonSerializer, NewtonsoftJsonSerializer>();
 
             // Add ApiExplorer
