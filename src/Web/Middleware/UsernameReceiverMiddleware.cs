@@ -1,5 +1,4 @@
-﻿using Core.Framework;
-using Core.Providers;
+﻿using Core.Providers;
 using Extensions;
 using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
@@ -8,12 +7,12 @@ namespace Web.Middleware
 {
     public class UsernameReceiverMiddleware
     {
-        private readonly ICommandContextProvider _commandContextProvider;
+        private readonly IUsernameProvider _usernameProvider;
         private readonly RequestDelegate _next;
 
-        public UsernameReceiverMiddleware(ICommandContextProvider commandContextProvider, RequestDelegate next)
+        public UsernameReceiverMiddleware(IUsernameProvider usernameProvider, RequestDelegate next)
         {
-            _commandContextProvider = commandContextProvider;
+            _usernameProvider = usernameProvider;
             _next = next;
         }
 
@@ -23,12 +22,7 @@ namespace Web.Middleware
 
             if (!string.IsNullOrEmpty(username))
             {
-                var commandContext = new CommandContext
-                {
-                    Username = username
-                };
-
-                _commandContextProvider.Set(commandContext);
+                _usernameProvider.Set(username);
             }
 
             await _next(context);
