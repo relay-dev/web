@@ -1,6 +1,7 @@
 ﻿using Core.Plugins.Providers;
 using Core.Providers;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Web.AzureFunctions.Configuration;
@@ -68,6 +69,22 @@ namespace Web.AzureFunctions
             services.AddSingleton<IUsernameProvider>(usernameProvider);
 
             return services;
+        }
+
+        /// <summary>
+        /// Note: This is an extension method on the ConfigurationBuilder, not the ServiceCollection. It's handy to have it where all the other application init code is
+        /// </summary>
+        public static ConfigurationBuilder AddAzureFunctionsConfiguration<TStartup>(this ConfigurationBuilder configurationBuilder, AzureFunctionsConfiguration azureFunctionsConfiguration) where TStartup : class
+        {
+            configurationBuilder.AddEnvironmentVariables();
+
+            if (azureFunctionsConfiguration.IsLocal)
+            {
+                configurationBuilder.AddUserSecrets<TStartup>();
+                configurationBuilder.AddJsonFile("local.settings.json", false, true);
+            }
+
+            return configurationBuilder;
         }
     }
 }
