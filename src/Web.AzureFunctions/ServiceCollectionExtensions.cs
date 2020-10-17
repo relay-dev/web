@@ -81,7 +81,7 @@ namespace Web.AzureFunctions
             if (new AzureFunctionsConfiguration().IsLocal)
             {
                 configurationBuilder.AddUserSecrets<TStartup>();
-                configurationBuilder.AddJsonFile("local.settings.json", false, true);
+                configurationBuilder.AddJsonFile("appsettings.Local.json", false, true);
             }
 
             return configurationBuilder;

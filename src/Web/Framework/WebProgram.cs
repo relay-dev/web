@@ -36,9 +36,9 @@ namespace Web.Framework
             configBuilder
                 .AddJsonFile("appsettings.json", false, true)
                 .AddJsonFile($"appsettings.{environment.EnvironmentName}.json", true, true)
-                .AddJsonFile("local.settings.json", true, true)
+                .AddJsonFile("appsettings.Local.json", true, true)
                 .AddEnvironmentVariables();
-
+            
             // Load application secrets
             if (IsLocal)
             {

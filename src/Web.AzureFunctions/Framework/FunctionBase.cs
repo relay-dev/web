@@ -38,7 +38,7 @@ namespace Web.AzureFunctions.Framework
 //                .SetBasePath(basePath)
 //                .AddJsonFile("appsettings.json", true, true)
 //                .AddJsonFile("appsettings.Development.json", true, true)
-//                .AddJsonFile("local.settings.json", true, true)
+//                .AddJsonFile("appsettings.Local.json", true, true)
 //                .AddUserSecrets<TStartup>()
 //                .AddEnvironmentVariables();
 
