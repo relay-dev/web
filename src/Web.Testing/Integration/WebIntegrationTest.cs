@@ -11,12 +11,23 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Core.Providers;
+using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace Web.Testing.Integration
 {
     public abstract class WebIntegrationTest<TToTest> : IntegrationTest<TToTest>
     {
         protected ILogger Logger => ResolveService<ILogger<TToTest>>();
+
+        public override void Setup()
+        {
+            IUsernameProvider usernameProvider = ResolveService<IUsernameProvider>();
+
+            usernameProvider.Set(TestUsername);
+
+            base.Setup();
+        }
 
         protected IHostBuilder CreateTestHostBuilder<TStartup>() where TStartup : class
         {
@@ -65,7 +76,11 @@ namespace Web.Testing.Integration
 
         protected HttpRequest CreateHttpRequest()
         {
-            return new DefaultHttpContext().Request;
+            var httpRequest = new DefaultHttpContext().Request;
+
+            httpRequest.Headers["X-Username"] = TestUsername;
+
+            return httpRequest;
         }
 
         protected HttpRequest CreateHttpRequest(string key, string val)
