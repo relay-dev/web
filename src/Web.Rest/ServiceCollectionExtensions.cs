@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using System;
 using Web.Rest.Configuration;
+using Web.Rest.Filters;
 
 namespace Web.Rest
 {
@@ -29,6 +30,8 @@ namespace Web.Rest
                             Version = restConfiguration.SwaggerConfiguration.Version,
                             Description = restConfiguration.SwaggerConfiguration.Description
                         });
+
+                    options.OperationFilter<UsernameHeaderFilter>();
                 });
 
             // Add RestConfiguration
