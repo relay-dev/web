@@ -35,15 +35,16 @@ namespace Web.Framework
             // Load the appsettings file and overlay environment specific configurations
             configBuilder
                 .AddJsonFile("appsettings.json", false, true)
-                .AddJsonFile($"appsettings.{environment.EnvironmentName}.json", true, true)
-                .AddJsonFile("appsettings.Local.json", true, true)
-                .AddEnvironmentVariables();
-            
+                .AddJsonFile($"appsettings.{environment.EnvironmentName}.json", true, true);
+
             // Load application secrets
             if (IsLocal)
             {
+                configBuilder.AddJsonFile("appsettings.Local.json", true, true);
                 configBuilder.AddUserSecrets<TStartup>();
             }
+
+            configBuilder.AddEnvironmentVariables();
         }
 
         public static bool IsLocal => bool.Parse(Environment.GetEnvironmentVariable("IS_LOCAL") ?? false.ToString());
