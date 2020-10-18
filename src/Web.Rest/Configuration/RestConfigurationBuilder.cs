@@ -30,6 +30,11 @@ namespace Web.Rest.Configuration
         {
             _restConfiguration.SwaggerConfiguration ??= DefaultSwaggerConfiguration;
 
+            if (_restConfiguration.ApplicationConfiguration["IsDocumentUsernameHeaderToken"] != null)
+            {
+                _restConfiguration.IsSuppressUsernameHeaderToken = !bool.Parse(_restConfiguration.ApplicationConfiguration["IsDocumentUsernameHeader"]);
+            }
+
             return _restConfiguration;
         }
 
