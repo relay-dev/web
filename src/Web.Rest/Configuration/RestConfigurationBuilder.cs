@@ -19,9 +19,9 @@ namespace Web.Rest.Configuration
             return this;
         }
 
-        public RestConfigurationBuilder SuppressUsernameHeaderToken()
+        public RestConfigurationBuilder DocumentUsernameHeaderToken(bool flag = true)
         {
-            _restConfiguration.IsSuppressUsernameHeaderToken = true;
+            _restConfiguration.IsDocumentUsernameHeaderToken = flag;
 
             return this;
         }
@@ -30,9 +30,9 @@ namespace Web.Rest.Configuration
         {
             _restConfiguration.SwaggerConfiguration ??= DefaultSwaggerConfiguration;
 
-            if (_restConfiguration.ApplicationConfiguration["IsDocumentUsernameHeaderToken"] != null && bool.TryParse(_restConfiguration.ApplicationConfiguration["IsDocumentUsernameHeader"], out bool isDocumentHeader))
+            if (_restConfiguration.ApplicationConfiguration["IsDocumentUsernameHeaderToken"] != null && bool.TryParse(_restConfiguration.ApplicationConfiguration["IsDocumentUsernameHeader"], out bool isDocumentUsernameHeaderToken))
             {
-                _restConfiguration.IsSuppressUsernameHeaderToken = !isDocumentHeader;
+                _restConfiguration.IsDocumentUsernameHeaderToken = isDocumentUsernameHeaderToken;
             }
 
             return _restConfiguration;

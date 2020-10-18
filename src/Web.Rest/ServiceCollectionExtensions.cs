@@ -31,7 +31,7 @@ namespace Web.Rest
                             Description = restConfiguration.SwaggerConfiguration.Description
                         });
 
-                    if (!restConfiguration.IsSuppressUsernameHeaderToken)
+                    if (restConfiguration.IsDocumentUsernameHeaderToken)
                     {
                         options.OperationFilter<UsernameHeaderFilter>();
                     }
