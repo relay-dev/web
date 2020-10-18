@@ -76,13 +76,13 @@ namespace Web.AzureFunctions
         /// </summary>
         public static ConfigurationBuilder AddAzureFunctionsConfiguration<TStartup>(this ConfigurationBuilder configurationBuilder) where TStartup : class
         {
-            configurationBuilder.AddEnvironmentVariables();
-
             if (new AzureFunctionsConfiguration().IsLocal)
             {
                 configurationBuilder.AddUserSecrets<TStartup>();
                 configurationBuilder.AddJsonFile("appsettings.Local.json", false, true);
             }
+
+            configurationBuilder.AddEnvironmentVariables();
 
             return configurationBuilder;
         }
