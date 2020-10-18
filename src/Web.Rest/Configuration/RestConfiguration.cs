@@ -29,7 +29,7 @@ namespace Web.Rest.Configuration
             }
         }
 
-        public bool IsDocumentUsernameHeaderToken { get; set; }
+        public bool? IsDocumentUsernameHeaderToken { get; set; }
         public SwaggerConfiguration SwaggerConfiguration { get; set; }
         public IConfiguration ApplicationConfiguration => WebConfiguration.ApplicationConfiguration;
     }
