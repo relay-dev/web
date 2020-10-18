@@ -30,12 +30,24 @@ namespace Web.Rest.Configuration
         {
             _restConfiguration.SwaggerConfiguration ??= DefaultSwaggerConfiguration;
 
-            if (_restConfiguration.ApplicationConfiguration["IsDocumentUsernameHeaderToken"] != null && bool.TryParse(_restConfiguration.ApplicationConfiguration["IsDocumentUsernameHeader"], out bool isDocumentUsernameHeaderToken))
+            if (!_restConfiguration.IsDocumentUsernameHeaderToken.HasValue)
             {
-                _restConfiguration.IsDocumentUsernameHeaderToken = isDocumentUsernameHeaderToken;
+                _restConfiguration.IsDocumentUsernameHeaderToken = ResolveIsDocumentUsernameHeaderToken();
             }
 
             return _restConfiguration;
+        }
+
+        private bool ResolveIsDocumentUsernameHeaderToken()
+        {
+            string configSetting = _restConfiguration.ApplicationConfiguration["IsDocumentUsernameHeaderToken"];
+
+            if (!string.IsNullOrEmpty(configSetting) && bool.TryParse(configSetting, out bool isDocumentUsernameHeaderToken))
+            {
+                return isDocumentUsernameHeaderToken;
+            }
+
+            return true;
         }
 
         private SwaggerConfiguration DefaultSwaggerConfiguration =>
