@@ -41,7 +41,7 @@ namespace Web.Framework
             if (IsLocal)
             {
                 configBuilder.AddJsonFile("appsettings.Local.json", true, true);
-                configBuilder.AddUserSecrets<TStartup>();
+                configBuilder.AddUserSecrets<TStartup>(true);
             }
 
             configBuilder.AddEnvironmentVariables();

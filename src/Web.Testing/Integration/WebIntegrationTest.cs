@@ -65,7 +65,7 @@ namespace Web.Testing.Integration
                         .AddJsonFile("appsettings.json", true, true)
                         .AddJsonFile("appsettings.Development.json", true, true)
                         .AddJsonFile("appsettings.Local.json", true, true)
-                        .AddUserSecrets<TStartup>()
+                        .AddUserSecrets<TStartup>(true)
                         .AddEnvironmentVariables();
                 });
 
