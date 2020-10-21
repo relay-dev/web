@@ -42,7 +42,7 @@ namespace Web.Testing.Integration
                 })
                 .ConfigureServices((webBuilder, services) =>
                 {
-                    ConfigureTestServices(services);
+                    ConfigureIntegrationTestServices(services);
                 })
                 .ConfigureAppConfiguration((webBuilder, configBuilder) =>
                 {
@@ -57,7 +57,7 @@ namespace Web.Testing.Integration
                         .AddEnvironmentVariables();
                 });
 
-        protected virtual IServiceCollection ConfigureTestServices(IServiceCollection services)
+        protected virtual IServiceCollection ConfigureIntegrationTestServices(IServiceCollection services)
         {
             return services;
         }
