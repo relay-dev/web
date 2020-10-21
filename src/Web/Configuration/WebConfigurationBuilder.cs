@@ -105,12 +105,13 @@ namespace Web.Configuration
                 throw new InvalidOperationException("UseApplicationConfiguration() must be called before calling Build()");
             }
 
-            if (string.IsNullOrEmpty(_webConfiguration.ApplicationConfiguration["ApplicationName"]))
+            _webConfiguration.ApplicationName ??= _webConfiguration.ApplicationConfiguration["ApplicationName"];
+
+            if (string.IsNullOrEmpty(_webConfiguration.ApplicationName))
             {
                 throw new InvalidOperationException("ApplicationName not provided. You can create an appSetting called 'ApplicationName', or call UseApplicationName() before calling Build()");
             }
 
-            _webConfiguration.ApplicationName ??= _webConfiguration.ApplicationConfiguration["ApplicationName"];
             _webConfiguration.ApplicationContext ??= new ApplicationContext(_webConfiguration.ApplicationName);
 
             return _webConfiguration;
