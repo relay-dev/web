@@ -1,4 +1,5 @@
 ﻿using Core.Plugins.NUnit.Integration;
+using Core.Providers;
 using Extensions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -11,7 +12,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using Core.Providers;
 using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace Web.Testing.Integration
@@ -29,21 +29,7 @@ namespace Web.Testing.Integration
             usernameProvider.Set(TestUsername);
         }
 
-        protected IHostBuilder CreateTestHostBuilder<TStartup>() where TStartup : class
-        {
-            string basePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory.SubstringBefore("tests"), "src", typeof(TStartup).Namespace);
-
-            return CreateTestHostBuilder<TStartup>(basePath);
-        }
-
-        protected IHostBuilder CreateTestHostBuilder<TStartup>(Assembly assembly) where TStartup : class
-        {
-            string basePath = GetAssemblyDirectory(assembly);
-
-            return CreateTestHostBuilder<TStartup>(basePath);
-        }
-
-        protected IHostBuilder CreateTestHostBuilder<TStartup>(string basePath) where TStartup : class =>
+        protected IHostBuilder CreateTestHostBuilder<TStartup>(string basePath = null) where TStartup : class =>
             Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder(new string[0])
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
@@ -60,6 +46,8 @@ namespace Web.Testing.Integration
                 })
                 .ConfigureAppConfiguration((webBuilder, configBuilder) =>
                 {
+                    basePath ??= Path.Combine(AppDomain.CurrentDomain.BaseDirectory.SubstringBefore("tests"), "src", typeof(TStartup).Namespace);
+
                     configBuilder
                         .SetBasePath(basePath)
                         .AddJsonFile("appsettings.json", true, true)
