@@ -74,16 +74,12 @@ namespace Web.AzureFunctions
         /// <summary>
         /// Note: This is an extension method on the ConfigurationBuilder, not the ServiceCollection. It's handy to have it where all the other application init code is
         /// </summary>
-        public static ConfigurationBuilder AddAzureFunctionsConfiguration<TStartup>(this ConfigurationBuilder configurationBuilder, bool isAddUserSecrets = false) where TStartup : class
+        public static ConfigurationBuilder AddAzureFunctionsConfiguration<TStartup>(this ConfigurationBuilder configurationBuilder, bool isUserSecretsOptional = true) where TStartup : class
         {
             if (new AzureFunctionsConfiguration().IsLocal)
             {
                 configurationBuilder.AddJsonFile("appsettings.Local.json", false, true);
-
-                if (isAddUserSecrets)
-                {
-                    configurationBuilder.AddUserSecrets<TStartup>();
-                }
+                configurationBuilder.AddUserSecrets<TStartup>(isUserSecretsOptional);
             }
 
             configurationBuilder.AddEnvironmentVariables();
