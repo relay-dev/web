@@ -20,7 +20,7 @@ namespace Web.Testing.Integration
     {
         protected ILogger Logger => ResolveService<ILogger<TToTest>>();
 
-        public override void OneTimeSetUp()
+        public override void BootstrapTest()
         {
             base.OneTimeSetUp();
 
