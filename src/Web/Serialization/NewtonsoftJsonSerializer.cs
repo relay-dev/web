@@ -45,7 +45,8 @@ namespace Web.Serialization
 
             var settings = new JsonSerializerSettings
             {
-                NullValueHandling = options.IgnoreNullValues ? NullValueHandling.Ignore : NullValueHandling.Include
+                NullValueHandling = options.IgnoreNullValues ? NullValueHandling.Ignore : NullValueHandling.Include,
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
             };
 
             if (options.MaxDepth > 0)
