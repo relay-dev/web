@@ -38,16 +38,17 @@ namespace Web.Serialization
 
         private JsonSerializerSettings ToJsonSerializerSettings(SerializerOptions options)
         {
-            if (options == null)
-            {
-                return null;
-            }
-
             var settings = new JsonSerializerSettings
             {
-                NullValueHandling = options.IgnoreNullValues ? NullValueHandling.Ignore : NullValueHandling.Include,
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore
             };
+
+            if (options == null)
+            {
+                return settings;
+            }
+
+            settings.NullValueHandling = options.IgnoreNullValues ? NullValueHandling.Ignore : NullValueHandling.Include;
 
             if (options.MaxDepth > 0)
             {
