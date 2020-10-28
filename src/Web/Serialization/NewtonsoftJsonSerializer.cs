@@ -40,7 +40,8 @@ namespace Web.Serialization
         {
             var settings = new JsonSerializerSettings
             {
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                NullValueHandling = NullValueHandling.Ignore
             };
 
             if (options == null)

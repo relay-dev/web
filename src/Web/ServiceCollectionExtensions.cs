@@ -4,7 +4,6 @@ using Core.Plugins.Azure;
 using Core.Plugins.EntityFramework;
 using Core.Plugins.Framework;
 using Core.Plugins.MediatR;
-using Core.Providers;
 using Core.Utilities;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
@@ -23,7 +22,6 @@ using System.Threading.Tasks;
 using Web.Configuration;
 using Web.Controllers;
 using Web.Middleware;
-using Web.Providers;
 using Web.Serialization;
 
 namespace Web
@@ -36,7 +34,11 @@ namespace Web
             IMvcCoreBuilder mvcBuilder = services
                 .AddMvcCore()
                 .AddApplicationPart(typeof(DiagnosticsController<>).Assembly)
-                .AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
+                .AddNewtonsoftJson(options =>
+                {
+                    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                    options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+                });
 
             // Add Core Plugins
             services.AddDefaultCorePlugins();
