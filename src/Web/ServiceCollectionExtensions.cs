@@ -55,10 +55,10 @@ namespace Web
             services.AddSingleton(webConfiguration.ApplicationConfiguration);
             services.AddSingleton(webConfiguration.ApplicationContext);
 
-            // Add DistributedCache (NewtonsoftJsonSerializer is needed for the cache utility)
+            // Add DistributedCache
             services.AddDistributedMemoryCache();
 
-            // Add overwrites
+            // Add Web services
             services.AddScoped<IJsonSerializer, NewtonsoftJsonSerializer>();
 
             // Add ApiExplorer

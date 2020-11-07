@@ -19,6 +19,17 @@ namespace Web.Rest
             // Add Health Checks
             services.AddHealthChecks();
 
+            // Add Cors
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AnyOrigin", builder =>
+                {
+                    builder
+                        .AllowAnyOrigin()
+                        .AllowAnyMethod();
+                });
+            });
+
             // Add Swagger
             services
                 .AddSwaggerGen(options =>
@@ -49,6 +60,8 @@ namespace Web.Rest
 
             // Use Web Framework
             app.UseWebFramework(restConfiguration.WebConfiguration, env);
+
+            app.UseCors("AnyOrigin");
 
             var pathBase = restConfiguration.ApplicationConfiguration["PATH_BASE"];
 
