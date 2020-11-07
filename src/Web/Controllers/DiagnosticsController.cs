@@ -1,8 +1,9 @@
 ﻿using Core.Application;
-using Core.Caching;
+using Core.Plugins.Caching;
 using Core.Providers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -14,13 +15,13 @@ namespace Web.Controllers
     [Route("v1/[controller]")]
     public class DiagnosticsController<TDbContext> : Controller where TDbContext : DbContext
     {
-        private readonly ICache _cache;
+        private readonly IMemoryCache _cache;
         private readonly TDbContext _dbContext;
         private readonly ILogger<DiagnosticsController<TDbContext>> _logger;
         private readonly IApplicationContextProvider _applicationContextProvider;
 
         public DiagnosticsController(
-            ICache cache,
+            IMemoryCache cache,
             TDbContext dbContext,
             ILogger<DiagnosticsController<TDbContext>> logger,
             IApplicationContextProvider applicationContextProvider)
@@ -51,9 +52,9 @@ namespace Web.Controllers
         [Route("Cache/Clear")]
         public ActionResult ClearCache()
         {
-            List<string> cacheKeys = _cache.GetAllKeys();
+            List<string> cacheKeys = CacheKeyManager.GetAllKeys();
 
-            _cache.RemoveAll();
+            _cache.Clear();
 
             return new OkObjectResult($"Cleared cache entries for: '{string.Join("', '", cacheKeys)}'");
         }
