@@ -55,8 +55,8 @@ namespace Web
             services.AddSingleton(webConfiguration.ApplicationConfiguration);
             services.AddSingleton(webConfiguration.ApplicationContext);
 
-            // Add DistributedCache
-            services.AddDistributedMemoryCache();
+            // Add MemoryCache
+            services.AddMemoryCache();
 
             // Add Web services
             services.AddScoped<IJsonSerializer, NewtonsoftJsonSerializer>();
