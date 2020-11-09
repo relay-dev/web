@@ -74,12 +74,9 @@ namespace Web.Configuration
             return this;
         }
 
-        /// <notes>
-        /// Limiting this to 1 assembly. Assembly scanning can become expensive in a cloud-based environment where applications need to auto-scale fast
-        /// </notes>
-        public WebConfigurationBuilder UseAssemblyToScan(Assembly assembly)
+        public WebConfigurationBuilder UseAssembliesToScan(params Assembly[] assemblies)
         {
-            foreach (Type type in assembly.GetTypes())
+            foreach (Type type in assemblies.SelectMany(a => a.GetTypes()))
             {
                 if (type.GetInterfaces().Any(i => i.Name.Contains("IRequestHandler")))
                 {
@@ -96,6 +93,11 @@ namespace Web.Configuration
             }
 
             return this;
+        }
+
+        public WebConfigurationBuilder UseAssembliesFromTypesToScan(params Type[] types)
+        {
+            return UseAssembliesToScan(types.Select(t => t.Assembly).ToArray());
         }
 
         public WebConfiguration Build()

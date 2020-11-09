@@ -8,6 +8,11 @@ namespace Web.Framework
 {
     public class WebProgram<TStartup> where TStartup : class
     {
+        protected static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(ConfigureWebHostDefaults)
+                .ConfigureAppConfiguration(ConfigureAppConfiguration);
+
         protected static void ConfigureWebHostDefaults(IWebHostBuilder webBuilder)
         {
             webBuilder.UseStartup<TStartup>();
