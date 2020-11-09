@@ -41,58 +41,58 @@ namespace Web.Configuration
             return this;
         }
 
-        public WebConfigurationBuilder UseCommandHandlerTypes(List<Type> commandHandlerTypes)
+        public WebConfigurationBuilder UseCommandHandlers(List<Type> commandHandlerTypes)
         {
             _webConfiguration.CommandHandlerTypes = commandHandlerTypes;
 
             return this;
         }
 
-        public WebConfigurationBuilder UseCommandHandlerTypesFromAssembly<TCommandHandler>()
+        public WebConfigurationBuilder UseCommandHandlersFromAssembly<TCommandHandler>()
         {
-            _container.CommandHandlerTypesAssemblies.Add(typeof(TCommandHandler).Assembly);
+            _container.CommandHandlerAssemblies.Add(typeof(TCommandHandler).Assembly);
             
             return this;
         }
 
-        public WebConfigurationBuilder UseMapperTypes(List<Type> mapperTypes)
+        public WebConfigurationBuilder UseMappers(List<Type> mapperTypes)
         {
             _webConfiguration.MapperTypes = mapperTypes;
 
             return this;
         }
         
-        public WebConfigurationBuilder UseMapperTypesFromAssemblyContaining<TMapper>()
+        public WebConfigurationBuilder UseMappersFromAssemblyContaining<TMapper>()
         {
-            _container.MapperTypesAssemblies.Add(typeof(TMapper).Assembly);
+            _container.MapperAssemblies.Add(typeof(TMapper).Assembly);
 
             return this;
         }
 
-        public WebConfigurationBuilder UseValidatorTypes(Dictionary<Type, Type> validatorTypes)
+        public WebConfigurationBuilder UseValidators(Dictionary<Type, Type> validatorTypes)
         {
             _webConfiguration.ValidatorTypes = validatorTypes;
 
             return this;
         }
 
-        public WebConfigurationBuilder UseValidatorTypesFromAssemblyContaining<TValidator>()
+        public WebConfigurationBuilder UseValidatorsFromAssemblyContaining<TValidator>()
         {
             _webConfiguration.ValidatorsAssembly = typeof(TValidator).Assembly;
 
             return this;
         }
 
-        public WebConfigurationBuilder UseWarmupTypes(List<Type> warmupTypes)
+        public WebConfigurationBuilder UseWarmups(List<Type> warmupTypes)
         {
             _webConfiguration.WarmupTypes = warmupTypes;
 
             return this;
         }
 
-        public WebConfigurationBuilder UseWarmupTypesFromAssembly<TWarmup>()
+        public WebConfigurationBuilder UseWarmupsFromAssembly<TWarmup>()
         {
-            _container.WarmupTypesAssemblies.Add(typeof(TWarmup).Assembly);
+            _container.WarmupAssemblies.Add(typeof(TWarmup).Assembly);
 
             return this;
         }
@@ -113,9 +113,9 @@ namespace Web.Configuration
 
             _webConfiguration.ApplicationContext ??= new ApplicationContext(_webConfiguration.ApplicationName);
 
-            if (_container.CommandHandlerTypesAssemblies.Any())
+            if (_container.CommandHandlerAssemblies.Any())
             {
-                foreach (Type type in _container.CommandHandlerTypesAssemblies.SelectMany(a => a.GetTypes()))
+                foreach (Type type in _container.CommandHandlerAssemblies.SelectMany(a => a.GetTypes()))
                 {
                     if (type.GetInterfaces().Any(i => i.Name.Contains("IRequestHandler")))
                     {
@@ -124,9 +124,9 @@ namespace Web.Configuration
                 }
             }
 
-            if (_container.MapperTypesAssemblies.Any())
+            if (_container.MapperAssemblies.Any())
             {
-                foreach (Type type in _container.MapperTypesAssemblies.SelectMany(a => a.GetTypes()))
+                foreach (Type type in _container.MapperAssemblies.SelectMany(a => a.GetTypes()))
                 {
                     if (type.IsSubclassOf(typeof(Profile)))
                     {
@@ -135,9 +135,9 @@ namespace Web.Configuration
                 }
             }
 
-            if (_container.WarmupTypesAssemblies.Any())
+            if (_container.WarmupAssemblies.Any())
             {
-                foreach (Type type in _container.WarmupTypesAssemblies.SelectMany(a => a.GetTypes()))
+                foreach (Type type in _container.WarmupAssemblies.SelectMany(a => a.GetTypes()))
                 {
                     if (type.GetInterfaces().Contains(typeof(IWarmup)))
                     {
@@ -153,14 +153,14 @@ namespace Web.Configuration
         {
             public WebConfigurationBuilderContainer()
             {
-                CommandHandlerTypesAssemblies = new List<Assembly>();
-                MapperTypesAssemblies = new List<Assembly>();
-                WarmupTypesAssemblies = new List<Assembly>();
+                CommandHandlerAssemblies = new List<Assembly>();
+                MapperAssemblies = new List<Assembly>();
+                WarmupAssemblies = new List<Assembly>();
             }
 
-            public List<Assembly> CommandHandlerTypesAssemblies { get; set; }
-            public List<Assembly> MapperTypesAssemblies { get; set; }
-            public List<Assembly> WarmupTypesAssemblies { get; set; }
+            public List<Assembly> CommandHandlerAssemblies { get; set; }
+            public List<Assembly> MapperAssemblies { get; set; }
+            public List<Assembly> WarmupAssemblies { get; set; }
         }
     }
 }
