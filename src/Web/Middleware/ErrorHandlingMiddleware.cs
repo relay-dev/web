@@ -60,7 +60,7 @@ namespace Web.Middleware
 
             var result = new
             {
-                error = errorMessage
+                errorMessage
             };
 
             context.Response.ContentType = "application/json";
