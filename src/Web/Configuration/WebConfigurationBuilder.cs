@@ -48,7 +48,7 @@ namespace Web.Configuration
             return this;
         }
 
-        public WebConfigurationBuilder UseCommandHandlersFromAssembly<TCommandHandler>()
+        public WebConfigurationBuilder UseCommandHandlersFromAssemblyContaining<TCommandHandler>()
         {
             _container.CommandHandlerAssemblies.Add(typeof(TCommandHandler).Assembly);
             
@@ -83,14 +83,14 @@ namespace Web.Configuration
             return this;
         }
 
-        public WebConfigurationBuilder UseWarmups(List<Type> warmupTypes)
+        public WebConfigurationBuilder UseWarmupTypes(List<Type> warmupTypes)
         {
             _webConfiguration.WarmupTypes = warmupTypes;
 
             return this;
         }
 
-        public WebConfigurationBuilder UseWarmupsFromAssembly<TWarmup>()
+        public WebConfigurationBuilder UseWarmupTypesFromAssemblyContaining<TWarmup>()
         {
             _container.WarmupAssemblies.Add(typeof(TWarmup).Assembly);
 
