@@ -1,13 +1,12 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using System.IO;
-using System.Threading.Tasks;
 
 namespace Web.Extensions
 {
     public static class HttpRequestExtensions
     {
-        public static async Task<string> GetArgument(this HttpRequest request, string argumentName)
+        public static string GetArgument(this HttpRequest request, string argumentName)
         {
             string argumentValue = request.Query[argumentName];
 
@@ -16,16 +15,23 @@ namespace Web.Extensions
                 return argumentValue;
             }
 
-            string requestBody = await new StreamReader(request.Body).ReadToEndAsync();
+            string requestBody = new StreamReader(request.Body).ReadToEnd();
 
             dynamic data = JsonConvert.DeserializeObject(requestBody);
 
             return data?.GetType().GetProperty(argumentName).GetValue(data, null);
         }
 
-        public static async Task<TArgument> GetArgument<TArgument>(this HttpRequest request, string argumentName) where TArgument : class
+        public static TRequestBody GetBody<TRequestBody>(this HttpRequest request)
         {
-            return await GetArgument(request, argumentName) as TArgument;
+            string requestBody = new StreamReader(request.Body).ReadToEnd();
+
+            return JsonConvert.DeserializeObject<TRequestBody>(requestBody);
+        }
+
+        public static TArgument GetArgument<TArgument>(this HttpRequest request, string argumentName) where TArgument : class
+        {
+            return GetArgument(request, argumentName) as TArgument;
         }
     }
 }
