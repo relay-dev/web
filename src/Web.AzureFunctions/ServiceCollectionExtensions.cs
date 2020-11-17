@@ -24,7 +24,7 @@ namespace Web.AzureFunctions
             // Add Event Handler framework
             if (azureFunctionsConfiguration.IsEventHandler)
             {
-                services.AddUsernameProvider(azureFunctionsConfiguration.WebConfiguration.ApplicationContext.ApplicationName);
+                services.AddUsernameProvider(azureFunctionsConfiguration.WebConfiguration.ApplicationName);
             }
 
             return services;

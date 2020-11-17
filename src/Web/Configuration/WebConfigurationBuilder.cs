@@ -106,6 +106,11 @@ namespace Web.Configuration
 
             _webConfiguration.ApplicationName ??= _webConfiguration.ApplicationConfiguration["ApplicationName"];
 
+            if (string.IsNullOrEmpty(_webConfiguration.ApplicationName) && _webConfiguration.ApplicationContext != null)
+            {
+                _webConfiguration.ApplicationName = _webConfiguration.ApplicationContext.ApplicationName;
+            }
+
             if (string.IsNullOrEmpty(_webConfiguration.ApplicationName))
             {
                 throw new InvalidOperationException("ApplicationName not provided. You can create an appSetting called 'ApplicationName', or call UseApplicationName() before calling Build()");
