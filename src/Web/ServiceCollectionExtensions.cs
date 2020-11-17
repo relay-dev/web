@@ -120,7 +120,7 @@ namespace Web
             return services;
         }
 
-        public static IServiceCollection AddScopedService<TService, TImplementation>(this IServiceCollection services, string baseUrlSettingName) where TService : class where TImplementation : class, TService
+        public static IServiceCollection AddScopedApiClient<TService, TImplementation>(this IServiceCollection services, string baseUrlSettingName) where TService : class where TImplementation : class, TService
         {
             services.AddScoped(typeof(TService), sp =>
             {
