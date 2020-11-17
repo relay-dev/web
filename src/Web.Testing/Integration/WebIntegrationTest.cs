@@ -20,7 +20,7 @@ namespace Web.Testing.Integration
     {
         protected ILogger Logger => ResolveService<ILogger<TToTest>>();
 
-        public override void BootstrapTest()
+        protected override void BootstrapTest()
         {
             base.OneTimeSetUp();
 
@@ -53,6 +53,7 @@ namespace Web.Testing.Integration
                         .AddJsonFile("appsettings.json", true, true)
                         .AddJsonFile("appsettings.Development.json", true, true)
                         .AddJsonFile("appsettings.Local.json", true, true)
+                        .AddJsonFile("local.settings.json", true, true)
                         .AddUserSecrets<TStartup>(true)
                         .AddEnvironmentVariables();
                 });

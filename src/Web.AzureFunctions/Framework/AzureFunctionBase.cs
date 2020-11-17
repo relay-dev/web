@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Web.AzureFunctions.Framework
 {
-    public class FunctionBase
+    public class AzureFunctionBase
     {
         protected async Task<TResult> ExecuteAsync<TResult>(Func<Task<TResult>> valueFactory, ILogger logger, CancellationToken cancellationToken)
         {
@@ -47,29 +47,4 @@ namespace Web.AzureFunctions.Framework
             }
         }
     }
-
-//    public abstract class FunctionStartupBase : FunctionsStartup
-//    {
-//        public override void ConfigureAppConfiguration(IFunctionsConfigurationBuilder builder)
-//        {
-//            FunctionsHostBuilderContext context = builder.GetContext();
-
-//            string basePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory.SubstringBefore("tests"), "src", typeof(TStartup).Namespace);
-
-//            configBuilder
-//                .SetBasePath(basePath)
-//                .AddJsonFile("appsettings.json", true, true)
-//                .AddJsonFile("appsettings.Development.json", true, true)
-//                .AddJsonFile("appsettings.Local.json", true, true)
-//                .AddUserSecrets<TStartup>()
-//                .AddEnvironmentVariables();
-
-//            builder.ConfigurationBuilder
-//                .AddJsonFile(Path.Combine(context.ApplicationRootPath, "appsettings.json"), optional: true, reloadOnChange: false)
-//                .AddJsonFile(Path.Combine(context.ApplicationRootPath, $"appsettings.{context.EnvironmentName}.json"), optional: true, reloadOnChange: false)
-//                .AddEnvironmentVariables();
-
-//            base.ConfigureAppConfiguration(builder);
-//        }
-//    }
 }

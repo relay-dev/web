@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <PackageId>Relay.Web.Testing</PackageId>
+    <PackageId>Relay.Web.Testing.AzureFunctions</PackageId>
     <Version>1.0.1</Version>
     <Authors>Scott Ferguson</Authors>
     <Company>Relay Technologies</Company>
@@ -19,6 +19,7 @@
   <ItemGroup>
     <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="3.1.2" />
     <PackageReference Include="AutoBogus" Version="2.11.0" />
+    <PackageReference Include="Microsoft.Azure.WebJobs" Version="3.0.23" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="3.1.8" />
     <PackageReference Include="Moq" Version="4.14.5" />
     <PackageReference Include="Moq.AutoMock" Version="2.1.0" />
@@ -26,6 +27,11 @@
     <PackageReference Include="Relay.Core.Plugins.NUnit" Version="1.0.183" />
     <PackageReference Include="Relay.Extensions" Version="1.0.4" />
     <PackageReference Include="Shouldly" Version="3.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Web.AzureFunctions\Web.AzureFunctions.csproj" />
+    <ProjectReference Include="..\Web.Testing\Web.Testing.csproj" />
   </ItemGroup>
 
 </Project>

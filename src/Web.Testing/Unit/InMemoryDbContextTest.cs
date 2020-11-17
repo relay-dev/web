@@ -16,7 +16,7 @@ namespace Web.Testing.Unit
             _dbContextsCreated = new List<TDbContext>();
         }
 
-        public override void BootstrapTest()
+        protected override void BootstrapTest()
         {
             var options = new DbContextOptionsBuilder<TDbContext>()
                 .UseInMemoryDatabase(Guid.NewGuid().ToString())
