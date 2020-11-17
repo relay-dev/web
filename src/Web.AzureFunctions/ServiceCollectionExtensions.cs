@@ -79,7 +79,8 @@ namespace Web.AzureFunctions
             if (new AzureFunctionsConfiguration().IsLocal)
             {
                 configurationBuilder.AddJsonFile("appsettings.Local.json", false, true);
-                configurationBuilder.AddUserSecrets<TStartup>(true);
+                configurationBuilder.AddJsonFile("C:\\Azure\\appsettings.KeyVault.json", true, true);
+                configurationBuilder.AddJsonFile("secrets.json", true, true);
             }
 
             configurationBuilder.AddEnvironmentVariables();
