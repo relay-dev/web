@@ -1,6 +1,9 @@
 ﻿using Core.Plugins.NUnit.Integration;
 using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.IO;
+using System.Text;
 
 namespace Web.Testing.Integration
 {
@@ -17,15 +20,12 @@ namespace Web.Testing.Integration
 
         protected HttpRequest CreateHttpRequest(string key, string val)
         {
-            HttpRequest request = CreateHttpRequest();
+            var queryStringParameters = new Dictionary<string, string>
+            {
+                { key, val }
+            };
 
-            request.QueryString = QueryString.Create(
-                new Dictionary<string, string>
-                {
-                    {key, val}
-                });
-
-            return request;
+            return CreateHttpRequest(queryStringParameters);
         }
 
         protected HttpRequest CreateHttpRequest(Dictionary<string, string> queryStringParameters)
@@ -35,6 +35,17 @@ namespace Web.Testing.Integration
             request.QueryString = QueryString.Create(queryStringParameters);
 
             return request;
+        }
+
+        protected HttpRequest CreateHttpRequestWithBody(object body)
+        {
+            HttpRequest httpRequest = CreateHttpRequest();
+
+            string bodyAsJson = JsonConvert.SerializeObject(body);
+
+            httpRequest.Body = new MemoryStream(Encoding.ASCII.GetBytes(bodyAsJson));
+
+            return httpRequest;
         }
     }
 }
