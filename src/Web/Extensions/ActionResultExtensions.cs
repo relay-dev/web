@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Shouldly;
 
-namespace Web.Testing.Extensions
+namespace Web.Extensions
 {
     public static class ActionResultExtensions
     {
@@ -9,13 +8,7 @@ namespace Web.Testing.Extensions
         {
             var okResult = actionResult.Result as OkObjectResult;
 
-            okResult.ShouldNotBeNull();
-
-            var result = okResult.Value as TResult;
-
-            result.ShouldNotBeNull();
-
-            return result;
+            return okResult?.Value as TResult;
         }
     }
 }
