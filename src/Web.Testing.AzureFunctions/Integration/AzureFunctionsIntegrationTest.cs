@@ -4,7 +4,7 @@ using Web.Testing.Integration;
 
 namespace Web.Testing.AzureFunctions.Integration
 {
-    public abstract class AzureFunctionsIntegrationTest<TToTest> : WebIntegrationTest<TToTest>
+    public abstract class AzureFunctionsIntegrationTest<TToTest> : AspNetIntegrationTest<TToTest>
     {
         public IHost Bootstrap<TStartup>() where TStartup : FunctionsStartup, new()
         {

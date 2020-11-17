@@ -1,28 +1,21 @@
-﻿using Core.Plugins.NUnit.Integration;
-using Core.Providers;
+﻿using Core.Providers;
 using Extensions;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
-using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace Web.Testing.Integration
 {
-    public abstract class WebIntegrationTest<TToTest> : IntegrationTest<TToTest>
+    public abstract class WebIntegrationTest<TToTest> : AspNetIntegrationTest<TToTest>
     {
-        protected ILogger Logger => ResolveService<ILogger<TToTest>>();
-
         protected override void BootstrapTest()
         {
-            base.OneTimeSetUp();
+            base.BootstrapTest();
 
             IUsernameProvider usernameProvider = ResolveService<IUsernameProvider>();
 
@@ -42,7 +35,8 @@ namespace Web.Testing.Integration
                 })
                 .ConfigureServices((webBuilder, services) =>
                 {
-                    ConfigureIntegrationTestServices(services);
+                    RegisterControllers<TStartup>(services);
+                    ConfigureTestServices(services);
                 })
                 .ConfigureAppConfiguration((webBuilder, configBuilder) =>
                 {
@@ -58,40 +52,9 @@ namespace Web.Testing.Integration
                         .AddEnvironmentVariables();
                 });
 
-        protected virtual IServiceCollection ConfigureIntegrationTestServices(IServiceCollection services)
+        protected virtual IServiceCollection ConfigureTestServices(IServiceCollection services)
         {
             return services;
-        }
-
-        protected HttpRequest CreateHttpRequest()
-        {
-            var httpRequest = new DefaultHttpContext().Request;
-
-            httpRequest.Headers["X-Username"] = TestUsername;
-
-            return httpRequest;
-        }
-
-        protected HttpRequest CreateHttpRequest(string key, string val)
-        {
-            HttpRequest request = CreateHttpRequest();
-
-            request.QueryString = QueryString.Create(
-                new Dictionary<string, string>
-                {
-                    {key, val}
-                });
-
-            return request;
-        }
-
-        protected HttpRequest CreateHttpRequest(Dictionary<string, string> queryStringParameters)
-        {
-            HttpRequest request = CreateHttpRequest();
-
-            request.QueryString = QueryString.Create(queryStringParameters);
-
-            return request;
         }
 
         protected void RegisterControllers<TStartup>(IServiceCollection services)
@@ -100,13 +63,6 @@ namespace Web.Testing.Integration
             {
                 services.AddScoped(controllerType);
             }
-        }
-
-        private string GetAssemblyDirectory(Assembly assembly)
-        {
-            string path = Uri.UnescapeDataString(new UriBuilder(assembly.CodeBase).Path);
-
-            return Path.GetDirectoryName(path);
         }
     }
 }
