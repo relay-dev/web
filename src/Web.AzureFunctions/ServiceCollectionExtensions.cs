@@ -17,17 +17,17 @@ namespace Web.AzureFunctions
             // Add Web Framework
             services.AddWebFramework(azureFunctionsConfiguration.WebConfiguration);
 
-            // Add Functions
-            if (azureFunctionsConfiguration.FunctionTypes.Any())
-            {
-                services.AddTypes(azureFunctionsConfiguration.FunctionTypes);
-            }
-
             // Add Logging
             services.AddLogging(azureFunctionsConfiguration);
 
             // Add AzureFunctionsConfiguration
             services.AddSingleton(azureFunctionsConfiguration);
+
+            // Add Functions
+            if (azureFunctionsConfiguration.FunctionTypes.Any())
+            {
+                services.AddTypes(azureFunctionsConfiguration.FunctionTypes);
+            }
 
             // Add Event Handler framework
             if (azureFunctionsConfiguration.IsEventHandler)
