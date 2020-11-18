@@ -6,11 +6,9 @@ namespace Web.Testing.AzureFunctions.Integration
 {
     public abstract class AzureFunctionsIntegrationTest<TToTest> : AspNetIntegrationTest<TToTest>
     {
-        public IHost Bootstrap<TStartup>() where TStartup : FunctionsStartup, new()
+        protected IHostBuilder CreateAzureFunctionsTestHostBuilder<TStartup>() where TStartup : FunctionsStartup, new()
         {
-            return new HostBuilder()
-                .ConfigureWebJobs(new TStartup().Configure)
-                .Build();
+            return new HostBuilder().ConfigureWebJobs(new TStartup().Configure);
         }
     }
 }
