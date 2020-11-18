@@ -30,10 +30,6 @@ namespace Web
     {
         public static IServiceCollection AddWebFramework(this IServiceCollection services, WebConfiguration webConfiguration)
         {
-
-            services.AddScoped<WarmupTaskExecutor>();
-
-
             // Add MVC and Newtonsoft
             IMvcCoreBuilder mvcBuilder = services
                 .AddMvcCore()
