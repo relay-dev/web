@@ -43,6 +43,7 @@ namespace Web.AzureFunctions
             services = AddAzureFunctionsFramework(services, azureFunctionsConfiguration);
 
             services.AddDbContext<TDbContext>();
+            services.AddScoped<DbContext, TDbContext>();
 
             return services;
         }

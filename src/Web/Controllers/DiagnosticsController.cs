@@ -1,48 +1,56 @@
 ﻿using Core.Application;
 using Core.Plugins.Caching;
-using Core.Providers;
+using Core.Plugins.Framework;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Web.Controllers
 {
     [ApiController]
-    [Route("v1/[controller]")]
-    public class DiagnosticsController<TDbContext> : Controller where TDbContext : DbContext
+    [Route("[controller]")]
+    [ApiExplorerSettings(IgnoreApi = true)]
+    public class DiagnosticsController : Controller
     {
         private readonly IMemoryCache _cache;
-        private readonly TDbContext _dbContext;
-        private readonly ILogger<DiagnosticsController<TDbContext>> _logger;
-        private readonly IApplicationContextProvider _applicationContextProvider;
+        private readonly DbContext _dbContext;
+        private readonly IConfiguration _configuration;
+        private readonly ApplicationContext _applicationContext;
+        private readonly WarmupTaskExecutor _warmupTaskExecutor;
+        private readonly ILogger<DiagnosticsController> _logger;
 
         public DiagnosticsController(
             IMemoryCache cache,
-            TDbContext dbContext,
-            ILogger<DiagnosticsController<TDbContext>> logger,
-            IApplicationContextProvider applicationContextProvider)
+            DbContext dbContext,
+            IConfiguration configuration,
+            ApplicationContext applicationContext,
+            WarmupTaskExecutor warmupTaskExecutor,
+            ILogger<DiagnosticsController> logger)
         {
             _cache = cache;
             _dbContext = dbContext;
+            _configuration = configuration;
+            _applicationContext = applicationContext;
+            _warmupTaskExecutor = warmupTaskExecutor;
             _logger = logger;
-            _applicationContextProvider = applicationContextProvider;
         }
 
         [HttpGet]
         public ActionResult<ApplicationDiagnostics> Get()
         {
-            ApplicationContext applicationContext = _applicationContextProvider.Get();
-
             var diagnostics = new ApplicationDiagnostics
             {
-                ApplicationId = applicationContext.ApplicationId,
-                ApplicationName = applicationContext.ApplicationName,
-                ApplicationVersion = applicationContext.ApplicationVersion,
-                BuildTimestamp = applicationContext.BuildTimestamp
+                ApplicationId = _applicationContext.ApplicationId,
+                ApplicationName = _applicationContext.ApplicationName,
+                ApplicationVersion = _applicationContext.ApplicationVersion,
+                BuildTimestamp = _applicationContext.BuildTimestamp
             };
 
             return new OkObjectResult(diagnostics);
@@ -56,7 +64,25 @@ namespace Web.Controllers
 
             _cache.Clear();
 
-            return new OkObjectResult($"Cleared cache entries for: '{string.Join("', '", cacheKeys)}'");
+            string message = $"Cleared cache entries for: {Environment.NewLine}{Environment.NewLine}'{string.Join(Environment.NewLine, cacheKeys)}'";
+
+            return new OkObjectResult(message);
+        }
+
+        [HttpGet]
+        [Route("Configuration")]
+        public ActionResult Configuration()
+        {
+            var configurations = new List<string>();
+
+            foreach (KeyValuePair<string, string> kvp in _configuration.AsEnumerable())
+            {
+                configurations.Add($"{kvp.Key}: {kvp.Value}");
+            }
+
+            string message = $"Configuration entries: {Environment.NewLine}{Environment.NewLine}{string.Join(Environment.NewLine, configurations)}";
+
+            return new OkObjectResult(message);
         }
 
         [HttpGet]
@@ -83,6 +109,15 @@ namespace Web.Controllers
             _logger.LogInformation(new EventId(), message);
 
             return new OkObjectResult($"Log Message: {message}");
+        }
+
+        [HttpGet]
+        [Route("Warmup")]
+        public ActionResult Warmup()
+        {
+            Task.Factory.StartNew(() => _warmupTaskExecutor.RunAsync(new CancellationToken()));
+
+            return new OkObjectResult("Complete");
         }
     }
 }

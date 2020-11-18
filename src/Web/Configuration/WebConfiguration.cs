@@ -1,4 +1,5 @@
 ﻿using Core.Application;
+using Core.Plugins.Configuration;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -12,18 +13,20 @@ namespace Web.Configuration
         {
             CommandHandlerTypes = new List<Type>();
             MapperTypes = new List<Type>();
-            WarmupTypes = new List<Type>();
             ValidatorTypes = new Dictionary<Type, Type>();
         }
 
-        public string ApplicationName { get; set; }
         public bool IsAddApiExplorer { get; set; }
-        public IConfiguration ApplicationConfiguration { get; set; }
-        public ApplicationContext ApplicationContext { get; set; }
         public List<Type> CommandHandlerTypes { get; set; }
         public List<Type> MapperTypes { get; set; }
-        public List<Type> WarmupTypes { get; set; }
         public Dictionary<Type, Type> ValidatorTypes { get; set; }
         public Assembly ValidatorsAssembly { get; set; }
+
+        public PluginConfiguration PluginConfiguration { get; set; }
+
+        public string ApplicationName => PluginConfiguration.ApplicationConfiguration.ApplicationName;
+        public ApplicationContext ApplicationContext => PluginConfiguration.ApplicationConfiguration.ApplicationContext;
+        public IConfiguration ApplicationConfiguration => PluginConfiguration.ApplicationConfiguration.Configuration;
+        public List<Type> WarmupTypes => PluginConfiguration.ApplicationConfiguration.WarmupTypes;
     }
 }

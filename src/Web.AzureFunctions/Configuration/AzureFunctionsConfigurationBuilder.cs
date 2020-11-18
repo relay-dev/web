@@ -34,6 +34,13 @@ namespace Web.AzureFunctions.Configuration
             return this;
         }
 
+        public AzureFunctionsConfigurationBuilder UseFunctionsFromAssemblyContaining(Type type)
+        {
+            _container.FunctionsAssemblies.Add(type.Assembly);
+
+            return this;
+        }
+
         public AzureFunctionsConfigurationBuilder AsEventHandler()
         {
             _azureFunctionsConfiguration.IsEventHandler = true;

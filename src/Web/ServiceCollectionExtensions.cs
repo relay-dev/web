@@ -30,10 +30,14 @@ namespace Web
     {
         public static IServiceCollection AddWebFramework(this IServiceCollection services, WebConfiguration webConfiguration)
         {
+
+            services.AddScoped<WarmupTaskExecutor>();
+
+
             // Add MVC and Newtonsoft
             IMvcCoreBuilder mvcBuilder = services
                 .AddMvcCore()
-                .AddApplicationPart(typeof(DiagnosticsController<>).Assembly)
+                .AddApplicationPart(typeof(DiagnosticsController).Assembly)
                 .AddNewtonsoftJson(options =>
                 {
                     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
@@ -41,7 +45,7 @@ namespace Web
                 });
 
             // Add Core Plugins
-            services.AddDefaultCorePlugins();
+            services.AddDefaultCorePlugins(webConfiguration.PluginConfiguration.ApplicationConfiguration);
             services.AddAutoMapperPlugin(webConfiguration.MapperTypes);
             services.AddAzureBlobStoragePlugin(webConfiguration.ApplicationConfiguration);
             services.AddAzureEventGridPlugin(webConfiguration.ApplicationConfiguration);
@@ -102,7 +106,7 @@ namespace Web
 
             if (webConfiguration.WarmupTypes.Any() && !IsLocal)
             {
-                var warmupExecutor = new WarmupTaskExecutor(app.ApplicationServices, webConfiguration.WarmupTypes);
+                var warmupExecutor = new WarmupTaskExecutor(app.ApplicationServices, webConfiguration.PluginConfiguration.ApplicationConfiguration);
 
                 Task.Factory.StartNew(() => warmupExecutor.RunAsync(new CancellationToken()));
             }
@@ -115,7 +119,8 @@ namespace Web
             services = AddWebFramework(services, webConfiguration);
 
             services.AddDbContext<TDbContext>();
-            services.AddScoped<DiagnosticsController<TDbContext>>();
+            services.AddScoped<DbContext, TDbContext>();
+            services.AddScoped<DiagnosticsController>();
 
             return services;
         }
