@@ -1,19 +1,19 @@
 ﻿using Microsoft.Extensions.Configuration;
 using System;
+using System.Collections.Generic;
 using Web.Configuration;
 
 namespace Web.AzureFunctions.Configuration
 {
     public class AzureFunctionsConfiguration
     {
-        public AzureFunctionsConfiguration() { }
-
-        public AzureFunctionsConfiguration(WebConfiguration webConfiguration)
+        public AzureFunctionsConfiguration()
         {
-            WebConfiguration = webConfiguration;
+            FunctionTypes = new List<Type>();
         }
 
         public bool IsEventHandler { get; set; }
+        public List<Type> FunctionTypes { get; set; }
         public WebConfiguration WebConfiguration { get; set; }
         public IConfiguration ApplicationConfiguration => WebConfiguration.ApplicationConfiguration;
 

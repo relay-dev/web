@@ -6,10 +6,12 @@ namespace Web.Rest.Configuration
     public class RestConfigurationBuilder
     {
         private readonly RestConfiguration _restConfiguration;
+        private readonly WebConfigurationBuilder _webConfigurationBuilder;
 
         public RestConfigurationBuilder(WebConfigurationBuilder webConfigurationBuilder)
         {
-            _restConfiguration = new RestConfiguration(webConfigurationBuilder.Build());
+            _webConfigurationBuilder = webConfigurationBuilder;
+            _restConfiguration = new RestConfiguration();
         }
 
         public RestConfigurationBuilder UseSwaggerConfiguration(SwaggerConfiguration swaggerConfiguration)
@@ -28,6 +30,8 @@ namespace Web.Rest.Configuration
 
         public RestConfiguration Build()
         {
+            _restConfiguration.WebConfiguration = _webConfigurationBuilder.Build();
+
             _restConfiguration.SwaggerConfiguration ??= DefaultSwaggerConfiguration;
 
             if (!_restConfiguration.IsDocumentUsernameHeaderToken.HasValue)

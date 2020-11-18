@@ -1,9 +1,11 @@
-﻿using Core.Plugins.Providers;
+﻿using Core.Plugins;
+using Core.Plugins.Providers;
 using Core.Providers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using System.Linq;
 using Web.AzureFunctions.Configuration;
 
 namespace Web.AzureFunctions
@@ -14,6 +16,12 @@ namespace Web.AzureFunctions
         {
             // Add Web Framework
             services.AddWebFramework(azureFunctionsConfiguration.WebConfiguration);
+
+            // Add Functions
+            if (azureFunctionsConfiguration.FunctionTypes.Any())
+            {
+                services.AddTypes(azureFunctionsConfiguration.FunctionTypes);
+            }
 
             // Add Logging
             services.AddLogging(azureFunctionsConfiguration);
@@ -74,7 +82,7 @@ namespace Web.AzureFunctions
         /// <summary>
         /// Note: This is an extension method on the ConfigurationBuilder, not the ServiceCollection. It's handy to have it where all the other application init code is
         /// </summary>
-        public static ConfigurationBuilder AddAzureFunctionsConfiguration<TStartup>(this ConfigurationBuilder configurationBuilder) where TStartup : class
+        public static ConfigurationBuilder AddAzureFunctionsConfiguration(this ConfigurationBuilder configurationBuilder)
         {
             if (new AzureFunctionsConfiguration().IsLocal)
             {
