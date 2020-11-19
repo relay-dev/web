@@ -14,6 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
@@ -41,18 +42,18 @@ namespace Web
                 });
 
             // Add Core Plugins
-            services.AddDefaultCorePlugins(webConfiguration.PluginConfiguration.ApplicationConfiguration);
+            services.AddDefaultCorePlugins(webConfiguration);
             services.AddAutoMapperPlugin(webConfiguration.MapperTypes);
-            services.AddAzureBlobStoragePlugin(webConfiguration.ApplicationConfiguration);
-            services.AddAzureEventGridPlugin(webConfiguration.ApplicationConfiguration);
+            services.AddAzureBlobStoragePlugin(webConfiguration.Configuration);
+            services.AddAzureEventGridPlugin(webConfiguration.Configuration);
             services.AddEntityFrameworkPlugin();
-            services.AddFluentValidationPlugin(mvcBuilder, webConfiguration.ValidatorsAssembly);
+            services.AddFluentValidationPlugin(mvcBuilder, webConfiguration.ValidatorsAssemblies);
             services.AddMediatRPlugin(webConfiguration.CommandHandlerTypes);
             services.AddWarmup(webConfiguration.WarmupTypes);
 
             // Add WebConfiguration and ApplicationContext
             services.AddSingleton(webConfiguration);
-            services.AddSingleton(webConfiguration.ApplicationConfiguration);
+            services.AddSingleton(webConfiguration.Configuration);
             services.AddSingleton(webConfiguration.ApplicationContext);
 
             // Add MemoryCache
@@ -81,7 +82,7 @@ namespace Web
                 app.UseHsts();
             }
 
-            var pathBase = webConfiguration.ApplicationConfiguration["PATH_BASE"];
+            var pathBase = webConfiguration.Configuration["PATH_BASE"];
 
             if (!string.IsNullOrEmpty(pathBase))
             {
@@ -102,7 +103,7 @@ namespace Web
 
             if (webConfiguration.WarmupTypes.Any() && !IsLocal)
             {
-                var warmupExecutor = new WarmupTaskExecutor(app.ApplicationServices, webConfiguration.PluginConfiguration.ApplicationConfiguration);
+                var warmupExecutor = new WarmupTaskExecutor(app.ApplicationServices, webConfiguration);
 
                 Task.Factory.StartNew(() => warmupExecutor.RunAsync(new CancellationToken()));
             }
@@ -138,14 +139,14 @@ namespace Web
             return services;
         }
 
-        public static IServiceCollection AddFluentValidationPlugin(this IServiceCollection services, IMvcCoreBuilder mvcCoreBuilder, Assembly assemblyToScan)
+        public static IServiceCollection AddFluentValidationPlugin(this IServiceCollection services, IMvcCoreBuilder mvcCoreBuilder, List<Assembly> assembliesToScan)
         {
-            if (assemblyToScan == null)
+            if (assembliesToScan == null || !assembliesToScan.Any())
             {
                 return services;
             }
 
-            mvcCoreBuilder.AddFluentValidation(fv => fv.RegisterValidatorsFromAssembly(assemblyToScan));
+            mvcCoreBuilder.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblies(assembliesToScan));
 
             return services;
         }

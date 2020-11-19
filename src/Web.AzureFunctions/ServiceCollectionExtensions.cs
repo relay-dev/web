@@ -15,7 +15,7 @@ namespace Web.AzureFunctions
         public static IServiceCollection AddAzureFunctionsFramework(this IServiceCollection services, AzureFunctionsConfiguration azureFunctionsConfiguration)
         {
             // Add Web Framework
-            services.AddWebFramework(azureFunctionsConfiguration.WebConfiguration);
+            services.AddWebFramework(azureFunctionsConfiguration);
 
             // Add Logging
             services.AddLogging(azureFunctionsConfiguration);
@@ -32,7 +32,7 @@ namespace Web.AzureFunctions
             // Add Event Handler framework
             if (azureFunctionsConfiguration.IsEventHandler)
             {
-                services.AddUsernameProvider(azureFunctionsConfiguration.WebConfiguration.ApplicationName);
+                services.AddUsernameProvider(azureFunctionsConfiguration.ApplicationName);
             }
 
             return services;
@@ -52,7 +52,7 @@ namespace Web.AzureFunctions
         {
             services.AddLogging(logging =>
             {
-                logging.AddConfiguration(azureFunctionsConfiguration.ApplicationConfiguration.GetSection("Logging"));
+                logging.AddConfiguration(azureFunctionsConfiguration.Configuration.GetSection("Logging"));
 
                 if (azureFunctionsConfiguration.IsLocal)
                 {

@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Core.Framework;
 using Core.Plugins.Configuration;
 using System;
 using System.Collections.Generic;
@@ -8,85 +7,91 @@ using System.Reflection;
 
 namespace Web.Configuration
 {
-    public class WebConfigurationBuilder
+    public class WebConfigurationBuilder<TConfiguration> : PluginConfigurationBuilder<TConfiguration> where TConfiguration : class
     {
-        private readonly WebConfiguration _webConfiguration;
         private readonly WebConfigurationBuilderContainer _container;
-        private readonly PluginConfigurationBuilder _pluginConfigurationBuilder;
 
-        public WebConfigurationBuilder(PluginConfigurationBuilder pluginConfigurationBuilder)
+        public WebConfigurationBuilder()
         {
-            _webConfiguration = new WebConfiguration();
             _container = new WebConfigurationBuilderContainer();
-            _pluginConfigurationBuilder = pluginConfigurationBuilder;
         }
 
-        public WebConfigurationBuilder UseCommandHandlers(List<Type> commandHandlerTypes)
+        public WebConfigurationBuilder<TConfiguration> UseCommandHandlers(List<Type> commandHandlerTypes)
         {
-            _webConfiguration.CommandHandlerTypes = commandHandlerTypes;
+            _container.CommandHandlerTypes = commandHandlerTypes;
 
             return this;
         }
 
-        public WebConfigurationBuilder UseCommandHandlersFromAssemblyContaining<TCommandHandler>()
+        public WebConfigurationBuilder<TConfiguration> UseCommandHandlersFromAssemblyContaining<TCommandHandler>()
         {
             _container.CommandHandlerAssemblies.Add(typeof(TCommandHandler).Assembly);
 
             return this;
         }
 
-        public WebConfigurationBuilder UseCommandHandlersFromAssemblyContaining(Type type)
+        public WebConfigurationBuilder<TConfiguration> UseCommandHandlersFromAssemblyContaining(Type type)
         {
             _container.CommandHandlerAssemblies.Add(type.Assembly);
 
             return this;
         }
 
-        public WebConfigurationBuilder UseMappers(List<Type> mapperTypes)
+        public WebConfigurationBuilder<TConfiguration> UseMappers(List<Type> mapperTypes)
         {
-            _webConfiguration.MapperTypes = mapperTypes;
+            _container.MapperTypes = mapperTypes;
 
             return this;
         }
 
-        public WebConfigurationBuilder UseMappersFromAssemblyContaining<TMapper>()
+        public WebConfigurationBuilder<TConfiguration> UseMappersFromAssemblyContaining<TMapper>()
         {
             _container.MapperAssemblies.Add(typeof(TMapper).Assembly);
 
             return this;
         }
 
-        public WebConfigurationBuilder UseMappersFromAssemblyContaining(Type type)
+        public WebConfigurationBuilder<TConfiguration> UseMappersFromAssemblyContaining(Type type)
         {
             _container.MapperAssemblies.Add(type.Assembly);
 
             return this;
         }
 
-        public WebConfigurationBuilder UseValidators(Dictionary<Type, Type> validatorTypes)
+        public WebConfigurationBuilder<TConfiguration> UseValidators(Dictionary<Type, Type> validatorTypes)
         {
-            _webConfiguration.ValidatorTypes = validatorTypes;
+            _container.ValidatorTypes = validatorTypes;
 
             return this;
         }
 
-        public WebConfigurationBuilder UseValidatorsFromAssemblyContaining<TValidator>()
+        public WebConfigurationBuilder<TConfiguration> UseValidatorsFromAssemblyContaining<TValidator>()
         {
-            _webConfiguration.ValidatorsAssembly = typeof(TValidator).Assembly;
+            _container.ValidatorAssemblies.Add(typeof(TValidator).Assembly);
 
             return this;
         }
 
-        public WebConfigurationBuilder UseValidatorsFromAssemblyContaining(Type type)
+        public WebConfigurationBuilder<TConfiguration> UseValidatorsFromAssemblyContaining(Type type)
         {
-            _webConfiguration.ValidatorsAssembly = type.Assembly;
+            _container.ValidatorAssemblies.Add(type.Assembly);
 
             return this;
         }
 
-        public WebConfiguration Build()
+        public override TConfiguration Build()
         {
-            _webConfiguration.PluginConfiguration = _pluginConfigurationBuilder.Build();
+            var webConfiguration = base.Build() as WebConfiguration;
+
+            if (webConfiguration == null)
+            {
+                throw new InvalidOperationException("webConfiguration cannot be null");
+            }
+
+            if (_container.CommandHandlerTypes.Any())
+            {
+                webConfiguration.CommandHandlerTypes = _container.CommandHandlerTypes;
+            }
 
             if (_container.CommandHandlerAssemblies.Any())
             {
@@ -94,9 +99,14 @@ namespace Web.Configuration
                 {
                     if (type.GetInterfaces().Any(i => i.Name.Contains("IRequestHandler")))
                     {
-                        _webConfiguration.CommandHandlerTypes.Add(type);
+                        webConfiguration.CommandHandlerTypes.Add(type);
                     }
                 }
+            }
+
+            if (_container.MapperTypes.Any())
+            {
+                webConfiguration.MapperTypes = _container.MapperTypes;
             }
 
             if (_container.MapperAssemblies.Any())
@@ -105,37 +115,36 @@ namespace Web.Configuration
                 {
                     if (type.IsSubclassOf(typeof(Profile)))
                     {
-                        _webConfiguration.MapperTypes.Add(type);
+                        webConfiguration.MapperTypes.Add(type);
                     }
                 }
             }
 
-            if (_container.WarmupAssemblies.Any())
+            if (_container.ValidatorTypes.Any())
             {
-                foreach (Type type in _container.WarmupAssemblies.SelectMany(a => a.GetTypes()))
-                {
-                    if (type.GetInterfaces().Contains(typeof(IWarmup)))
-                    {
-                        _webConfiguration.WarmupTypes.Add(type);
-                    }
-                }
+                webConfiguration.ValidatorTypes = _container.ValidatorTypes;
             }
 
-            return _webConfiguration;
+            if (_container.ValidatorAssemblies.Any())
+            {
+                webConfiguration.ValidatorsAssemblies.AddRange(_container.ValidatorAssemblies);
+            }
+
+            return webConfiguration as TConfiguration;
         }
 
-        internal class WebConfigurationBuilderContainer
+        internal class WebConfigurationBuilderContainer : WebConfiguration
         {
             public WebConfigurationBuilderContainer()
             {
                 CommandHandlerAssemblies = new List<Assembly>();
                 MapperAssemblies = new List<Assembly>();
-                WarmupAssemblies = new List<Assembly>();
+                ValidatorAssemblies = new List<Assembly>();
             }
 
             public List<Assembly> CommandHandlerAssemblies { get; set; }
             public List<Assembly> MapperAssemblies { get; set; }
-            public List<Assembly> WarmupAssemblies { get; set; }
+            public List<Assembly> ValidatorAssemblies { get; set; }
         }
     }
 }

@@ -14,7 +14,7 @@ namespace Web.Rest
         public static IServiceCollection AddRestFramework(this IServiceCollection services, RestConfiguration restConfiguration)
         {
             // Add Web Framework
-            services.AddWebFramework(restConfiguration.WebConfiguration);
+            services.AddWebFramework(restConfiguration);
 
             // Add Health Checks
             services.AddHealthChecks();
@@ -61,9 +61,9 @@ namespace Web.Rest
             app.UseCors("AnyOrigin");
 
             // Use Web Framework
-            app.UseWebFramework(restConfiguration.WebConfiguration, env);
+            app.UseWebFramework(restConfiguration, env);
 
-            var pathBase = restConfiguration.ApplicationConfiguration["PATH_BASE"];
+            var pathBase = restConfiguration.Configuration["PATH_BASE"];
 
             app.UseSwagger()
                 .UseSwaggerUI(c =>

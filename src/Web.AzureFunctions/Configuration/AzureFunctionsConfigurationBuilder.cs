@@ -7,66 +7,74 @@ using Web.Configuration;
 
 namespace Web.AzureFunctions.Configuration
 {
-    public class AzureFunctionsConfigurationBuilder
+    public class AzureFunctionsConfigurationBuilder<TConfiguration> : WebConfigurationBuilder<TConfiguration> where TConfiguration : class
     {
-        private readonly AzureFunctionsConfiguration _azureFunctionsConfiguration;
         private readonly AzureFunctionConfigurationBuilderContainer _container;
-        private readonly WebConfigurationBuilder _webConfigurationBuilder;
 
-        public AzureFunctionsConfigurationBuilder(WebConfigurationBuilder webConfigurationBuilder)
+        public AzureFunctionsConfigurationBuilder()
         {
-            _webConfigurationBuilder = webConfigurationBuilder;
-            _azureFunctionsConfiguration = new AzureFunctionsConfiguration();
             _container = new AzureFunctionConfigurationBuilderContainer();
         }
         
-        public AzureFunctionsConfigurationBuilder UseFunctions(List<Type> functionTypes)
+        public AzureFunctionsConfigurationBuilder<TConfiguration> UseFunctions(List<Type> functionTypes)
         {
-            _azureFunctionsConfiguration.FunctionTypes = functionTypes;
+            _container.FunctionTypes = functionTypes;
 
             return this;
         }
 
-        public AzureFunctionsConfigurationBuilder UseFunctionsFromAssemblyContaining<TFunction>()
+        public AzureFunctionsConfigurationBuilder<TConfiguration> UseFunctionsFromAssemblyContaining<TFunction>()
         {
             _container.FunctionsAssemblies.Add(typeof(TFunction).Assembly);
 
             return this;
         }
 
-        public AzureFunctionsConfigurationBuilder UseFunctionsFromAssemblyContaining(Type type)
+        public AzureFunctionsConfigurationBuilder<TConfiguration> UseFunctionsFromAssemblyContaining(Type type)
         {
             _container.FunctionsAssemblies.Add(type.Assembly);
 
             return this;
         }
 
-        public AzureFunctionsConfigurationBuilder AsEventHandler()
+        public AzureFunctionsConfigurationBuilder<TConfiguration> AsEventHandler()
         {
-            _azureFunctionsConfiguration.IsEventHandler = true;
+            _container.IsEventHandler = true;
 
             return this;
         }
 
-        public AzureFunctionsConfiguration Build()
+        public override TConfiguration Build()
         {
-            _azureFunctionsConfiguration.WebConfiguration = _webConfigurationBuilder.Build();
+            AzureFunctionsConfiguration azureFunctionsConfiguration = base.Build() as AzureFunctionsConfiguration;
 
+            if (azureFunctionsConfiguration == null)
+            {
+                throw new InvalidOperationException("azureFunctionsConfiguration cannot be null");
+            }
+
+            if (_container.FunctionTypes.Any())
+            {
+                azureFunctionsConfiguration.FunctionTypes = _container.FunctionTypes;
+            }
+            
             if (_container.FunctionsAssemblies.Any())
             {
                 foreach (Type type in _container.FunctionsAssemblies.SelectMany(a => a.GetTypes()))
                 {
                     if (type.IsSubclassOf(typeof(AzureFunctionBase)) || type == typeof(AzureFunctionBase))
                     {
-                        _azureFunctionsConfiguration.FunctionTypes.Add(type);
+                        azureFunctionsConfiguration.FunctionTypes.Add(type);
                     }
                 }
             }
 
-            return _azureFunctionsConfiguration;
+            azureFunctionsConfiguration.IsEventHandler = _container.IsEventHandler;
+
+            return azureFunctionsConfiguration as TConfiguration;
         }
 
-        internal class AzureFunctionConfigurationBuilderContainer
+        internal class AzureFunctionConfigurationBuilderContainer : AzureFunctionsConfiguration
         {
             public AzureFunctionConfigurationBuilderContainer()
             {

@@ -1,50 +1,62 @@
-﻿using System;
+﻿using Microsoft.Extensions.Configuration;
+using System;
 using Web.Configuration;
 
 namespace Web.Rest.Configuration
 {
-    public class RestConfigurationBuilder
+    public class RestConfigurationBuilder<TConfiguration> : WebConfigurationBuilder<TConfiguration> where TConfiguration : class
     {
-        private readonly RestConfiguration _restConfiguration;
-        private readonly WebConfigurationBuilder _webConfigurationBuilder;
+        private readonly RestConfigurationBuilderContainer _container;
+        private readonly IConfiguration _configuration;
 
-        public RestConfigurationBuilder(WebConfigurationBuilder webConfigurationBuilder)
+        public RestConfigurationBuilder(IConfiguration configuration)
         {
-            _webConfigurationBuilder = webConfigurationBuilder;
-            _restConfiguration = new RestConfiguration();
+            _configuration = configuration;
+            _container = new RestConfigurationBuilderContainer();
         }
 
-        public RestConfigurationBuilder UseSwaggerConfiguration(SwaggerConfiguration swaggerConfiguration)
+        public RestConfigurationBuilder<TConfiguration> UseSwaggerConfiguration(SwaggerConfiguration swaggerConfiguration)
         {
-            _restConfiguration.SwaggerConfiguration = swaggerConfiguration;
+            _container.SwaggerConfiguration = swaggerConfiguration;
 
             return this;
         }
 
-        public RestConfigurationBuilder DocumentUsernameHeaderToken(bool flag = true)
+        public RestConfigurationBuilder<TConfiguration> DocumentUsernameHeaderToken(bool flag = true)
         {
-            _restConfiguration.IsDocumentUsernameHeaderToken = flag;
+            _container.IsDocumentUsernameHeaderToken = flag;
 
             return this;
         }
 
-        public RestConfiguration Build()
+        public override TConfiguration Build()
         {
-            _restConfiguration.WebConfiguration = _webConfigurationBuilder.Build();
+            var restConfiguration = base.Build() as RestConfiguration;
 
-            _restConfiguration.SwaggerConfiguration ??= DefaultSwaggerConfiguration;
-
-            if (!_restConfiguration.IsDocumentUsernameHeaderToken.HasValue)
+            if (restConfiguration == null)
             {
-                _restConfiguration.IsDocumentUsernameHeaderToken = ResolveIsDocumentUsernameHeaderToken();
+                throw new InvalidOperationException("restConfiguration cannot be null");
             }
 
-            return _restConfiguration;
+            restConfiguration.IsDocumentUsernameHeaderToken = _container.IsDocumentUsernameHeaderToken;
+            restConfiguration.SwaggerConfiguration = _container.SwaggerConfiguration;
+
+            if (restConfiguration.IsDocumentUsernameHeaderToken == null)
+            {
+                restConfiguration.IsDocumentUsernameHeaderToken = ResolveIsDocumentUsernameHeaderToken();
+            }
+
+            if (restConfiguration.SwaggerConfiguration == null)
+            {
+                restConfiguration.SwaggerConfiguration = DefaultSwaggerConfiguration;
+            }
+
+            return restConfiguration as TConfiguration;
         }
 
         private bool ResolveIsDocumentUsernameHeaderToken()
         {
-            string configSetting = _restConfiguration.ApplicationConfiguration["IsDocumentUsernameHeaderToken"];
+            string configSetting = _configuration["IsDocumentUsernameHeaderToken"];
 
             if (!string.IsNullOrEmpty(configSetting) && bool.TryParse(configSetting, out bool isDocumentUsernameHeaderToken))
             {
@@ -57,10 +69,12 @@ namespace Web.Rest.Configuration
         private SwaggerConfiguration DefaultSwaggerConfiguration =>
             new SwaggerConfiguration
             {
-                Title = _restConfiguration.ApplicationConfiguration["SwaggerConfiguration:Title"] ?? _restConfiguration.ApplicationConfiguration["ServiceName"],
-                MajorVersion = Convert.ToInt32(_restConfiguration.ApplicationConfiguration["SwaggerConfiguration:MajorVersion"]),
-                MinorVersion = Convert.ToInt32(_restConfiguration.ApplicationConfiguration["SwaggerConfiguration:MinorVersion"]),
-                Description = _restConfiguration.ApplicationConfiguration["SwaggerConfiguration:Description"]
+                Title = _configuration["SwaggerConfiguration:Title"] ?? _configuration["ServiceName"],
+                MajorVersion = Convert.ToInt32(_configuration["SwaggerConfiguration:MajorVersion"]),
+                MinorVersion = Convert.ToInt32(_configuration["SwaggerConfiguration:MinorVersion"]),
+                Description = _configuration["SwaggerConfiguration:Description"]
             };
+
+        internal class RestConfigurationBuilderContainer : RestConfiguration { }
     }
 }
