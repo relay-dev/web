@@ -4,7 +4,13 @@ using Web.Configuration;
 
 namespace Web.Rest.Configuration
 {
-    public class RestConfigurationBuilder<TConfiguration> : WebConfigurationBuilder<TConfiguration> where TConfiguration : class
+    public class RestConfigurationBuilder : RestConfigurationBuilder<RestConfigurationBuilder, RestConfiguration>
+    {
+        public RestConfigurationBuilder(IConfiguration configuration)
+            : base(configuration) { }
+    }
+
+    public class RestConfigurationBuilder<TBuilder, TResult> : WebConfigurationBuilder<TBuilder, TResult> where TBuilder : class where TResult : class
     {
         private readonly RestConfigurationBuilderContainer _container;
         private readonly IConfiguration _configuration;
@@ -15,21 +21,21 @@ namespace Web.Rest.Configuration
             _container = new RestConfigurationBuilderContainer();
         }
 
-        public RestConfigurationBuilder<TConfiguration> UseSwaggerConfiguration(SwaggerConfiguration swaggerConfiguration)
+        public TBuilder UseSwaggerConfiguration(SwaggerConfiguration swaggerConfiguration)
         {
             _container.SwaggerConfiguration = swaggerConfiguration;
 
-            return this;
+            return this as TBuilder;
         }
 
-        public RestConfigurationBuilder<TConfiguration> DocumentUsernameHeaderToken(bool flag = true)
+        public TBuilder DocumentUsernameHeaderToken(bool flag = true)
         {
             _container.IsDocumentUsernameHeaderToken = flag;
 
-            return this;
+            return this as TBuilder;
         }
 
-        public override TConfiguration Build()
+        public override TResult Build()
         {
             var restConfiguration = base.Build() as RestConfiguration;
 
@@ -51,7 +57,7 @@ namespace Web.Rest.Configuration
                 restConfiguration.SwaggerConfiguration = DefaultSwaggerConfiguration;
             }
 
-            return restConfiguration as TConfiguration;
+            return restConfiguration as TResult;
         }
 
         private bool ResolveIsDocumentUsernameHeaderToken()

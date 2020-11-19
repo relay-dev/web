@@ -34,7 +34,6 @@ namespace Web
             // Add MVC and Newtonsoft
             IMvcCoreBuilder mvcBuilder = services
                 .AddMvcCore()
-                .AddApplicationPart(typeof(DiagnosticsController).Assembly)
                 .AddNewtonsoftJson(options =>
                 {
                     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
@@ -61,6 +60,12 @@ namespace Web
 
             // Add Web services
             services.AddScoped<IJsonSerializer, NewtonsoftJsonSerializer>();
+
+            // Add Diagnostics
+            if (webConfiguration.IsAddDiagnostics)
+            {
+                mvcBuilder.AddApplicationPart(typeof(DiagnosticsController).Assembly);
+            }
 
             // Add ApiExplorer
             if (webConfiguration.IsAddApiExplorer)

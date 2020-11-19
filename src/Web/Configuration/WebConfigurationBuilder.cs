@@ -7,7 +7,12 @@ using System.Reflection;
 
 namespace Web.Configuration
 {
-    public class WebConfigurationBuilder<TConfiguration> : PluginConfigurationBuilder<TConfiguration> where TConfiguration : class
+    public class WebConfigurationBuilder : WebConfigurationBuilder<WebConfigurationBuilder, WebConfiguration>
+    {
+
+    }
+
+    public class WebConfigurationBuilder<TBuilder, TResult> : PluginConfigurationBuilderGeneric<TBuilder, TResult> where TBuilder : class where TResult : class
     {
         private readonly WebConfigurationBuilderContainer _container;
 
@@ -16,70 +21,84 @@ namespace Web.Configuration
             _container = new WebConfigurationBuilderContainer();
         }
 
-        public WebConfigurationBuilder<TConfiguration> UseCommandHandlers(List<Type> commandHandlerTypes)
+        public TBuilder UseCommandHandlers(List<Type> commandHandlerTypes)
         {
             _container.CommandHandlerTypes = commandHandlerTypes;
 
-            return this;
+            return this as TBuilder;
         }
 
-        public WebConfigurationBuilder<TConfiguration> UseCommandHandlersFromAssemblyContaining<TCommandHandler>()
+        public TBuilder UseCommandHandlersFromAssemblyContaining<TCommandHandler>()
         {
             _container.CommandHandlerAssemblies.Add(typeof(TCommandHandler).Assembly);
 
-            return this;
+            return this as TBuilder;
         }
 
-        public WebConfigurationBuilder<TConfiguration> UseCommandHandlersFromAssemblyContaining(Type type)
+        public TBuilder UseCommandHandlersFromAssemblyContaining(Type type)
         {
             _container.CommandHandlerAssemblies.Add(type.Assembly);
 
-            return this;
+            return this as TBuilder;
         }
 
-        public WebConfigurationBuilder<TConfiguration> UseMappers(List<Type> mapperTypes)
+        public TBuilder UseMappers(List<Type> mapperTypes)
         {
             _container.MapperTypes = mapperTypes;
 
-            return this;
+            return this as TBuilder;
         }
 
-        public WebConfigurationBuilder<TConfiguration> UseMappersFromAssemblyContaining<TMapper>()
+        public TBuilder UseMappersFromAssemblyContaining<TMapper>()
         {
             _container.MapperAssemblies.Add(typeof(TMapper).Assembly);
 
-            return this;
+            return this as TBuilder;
         }
 
-        public WebConfigurationBuilder<TConfiguration> UseMappersFromAssemblyContaining(Type type)
+        public TBuilder UseMappersFromAssemblyContaining(Type type)
         {
             _container.MapperAssemblies.Add(type.Assembly);
 
-            return this;
+            return this as TBuilder;
         }
 
-        public WebConfigurationBuilder<TConfiguration> UseValidators(Dictionary<Type, Type> validatorTypes)
+        public TBuilder UseValidators(Dictionary<Type, Type> validatorTypes)
         {
             _container.ValidatorTypes = validatorTypes;
 
-            return this;
+            return this as TBuilder;
         }
 
-        public WebConfigurationBuilder<TConfiguration> UseValidatorsFromAssemblyContaining<TValidator>()
+        public TBuilder UseValidatorsFromAssemblyContaining<TValidator>()
         {
             _container.ValidatorAssemblies.Add(typeof(TValidator).Assembly);
 
-            return this;
+            return this as TBuilder;
         }
 
-        public WebConfigurationBuilder<TConfiguration> UseValidatorsFromAssemblyContaining(Type type)
+        public TBuilder UseValidatorsFromAssemblyContaining(Type type)
         {
             _container.ValidatorAssemblies.Add(type.Assembly);
 
-            return this;
+            return this as TBuilder;
         }
 
-        public override TConfiguration Build()
+        public TBuilder UseDiagnostics(bool flag = true)
+        {
+            _container.IsAddDiagnostics = flag;
+
+            return this as TBuilder;
+        }
+
+        public TBuilder UseApiExplorer(bool flag = true)
+        {
+            _container.IsAddApiExplorer = flag;
+
+            return this as TBuilder;
+        }
+
+        public override TResult Build()
         {
             var webConfiguration = base.Build() as WebConfiguration;
 
@@ -130,7 +149,10 @@ namespace Web.Configuration
                 webConfiguration.ValidatorsAssemblies.AddRange(_container.ValidatorAssemblies);
             }
 
-            return webConfiguration as TConfiguration;
+            webConfiguration.IsAddDiagnostics = _container.IsAddDiagnostics;
+            webConfiguration.IsAddApiExplorer = _container.IsAddApiExplorer;
+
+            return webConfiguration as TResult;
         }
 
         internal class WebConfigurationBuilderContainer : WebConfiguration

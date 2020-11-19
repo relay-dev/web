@@ -7,7 +7,12 @@ using Web.Configuration;
 
 namespace Web.AzureFunctions.Configuration
 {
-    public class AzureFunctionsConfigurationBuilder<TConfiguration> : WebConfigurationBuilder<TConfiguration> where TConfiguration : class
+    public class AzureFunctionsConfigurationBuilder : AzureFunctionsConfigurationBuilder<AzureFunctionsConfigurationBuilder, AzureFunctionsConfiguration>
+    {
+        
+    }
+
+    public class AzureFunctionsConfigurationBuilder<TBuilder, TResult> : WebConfigurationBuilder<TBuilder, TResult> where TBuilder : class where TResult : class
     {
         private readonly AzureFunctionConfigurationBuilderContainer _container;
 
@@ -16,35 +21,35 @@ namespace Web.AzureFunctions.Configuration
             _container = new AzureFunctionConfigurationBuilderContainer();
         }
         
-        public AzureFunctionsConfigurationBuilder<TConfiguration> UseFunctions(List<Type> functionTypes)
+        public TBuilder UseFunctions(List<Type> functionTypes)
         {
             _container.FunctionTypes = functionTypes;
 
-            return this;
+            return this as TBuilder;
         }
 
-        public AzureFunctionsConfigurationBuilder<TConfiguration> UseFunctionsFromAssemblyContaining<TFunction>()
+        public TBuilder UseFunctionsFromAssemblyContaining<TFunction>()
         {
             _container.FunctionsAssemblies.Add(typeof(TFunction).Assembly);
 
-            return this;
+            return this as TBuilder;
         }
 
-        public AzureFunctionsConfigurationBuilder<TConfiguration> UseFunctionsFromAssemblyContaining(Type type)
+        public TBuilder UseFunctionsFromAssemblyContaining(Type type)
         {
             _container.FunctionsAssemblies.Add(type.Assembly);
 
-            return this;
+            return this as TBuilder;
         }
 
-        public AzureFunctionsConfigurationBuilder<TConfiguration> AsEventHandler()
+        public TBuilder AsEventHandler()
         {
             _container.IsEventHandler = true;
 
-            return this;
+            return this as TBuilder;
         }
 
-        public override TConfiguration Build()
+        public override TResult Build()
         {
             AzureFunctionsConfiguration azureFunctionsConfiguration = base.Build() as AzureFunctionsConfiguration;
 
@@ -71,7 +76,7 @@ namespace Web.AzureFunctions.Configuration
 
             azureFunctionsConfiguration.IsEventHandler = _container.IsEventHandler;
 
-            return azureFunctionsConfiguration as TConfiguration;
+            return azureFunctionsConfiguration as TResult;
         }
 
         internal class AzureFunctionConfigurationBuilderContainer : AzureFunctionsConfiguration

@@ -9,6 +9,7 @@ namespace Web.Configuration
     {
         public WebConfiguration()
         {
+            IsAddDiagnostics = true;
             CommandHandlerTypes = new List<Type>();
             MapperTypes = new List<Type>();
             ValidatorTypes = new Dictionary<Type, Type>();
@@ -16,6 +17,7 @@ namespace Web.Configuration
         }
 
         public bool IsAddApiExplorer { get; set; }
+        public bool IsAddDiagnostics { get; set; }
         public List<Type> CommandHandlerTypes { get; set; }
         public List<Type> MapperTypes { get; set; }
         public Dictionary<Type, Type> ValidatorTypes { get; set; }
