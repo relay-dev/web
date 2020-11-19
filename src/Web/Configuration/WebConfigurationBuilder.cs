@@ -12,7 +12,7 @@ namespace Web.Configuration
 
     }
 
-    public class WebConfigurationBuilder<TBuilder, TResult> : PluginConfigurationBuilderGeneric<TBuilder, TResult> where TBuilder : class where TResult : class
+    public class WebConfigurationBuilder<TBuilder, TResult> : PluginConfigurationBuilder<TBuilder, TResult> where TBuilder : class where TResult : class
     {
         private readonly WebConfigurationBuilderContainer _container;
 
