@@ -102,8 +102,6 @@ namespace Web.Configuration
         {
             var webConfiguration = new WebConfiguration();
 
-            base.BuildUsing(webConfiguration);
-
             return BuildUsing(webConfiguration);
         }
 
@@ -115,6 +113,8 @@ namespace Web.Configuration
             {
                 throw new InvalidOperationException("webConfiguration cannot be null");
             }
+
+            base.BuildUsing(webConfiguration);
 
             if (_container.CommandHandlerTypes.Any())
             {

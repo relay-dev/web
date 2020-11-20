@@ -36,8 +36,6 @@ namespace Web.Rest.Configuration
         {
             var restConfiguration = new RestConfiguration();
 
-            base.BuildUsing(restConfiguration);
-
             return BuildUsing(restConfiguration);
         }
 
@@ -49,6 +47,8 @@ namespace Web.Rest.Configuration
             {
                 throw new InvalidOperationException("restConfiguration cannot be null");
             }
+
+            base.BuildUsing(restConfiguration);
 
             restConfiguration.IsDocumentUsernameHeaderToken = _container.IsDocumentUsernameHeaderToken;
             restConfiguration.SwaggerConfiguration = _container.SwaggerConfiguration;

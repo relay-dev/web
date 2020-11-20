@@ -53,8 +53,6 @@ namespace Web.AzureFunctions.Configuration
         {
             var azureFunctionsConfiguration = new AzureFunctionsConfiguration();
 
-            base.BuildUsing(azureFunctionsConfiguration);
-
             return BuildUsing(azureFunctionsConfiguration);
         }
 
@@ -66,6 +64,8 @@ namespace Web.AzureFunctions.Configuration
             {
                 throw new InvalidOperationException("azureFunctionsConfiguration cannot be null");
             }
+
+            base.BuildUsing(azureFunctionsConfiguration);
 
             if (_container.FunctionTypes.Any())
             {
