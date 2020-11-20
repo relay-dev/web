@@ -100,7 +100,16 @@ namespace Web.Configuration
 
         public override TResult Build()
         {
-            var webConfiguration = base.Build() as WebConfiguration;
+            var webConfiguration = new WebConfiguration();
+
+            base.BuildUsing(webConfiguration);
+
+            return BuildUsing(webConfiguration);
+        }
+
+        protected override TResult BuildUsing<TConfiguration>(TConfiguration configuration)
+        {
+            var webConfiguration = configuration as WebConfiguration;
 
             if (webConfiguration == null)
             {
@@ -154,7 +163,7 @@ namespace Web.Configuration
 
             return webConfiguration as TResult;
         }
-
+        
         internal class WebConfigurationBuilderContainer : WebConfiguration
         {
             public WebConfigurationBuilderContainer()

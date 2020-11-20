@@ -51,7 +51,16 @@ namespace Web.AzureFunctions.Configuration
 
         public override TResult Build()
         {
-            AzureFunctionsConfiguration azureFunctionsConfiguration = base.Build() as AzureFunctionsConfiguration;
+            var azureFunctionsConfiguration = new AzureFunctionsConfiguration();
+
+            base.BuildUsing(azureFunctionsConfiguration);
+
+            return BuildUsing(azureFunctionsConfiguration);
+        }
+
+        protected override TResult BuildUsing<TConfiguration>(TConfiguration configuration)
+        {
+            var azureFunctionsConfiguration = configuration as AzureFunctionsConfiguration;
 
             if (azureFunctionsConfiguration == null)
             {

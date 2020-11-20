@@ -6,18 +6,15 @@ namespace Web.Rest.Configuration
 {
     public class RestConfigurationBuilder : RestConfigurationBuilder<RestConfigurationBuilder, RestConfiguration>
     {
-        public RestConfigurationBuilder(IConfiguration configuration)
-            : base(configuration) { }
+        
     }
 
     public class RestConfigurationBuilder<TBuilder, TResult> : WebConfigurationBuilder<TBuilder, TResult> where TBuilder : class where TResult : class
     {
         private readonly RestConfigurationBuilderContainer _container;
-        private readonly IConfiguration _configuration;
 
-        public RestConfigurationBuilder(IConfiguration configuration)
+        public RestConfigurationBuilder()
         {
-            _configuration = configuration;
             _container = new RestConfigurationBuilderContainer();
         }
 
@@ -37,7 +34,16 @@ namespace Web.Rest.Configuration
 
         public override TResult Build()
         {
-            var restConfiguration = base.Build() as RestConfiguration;
+            var restConfiguration = new RestConfiguration();
+
+            base.BuildUsing(restConfiguration);
+
+            return BuildUsing(restConfiguration);
+        }
+
+        protected override TResult BuildUsing<TConfiguration>(TConfiguration configuration)
+        {
+            var restConfiguration = configuration as RestConfiguration;
 
             if (restConfiguration == null)
             {
@@ -49,20 +55,20 @@ namespace Web.Rest.Configuration
 
             if (restConfiguration.IsDocumentUsernameHeaderToken == null)
             {
-                restConfiguration.IsDocumentUsernameHeaderToken = ResolveIsDocumentUsernameHeaderToken();
+                restConfiguration.IsDocumentUsernameHeaderToken = ResolveIsDocumentUsernameHeaderToken(restConfiguration.Configuration);
             }
 
             if (restConfiguration.SwaggerConfiguration == null)
             {
-                restConfiguration.SwaggerConfiguration = DefaultSwaggerConfiguration;
+                restConfiguration.SwaggerConfiguration = GetDefaultSwaggerConfiguration(restConfiguration.Configuration);
             }
 
             return restConfiguration as TResult;
         }
 
-        private bool ResolveIsDocumentUsernameHeaderToken()
+        private bool ResolveIsDocumentUsernameHeaderToken(IConfiguration configuration)
         {
-            string configSetting = _configuration["IsDocumentUsernameHeaderToken"];
+            string configSetting = configuration["IsDocumentUsernameHeaderToken"];
 
             if (!string.IsNullOrEmpty(configSetting) && bool.TryParse(configSetting, out bool isDocumentUsernameHeaderToken))
             {
@@ -72,13 +78,13 @@ namespace Web.Rest.Configuration
             return true;
         }
 
-        private SwaggerConfiguration DefaultSwaggerConfiguration =>
+        private SwaggerConfiguration GetDefaultSwaggerConfiguration(IConfiguration configuration) =>
             new SwaggerConfiguration
             {
-                Title = _configuration["SwaggerConfiguration:Title"] ?? _configuration["ServiceName"],
-                MajorVersion = Convert.ToInt32(_configuration["SwaggerConfiguration:MajorVersion"]),
-                MinorVersion = Convert.ToInt32(_configuration["SwaggerConfiguration:MinorVersion"]),
-                Description = _configuration["SwaggerConfiguration:Description"]
+                Title = configuration["SwaggerConfiguration:Title"] ?? configuration["ServiceName"],
+                MajorVersion = Convert.ToInt32(configuration["SwaggerConfiguration:MajorVersion"]),
+                MinorVersion = Convert.ToInt32(configuration["SwaggerConfiguration:MinorVersion"]),
+                Description = configuration["SwaggerConfiguration:Description"]
             };
 
         internal class RestConfigurationBuilderContainer : RestConfiguration { }
