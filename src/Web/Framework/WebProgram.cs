@@ -45,8 +45,10 @@ namespace Web.Framework
             // Load application secrets
             if (IsLocal)
             {
-                configBuilder.AddJsonFile("appsettings.Local.json", true, true);
-                configBuilder.AddUserSecrets<TStartup>(true);
+                configBuilder
+                    .AddJsonFile("appsettings.Local.json", true, true)
+                    .AddJsonFile("C:\\Azure\\appsettings.KeyVault.json", true, true)
+                    .AddUserSecrets<TStartup>(true);
             }
 
             configBuilder.AddEnvironmentVariables();
