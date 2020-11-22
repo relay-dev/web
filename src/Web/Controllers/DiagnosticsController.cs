@@ -1,6 +1,8 @@
 ﻿using Core.Application;
 using Core.Plugins.Caching;
 using Core.Plugins.Framework;
+using Core.Providers;
+using Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
@@ -26,6 +28,8 @@ namespace Web.Controllers
         private readonly ApplicationContext _applicationContext;
         private readonly WarmupTaskExecutor _warmupTaskExecutor;
         private readonly ILogger<DiagnosticsController> _logger;
+        private readonly IConnectionStringParser _connectionStringParser;
+        private readonly IConnectionStringProvider _connectionStringProvider;
 
         public DiagnosticsController(
             IMemoryCache cache,
@@ -33,7 +37,9 @@ namespace Web.Controllers
             IDbContextProvider dbContextProvider,
             ApplicationContext applicationContext,
             WarmupTaskExecutor warmupTaskExecutor,
-            ILogger<DiagnosticsController> logger)
+            ILogger<DiagnosticsController> logger,
+            IConnectionStringParser connectionStringParser, 
+            IConnectionStringProvider connectionStringProvider)
         {
             _cache = cache;
             _configuration = configuration;
@@ -41,6 +47,8 @@ namespace Web.Controllers
             _applicationContext = applicationContext;
             _warmupTaskExecutor = warmupTaskExecutor;
             _logger = logger;
+            _connectionStringParser = connectionStringParser;
+            _connectionStringProvider = connectionStringProvider;
         }
 
         [HttpGet]
@@ -55,6 +63,22 @@ namespace Web.Controllers
             };
 
             return new OkObjectResult(diagnostics);
+        }
+
+        [HttpGet]
+        [Route("Cache")]
+        public ActionResult Cache()
+        {
+            var entries = new List<string>();
+
+            foreach (string key in CacheKeyManager.GetAllKeys())
+            {
+                entries.Add($"{key}: {_cache.Get(key)}");
+            }
+
+            string message = $"Cache entries: {Environment.NewLine}{Environment.NewLine}{string.Join(Environment.NewLine, entries)}";
+
+            return new OkObjectResult(message);
         }
 
         [HttpGet]
@@ -74,29 +98,33 @@ namespace Web.Controllers
         [Route("Configuration")]
         public ActionResult Configuration()
         {
-            var configurations = new List<string>();
+            var entries = new List<string>();
 
             foreach (KeyValuePair<string, string> kvp in _configuration.AsEnumerable())
             {
-                configurations.Add($"{kvp.Key}: {kvp.Value}");
+                entries.Add($"{kvp.Key}: {kvp.Value}");
             }
 
-            string message = $"Configuration entries: {Environment.NewLine}{Environment.NewLine}{string.Join(Environment.NewLine, configurations)}";
+            string message = $"Configuration entries: {Environment.NewLine}{Environment.NewLine}{string.Join(Environment.NewLine, entries)}";
 
             return new OkObjectResult(message);
         }
-        
+
         [HttpGet]
         [Route("Database")]
         public ActionResult<string> Database()
         {
-            DbConnection connection = _dbContextProvider.Get().Database.GetDbConnection();
+            var diagnostics = new DatabaseDiagnostics();
 
-            var diagnostics = new DatabaseDiagnostics
+            DbContext dbContext = _dbContextProvider.Get();
+
+            DbConnection connection = dbContext?.Database.GetDbConnection();
+
+            if (connection != null)
             {
-                ServerName = connection.DataSource,
-                DatabaseName = connection.Database
-            };
+                diagnostics.ServerName = connection.DataSource;
+                diagnostics.DatabaseName = connection.Database;
+            }
 
             return new OkObjectResult(diagnostics);
         }
@@ -119,6 +147,98 @@ namespace Web.Controllers
             Task.Factory.StartNew(() => _warmupTaskExecutor.RunAsync(new CancellationToken()));
 
             return new OkObjectResult("Complete");
+        }
+
+        [HttpGet]
+        [Route("DefaultConnection")]
+        public ActionResult<string> DefaultConnection()
+        {
+            Dictionary<string, string> connectionStringSegments = GetConnectionStringSegments("DefaultConnection");
+
+            if (connectionStringSegments == null)
+            {
+                return new NotFoundResult();
+            }
+
+            var data = new
+            {
+                DataSource = connectionStringSegments.TryGetValueOrNull("Data Source"),
+                InitialCatalog = connectionStringSegments.TryGetValueOrNull("Initial Catalog")
+            };
+
+            return new OkObjectResult(data);
+        }
+
+        [HttpGet]
+        [Route("DefaultStorageConnection")]
+        public ActionResult<string> DefaultStorageConnection()
+        {
+            Dictionary<string, string> connectionStringSegments = GetConnectionStringSegments("DefaultStorageConnection");
+
+            if (connectionStringSegments == null)
+            {
+                return new NotFoundResult();
+            }
+
+            var data = new
+            {
+                AccountName = connectionStringSegments.TryGetValueOrNull("AccountName")
+            };
+
+            return new OkObjectResult(data);
+        }
+
+        [HttpGet]
+        [Route("DefaultFtpConnection")]
+        public ActionResult<string> DefaultFtpConnection()
+        {
+            Dictionary<string, string> connectionStringSegments = GetConnectionStringSegments("DefaultFtpConnection");
+
+            if (connectionStringSegments == null)
+            {
+                return new NotFoundResult();
+            }
+
+            var data = new
+            {
+                Host = connectionStringSegments.TryGetValueOrNull("Host"),
+                Username = connectionStringSegments.TryGetValueOrNull("Username"),
+                IsSftp = connectionStringSegments.TryGetValueOrNull("IsSftp")
+            };
+
+            return new OkObjectResult(data);
+        }
+
+        [HttpGet]
+        [Route("DefaultEventGridConnection")]
+        public ActionResult<string> DefaultEventGridConnection()
+        {
+            Dictionary<string, string> connectionStringSegments = GetConnectionStringSegments("DefaultEventGridConnection");
+
+            if (connectionStringSegments == null)
+            {
+                return new NotFoundResult();
+            }
+
+            var data = new
+            {
+                Endpoint = connectionStringSegments.TryGetValueOrNull("Endpoint"),
+                Topic = connectionStringSegments.TryGetValueOrNull("Topic")
+            };
+
+            return new OkObjectResult(data);
+        }
+
+        private Dictionary<string, string> GetConnectionStringSegments(string connectionName)
+        {
+            string connectionString = _connectionStringProvider.GetOptional(connectionName);
+
+            if (connectionString == null)
+            {
+                return null;
+            }
+
+            return _connectionStringParser.Parse(connectionString);
         }
     }
 }
