@@ -156,16 +156,5 @@ namespace Web
 
             return services;
         }
-
-        public static IServiceCollection AddUsernameProvider(this IServiceCollection services, string username)
-        {
-            var usernameProvider = new UsernameProvider();
-
-            usernameProvider.Set(username);
-
-            services.AddSingleton<IUsernameProvider>(usernameProvider);
-
-            return services;
-        }
     }
 }

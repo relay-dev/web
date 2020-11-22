@@ -30,7 +30,7 @@ namespace Web.AzureFunctions
             // Add Event Handler framework
             if (azureFunctionsConfiguration.IsEventHandler)
             {
-                services.AddUsernameProvider(azureFunctionsConfiguration.ApplicationName);
+                services.AddSingletonUsernameProvider(azureFunctionsConfiguration.ApplicationName);
             }
 
             return services;
