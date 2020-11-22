@@ -7,14 +7,16 @@ namespace Web.Configuration
 {
     public class WebConfiguration : PluginConfiguration
     {
-        public WebConfiguration()
+        public WebConfiguration(bool isAddDiagnostics)
         {
-            IsAddDiagnostics = true;
+            IsAddDiagnostics = isAddDiagnostics;
             CommandHandlerTypes = new List<Type>();
             MapperTypes = new List<Type>();
             ValidatorTypes = new Dictionary<Type, Type>();
             ValidatorsAssemblies = new List<Assembly>();
         }
+
+        public WebConfiguration() : this(true) { }
 
         public bool IsAddDiagnostics { get; set; }
         public List<Type> CommandHandlerTypes { get; set; }
