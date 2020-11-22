@@ -87,6 +87,9 @@ namespace Web.Rest.Configuration
                 Description = configuration["SwaggerConfiguration:Description"]
             };
 
-        internal class RestConfigurationBuilderContainer : RestConfiguration { }
+        internal class RestConfigurationBuilderContainer : RestConfiguration
+        {
+
+        }
     }
 }

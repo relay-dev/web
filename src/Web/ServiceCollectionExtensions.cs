@@ -20,6 +20,8 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using Core.Plugins.Providers;
+using Core.Providers;
 using Web.Configuration;
 using Web.Controllers;
 using Web.Middleware;
@@ -151,6 +153,17 @@ namespace Web
             }
 
             mvcCoreBuilder.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblies(pluginConfiguration.ValidatorAssemblies));
+
+            return services;
+        }
+
+        public static IServiceCollection AddUsernameProvider(this IServiceCollection services, string username)
+        {
+            var usernameProvider = new UsernameProvider();
+
+            usernameProvider.Set(username);
+
+            services.AddSingleton<IUsernameProvider>(usernameProvider);
 
             return services;
         }

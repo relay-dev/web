@@ -1,6 +1,4 @@
 ﻿using Core.Plugins;
-using Core.Plugins.Providers;
-using Core.Providers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -64,17 +62,6 @@ namespace Web.AzureFunctions
                     logging.AddAzureWebAppDiagnostics();
                 }
             });
-
-            return services;
-        }
-
-        public static IServiceCollection AddUsernameProvider(this IServiceCollection services, string username)
-        {
-            var usernameProvider = new UsernameProvider();
-
-            usernameProvider.Set(username);
-
-            services.AddSingleton<IUsernameProvider>(usernameProvider);
 
             return services;
         }
