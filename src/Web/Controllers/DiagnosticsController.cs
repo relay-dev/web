@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Threading;
 using System.Threading.Tasks;
+using Web.Providers;
 
 namespace Web.Controllers
 {
@@ -20,23 +21,23 @@ namespace Web.Controllers
     public class DiagnosticsController : Controller
     {
         private readonly IMemoryCache _cache;
-        private readonly DbContext _dbContext;
         private readonly IConfiguration _configuration;
+        private readonly IDbContextProvider _dbContextProvider;
         private readonly ApplicationContext _applicationContext;
         private readonly WarmupTaskExecutor _warmupTaskExecutor;
         private readonly ILogger<DiagnosticsController> _logger;
 
         public DiagnosticsController(
             IMemoryCache cache,
-            DbContext dbContext,
             IConfiguration configuration,
+            IDbContextProvider dbContextProvider,
             ApplicationContext applicationContext,
             WarmupTaskExecutor warmupTaskExecutor,
             ILogger<DiagnosticsController> logger)
         {
             _cache = cache;
-            _dbContext = dbContext;
             _configuration = configuration;
+            _dbContextProvider = dbContextProvider;
             _applicationContext = applicationContext;
             _warmupTaskExecutor = warmupTaskExecutor;
             _logger = logger;
@@ -84,12 +85,12 @@ namespace Web.Controllers
 
             return new OkObjectResult(message);
         }
-
+        
         [HttpGet]
         [Route("Database")]
         public ActionResult<string> Database()
         {
-            DbConnection connection = _dbContext.Database.GetDbConnection();
+            DbConnection connection = _dbContextProvider.Get().Database.GetDbConnection();
 
             var diagnostics = new DatabaseDiagnostics
             {

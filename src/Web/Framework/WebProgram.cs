@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Core.Plugins.Configuration;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using System;
 
 namespace Web.Framework
 {
@@ -54,6 +54,6 @@ namespace Web.Framework
             configBuilder.AddEnvironmentVariables();
         }
 
-        public static bool IsLocal => bool.Parse(Environment.GetEnvironmentVariable("IS_LOCAL") ?? false.ToString());
+        public static bool IsLocal => new ApplicationConfiguration().IsLocal;
     }
 }

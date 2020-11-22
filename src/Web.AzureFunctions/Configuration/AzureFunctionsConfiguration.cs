@@ -13,7 +13,5 @@ namespace Web.AzureFunctions.Configuration
 
         public bool IsEventHandler { get; set; }
         public List<Type> FunctionTypes { get; set; }
-
-        public bool IsLocal => bool.Parse(Environment.GetEnvironmentVariable("IS_LOCAL") ?? false.ToString());
     }
 }

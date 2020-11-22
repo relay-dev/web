@@ -16,7 +16,6 @@ namespace Web.Configuration
             ValidatorsAssemblies = new List<Assembly>();
         }
 
-        public bool IsAddApiExplorer { get; set; }
         public bool IsAddDiagnostics { get; set; }
         public List<Type> CommandHandlerTypes { get; set; }
         public List<Type> MapperTypes { get; set; }

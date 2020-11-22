@@ -8,6 +8,7 @@ using Core.Utilities;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,6 +24,7 @@ using System.Threading.Tasks;
 using Web.Configuration;
 using Web.Controllers;
 using Web.Middleware;
+using Web.Providers;
 using Web.Serialization;
 
 namespace Web
@@ -34,6 +36,7 @@ namespace Web
             // Add MVC and Newtonsoft
             IMvcCoreBuilder mvcBuilder = services
                 .AddMvcCore()
+                .AddApiExplorer()
                 .AddNewtonsoftJson(options =>
                 {
                     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
@@ -64,13 +67,7 @@ namespace Web
             // Add Diagnostics
             if (webConfiguration.IsAddDiagnostics)
             {
-                mvcBuilder.AddApplicationPart(typeof(DiagnosticsController).Assembly);
-            }
-
-            // Add ApiExplorer
-            if (webConfiguration.IsAddApiExplorer)
-            {
-                mvcBuilder.AddApiExplorer();
+                mvcBuilder.PartManager.ApplicationParts.Add(new AssemblyPart(typeof(DiagnosticsController).Assembly));
             }
 
             return services;
@@ -106,7 +103,7 @@ namespace Web
                 endpoints.MapHealthChecks("/health");
             });
 
-            if (webConfiguration.WarmupTypes.Any() && !IsLocal)
+            if (webConfiguration.WarmupTypes.Any() && !webConfiguration.IsLocal)
             {
                 var warmupExecutor = new WarmupTaskExecutor(app.ApplicationServices, webConfiguration);
 
@@ -120,9 +117,16 @@ namespace Web
         {
             services = AddWebFramework(services, webConfiguration);
 
+            services.AddDbContextUtilities<TDbContext>();
+
+            return services;
+        }
+
+        public static IServiceCollection AddDbContextUtilities<TDbContext>(this IServiceCollection services) where TDbContext : DbContext
+        {
             services.AddDbContext<TDbContext>();
             services.AddScoped<DbContext, TDbContext>();
-            services.AddScoped<DiagnosticsController>();
+            services.AddScoped<IDbContextProvider, DbContextProvider>();
 
             return services;
         }
@@ -155,7 +159,5 @@ namespace Web
 
             return services;
         }
-
-        private static bool IsLocal => bool.Parse(Environment.GetEnvironmentVariable("IS_LOCAL") ?? false.ToString());
     }
 }

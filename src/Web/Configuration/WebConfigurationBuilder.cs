@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Core.Plugins.Configuration;
+using Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -91,13 +92,6 @@ namespace Web.Configuration
             return this as TBuilder;
         }
 
-        public TBuilder UseApiExplorer(bool flag = true)
-        {
-            _container.IsAddApiExplorer = flag;
-
-            return this as TBuilder;
-        }
-
         public override TResult Build()
         {
             var webConfiguration = new WebConfiguration();
@@ -118,7 +112,7 @@ namespace Web.Configuration
 
             if (_container.CommandHandlerTypes.Any())
             {
-                webConfiguration.CommandHandlerTypes = _container.CommandHandlerTypes;
+                webConfiguration.CommandHandlerTypes.AddRange(_container.CommandHandlerTypes);
             }
 
             if (_container.CommandHandlerAssemblies.Any())
@@ -134,7 +128,7 @@ namespace Web.Configuration
 
             if (_container.MapperTypes.Any())
             {
-                webConfiguration.MapperTypes = _container.MapperTypes;
+                webConfiguration.MapperTypes.AddRange(_container.MapperTypes);
             }
 
             if (_container.MapperAssemblies.Any())
@@ -150,7 +144,7 @@ namespace Web.Configuration
 
             if (_container.ValidatorTypes.Any())
             {
-                webConfiguration.ValidatorTypes = _container.ValidatorTypes;
+                _container.ValidatorTypes.ForEach(kvp => webConfiguration.ValidatorTypes.Add(kvp.Key, kvp.Value));
             }
 
             if (_container.ValidatorAssemblies.Any())
@@ -159,7 +153,6 @@ namespace Web.Configuration
             }
 
             webConfiguration.IsAddDiagnostics = _container.IsAddDiagnostics;
-            webConfiguration.IsAddApiExplorer = _container.IsAddApiExplorer;
 
             return webConfiguration as TResult;
         }
