@@ -1,5 +1,5 @@
 using Core.Plugins.Azure.EventGrid.Extensions;
-using Core.Utilities;
+using MediatR;
 using Microsoft.Azure.EventGrid.Models;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.EventGrid;
@@ -7,17 +7,18 @@ using Microsoft.Extensions.Logging;
 using System.Threading;
 using System.Threading.Tasks;
 using Web.AzureFunctions.Framework;
+using Web.Samples.OrderManagement.Domain.Commands.Get;
 using Web.Samples.OrderManagement.Domain.Events.Payload;
 
 namespace Web.Samples.OrderManagement.EventHandlers.Handlers
 {
     public class OnOrderCreated : EventHandlerBase
     {
-        private readonly IJsonSerializer _jsonSerializer;
+        private readonly IMediator _mediator;
 
-        public OnOrderCreated(IJsonSerializer jsonSerializer)
+        public OnOrderCreated(IMediator mediator)
         {
-            _jsonSerializer = jsonSerializer;
+            _mediator = mediator;
         }
 
         [FunctionName("OnOrderCreated")]
@@ -25,11 +26,16 @@ namespace Web.Samples.OrderManagement.EventHandlers.Handlers
         {
             var payload = eventGridEvent.GetPayload<OrderCreatedPayload>();
 
+            var request = new GetOrderByIdRequest
+            {
+                OrderId = payload.OrderId
+            };
+
+            GetOrderByIdResponse response = await _mediator.Send(request, cancellationToken);
+
             // Handle the event
 
-            string payloadJson = await _jsonSerializer.SerializeAsync(payload, cancellationToken);
-
-            log.LogInformation(payloadJson);
+            log.LogInformation($"Handled OnOrderCreated for OrderId {response.Order.OrderId}");
         }
     }
 }

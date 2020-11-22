@@ -47,10 +47,10 @@ namespace Web.Samples.OrderManagement.Domain.Commands.Create
                 OrderId = orderEntity.OrderId
             };
         }
-
+        
         private async Task RaiseOrderCreatedEvent(OrderEntity orderEntity, CancellationToken cancellationToken)
         {
-            var eventToRaise = new Event
+            var e = new Event
             {
                 EventType = "OrderCreated",
                 Subject = "OrderCreated",
@@ -61,7 +61,7 @@ namespace Web.Samples.OrderManagement.Domain.Commands.Create
                 }
             };
 
-            await _eventClient.RaiseEventAsync(eventToRaise, cancellationToken);
+            await _eventClient.RaiseEventAsync(e, cancellationToken);
         }
     }
 }

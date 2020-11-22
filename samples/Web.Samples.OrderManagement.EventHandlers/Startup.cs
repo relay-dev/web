@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Web.AzureFunctions;
 using Web.AzureFunctions.Configuration;
 using Web.AzureFunctions.Extensions;
+using Web.Samples.OrderManagement.Domain.Commands.Get;
 using Web.Samples.OrderManagement.Domain.Context;
 using Web.Samples.OrderManagement.EventHandlers;
 
@@ -29,6 +30,7 @@ namespace Web.Samples.OrderManagement.EventHandlers
                 .AsAzureFunctionsConfiguration()
                 .UseApplicationName(GetType().AssemblyQualifiedName)
                 .UseFunctionsFromAssemblyContaining<Startup>()
+                .UseCommandHandlersFromAssemblyContaining<GetOrderByIdHandler>()
                 .AsEventHandler()
                 .Build();
         }

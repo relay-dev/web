@@ -1,6 +1,6 @@
 ﻿using Core.Application;
+using Core.Framework;
 using Core.Plugins.Caching;
-using Core.Plugins.Framework;
 using Core.Providers;
 using Extensions;
 using Microsoft.AspNetCore.Mvc;
@@ -26,29 +26,29 @@ namespace Web.Controllers
         private readonly IConfiguration _configuration;
         private readonly IDbContextProvider _dbContextProvider;
         private readonly ApplicationContext _applicationContext;
-        private readonly WarmupTaskExecutor _warmupTaskExecutor;
-        private readonly ILogger<DiagnosticsController> _logger;
+        private readonly IWarmupTaskExecutor _warmupTaskExecutor;
         private readonly IConnectionStringParser _connectionStringParser;
         private readonly IConnectionStringProvider _connectionStringProvider;
+        private readonly ILogger<DiagnosticsController> _logger;
 
         public DiagnosticsController(
             IMemoryCache cache,
             IConfiguration configuration,
             IDbContextProvider dbContextProvider,
             ApplicationContext applicationContext,
-            WarmupTaskExecutor warmupTaskExecutor,
-            ILogger<DiagnosticsController> logger,
+            IWarmupTaskExecutor warmupTaskExecutor,
             IConnectionStringParser connectionStringParser, 
-            IConnectionStringProvider connectionStringProvider)
+            IConnectionStringProvider connectionStringProvider,
+            ILogger<DiagnosticsController> logger)
         {
             _cache = cache;
             _configuration = configuration;
             _dbContextProvider = dbContextProvider;
             _applicationContext = applicationContext;
             _warmupTaskExecutor = warmupTaskExecutor;
-            _logger = logger;
             _connectionStringParser = connectionStringParser;
             _connectionStringProvider = connectionStringProvider;
+            _logger = logger;
         }
 
         [HttpGet]

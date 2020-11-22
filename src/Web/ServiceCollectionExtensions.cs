@@ -1,6 +1,7 @@
 ﻿using Core.Plugins;
 using Core.Plugins.AutoMapper;
 using Core.Plugins.Azure;
+using Core.Plugins.Configuration;
 using Core.Plugins.EntityFramework;
 using Core.Plugins.Framework;
 using Core.Plugins.MediatR;
@@ -15,10 +16,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Web.Configuration;
@@ -44,22 +43,18 @@ namespace Web
                 });
 
             // Add Core Plugins
-            services.AddDefaultCorePlugins(webConfiguration);
-            services.AddAutoMapperPlugin(webConfiguration.MapperTypes);
-            services.AddAzureBlobStoragePlugin(webConfiguration.Configuration);
-            services.AddAzureEventGridPlugin(webConfiguration.Configuration);
+            services.AddApplicationConfiguration(webConfiguration);
+            services.AddCorePlugins(webConfiguration);
+            services.AddAutoMapperPlugin(webConfiguration);
+            services.AddAzureBlobStoragePlugin(webConfiguration);
+            services.AddAzureEventGridPlugin(webConfiguration);
             services.AddEntityFrameworkPlugin();
-            services.AddFluentValidationPlugin(mvcBuilder, webConfiguration.ValidatorsAssemblies);
-            services.AddMediatRPlugin(webConfiguration.CommandHandlerTypes);
-            services.AddWarmup(webConfiguration.WarmupTypes);
+            services.AddFluentValidationPlugin(mvcBuilder, webConfiguration);
+            services.AddMediatRPlugin(webConfiguration);
+            services.AddWarmup(webConfiguration);
 
             // Add WebConfiguration and ApplicationContext
             services.AddSingleton(webConfiguration);
-            services.AddSingleton(webConfiguration.Configuration);
-            services.AddSingleton(webConfiguration.ApplicationContext);
-
-            // Add MemoryCache
-            services.AddMemoryCache();
 
             // Add Web services
             services.AddScoped<IJsonSerializer, NewtonsoftJsonSerializer>();
@@ -148,14 +143,14 @@ namespace Web
             return services;
         }
 
-        public static IServiceCollection AddFluentValidationPlugin(this IServiceCollection services, IMvcCoreBuilder mvcCoreBuilder, List<Assembly> assembliesToScan)
+        public static IServiceCollection AddFluentValidationPlugin(this IServiceCollection services, IMvcCoreBuilder mvcCoreBuilder, PluginConfiguration pluginConfiguration)
         {
-            if (assembliesToScan == null || !assembliesToScan.Any())
+            if (pluginConfiguration.ValidatorAssemblies == null || !pluginConfiguration.ValidatorAssemblies.Any())
             {
                 return services;
             }
 
-            mvcCoreBuilder.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblies(assembliesToScan));
+            mvcCoreBuilder.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblies(pluginConfiguration.ValidatorAssemblies));
 
             return services;
         }
