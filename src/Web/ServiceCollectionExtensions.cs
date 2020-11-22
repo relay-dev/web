@@ -103,7 +103,7 @@ namespace Web
                 endpoints.MapHealthChecks("/health");
             });
 
-            if (webConfiguration.WarmupTypes.Any() && !webConfiguration.IsLocal)
+            if (webConfiguration.WarmupTypes.Any() && !webConfiguration.IsLocal())
             {
                 var warmupExecutor = new WarmupTaskExecutor(app.ApplicationServices, webConfiguration);
 

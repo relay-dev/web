@@ -53,7 +53,7 @@ namespace Web.AzureFunctions
             {
                 logging.AddConfiguration(azureFunctionsConfiguration.Configuration.GetSection("Logging"));
 
-                if (azureFunctionsConfiguration.IsLocal)
+                if (azureFunctionsConfiguration.IsLocal())
                 {
                     logging.AddConsole();
                     logging.AddDebug();

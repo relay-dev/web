@@ -54,6 +54,6 @@ namespace Web.Framework
             configBuilder.AddEnvironmentVariables();
         }
 
-        public static bool IsLocal => new ApplicationConfiguration().IsLocal;
+        public static bool IsLocal => new ApplicationConfiguration().IsLocal();
     }
 }

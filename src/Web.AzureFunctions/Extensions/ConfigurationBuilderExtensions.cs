@@ -7,7 +7,7 @@ namespace Web.AzureFunctions.Extensions
     {
         public static AzureFunctionsConfigurationBuilder AsAzureFunctionsConfiguration(this ConfigurationBuilder configurationBuilder)
         {
-            if (new AzureFunctionsConfiguration().IsLocal)
+            if (new AzureFunctionsConfiguration().IsLocal())
             {
                 configurationBuilder.AddJsonFile("appsettings.Local.json", false, true);
                 configurationBuilder.AddJsonFile("C:\\Azure\\appsettings.KeyVault.json", true, true);
