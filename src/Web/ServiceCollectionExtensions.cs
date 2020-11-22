@@ -45,7 +45,7 @@ namespace Web
                 });
 
             // Add Core Plugins
-            services.AddApplicationConfiguration(webConfiguration);
+            services.AddApplicationServices(webConfiguration);
             services.AddCorePlugins(webConfiguration);
             services.AddAutoMapperPlugin(webConfiguration);
             services.AddAzureBlobStoragePlugin(webConfiguration);
