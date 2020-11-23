@@ -89,7 +89,7 @@ namespace Web.Controllers
 
             _cache.Clear();
 
-            string message = $"Cleared cache entries for: {Environment.NewLine}{Environment.NewLine}'{string.Join(Environment.NewLine, cacheKeys)}'";
+            string message = $"Cleared cache entries for: {Environment.NewLine}{Environment.NewLine}{string.Join(Environment.NewLine, cacheKeys)}";
 
             return new OkObjectResult(message);
         }
