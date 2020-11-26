@@ -25,41 +25,43 @@ namespace Web.Controllers
         private readonly IMemoryCache _cache;
         private readonly IConfiguration _configuration;
         private readonly IDbContextProvider _dbContextProvider;
-        private readonly ApplicationContext _applicationContext;
         private readonly IWarmupTaskExecutor _warmupTaskExecutor;
         private readonly IConnectionStringParser _connectionStringParser;
         private readonly IConnectionStringProvider _connectionStringProvider;
+        private readonly IApplicationContextProvider _applicationContextProvider;
         private readonly ILogger<DiagnosticsController> _logger;
 
         public DiagnosticsController(
             IMemoryCache cache,
             IConfiguration configuration,
             IDbContextProvider dbContextProvider,
-            ApplicationContext applicationContext,
             IWarmupTaskExecutor warmupTaskExecutor,
             IConnectionStringParser connectionStringParser, 
             IConnectionStringProvider connectionStringProvider,
+            IApplicationContextProvider applicationContextProvider,
             ILogger<DiagnosticsController> logger)
         {
             _cache = cache;
             _configuration = configuration;
             _dbContextProvider = dbContextProvider;
-            _applicationContext = applicationContext;
             _warmupTaskExecutor = warmupTaskExecutor;
             _connectionStringParser = connectionStringParser;
             _connectionStringProvider = connectionStringProvider;
+            _applicationContextProvider = applicationContextProvider;
             _logger = logger;
         }
 
         [HttpGet]
         public ActionResult<ApplicationDiagnostics> Get()
         {
+            ApplicationContext applicationContext = _applicationContextProvider.Get();
+
             var diagnostics = new ApplicationDiagnostics
             {
-                ApplicationId = _applicationContext.ApplicationId,
-                ApplicationName = _applicationContext.ApplicationName,
-                ApplicationVersion = _applicationContext.ApplicationVersion,
-                BuildTimestamp = _applicationContext.BuildTimestamp
+                ApplicationId = applicationContext.ApplicationId,
+                ApplicationName = applicationContext.ApplicationName,
+                ApplicationVersion = applicationContext.ApplicationVersion,
+                BuildTimestamp = applicationContext.BuildTimestamp
             };
 
             return new OkObjectResult(diagnostics);
