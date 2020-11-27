@@ -37,7 +37,7 @@ namespace Web.Samples.OrderManagement.API
         {
             return new RestConfigurationBuilder()
                 .UseConfiguration(configuration)
-                .UseApplicationName(GetType().AssemblyQualifiedName)
+                .UseApplicationName("OrderManagement.API")
                 .UseCommandHandlersFromAssemblyContaining<CreateOrderHandler>()
                 .UseMappersFromAssemblyContaining<AutoMappers>()
                 .UseValidatorsFromAssemblyContaining<OrderValidator>()
