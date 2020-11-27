@@ -1,6 +1,6 @@
 ﻿using Core.Providers;
-using Extensions;
 using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Web.Middleware
@@ -16,7 +16,7 @@ namespace Web.Middleware
 
         public async Task Invoke(HttpContext context, IUsernameProvider usernameProvider)
         {
-            string username = context.Request.Headers.TryGetValueOrDefault("X-Username");
+            string username = TryGetValueOrDefault(context.Request.Headers, "X-Username");
 
             if (!string.IsNullOrEmpty(username))
             {
@@ -24,6 +24,15 @@ namespace Web.Middleware
             }
 
             await _next(context);
+        }
+
+        public static TValue TryGetValueOrDefault<TKey, TValue>(IDictionary<TKey, TValue> dictionary, TKey key)
+        {
+            bool isSuccessful = dictionary.TryGetValue(key, out var value);
+
+            return isSuccessful
+                ? value
+                : default(TValue);
         }
     }
 }

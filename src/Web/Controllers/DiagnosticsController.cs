@@ -2,7 +2,6 @@
 using Core.Framework;
 using Core.Plugins.Caching;
 using Core.Providers;
-using Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
@@ -164,8 +163,8 @@ namespace Web.Controllers
 
             var data = new
             {
-                DataSource = connectionStringSegments.TryGetValueOrNull("Data Source"),
-                InitialCatalog = connectionStringSegments.TryGetValueOrNull("Initial Catalog")
+                DataSource = TryGetValueOrNull(connectionStringSegments, "Data Source"),
+                InitialCatalog = TryGetValueOrNull(connectionStringSegments, "Initial Catalog")
             };
 
             return new OkObjectResult(data);
@@ -184,7 +183,7 @@ namespace Web.Controllers
 
             var data = new
             {
-                AccountName = connectionStringSegments.TryGetValueOrNull("AccountName")
+                AccountName = TryGetValueOrNull(connectionStringSegments, "AccountName")
             };
 
             return new OkObjectResult(data);
@@ -203,9 +202,9 @@ namespace Web.Controllers
 
             var data = new
             {
-                Host = connectionStringSegments.TryGetValueOrNull("Host"),
-                Username = connectionStringSegments.TryGetValueOrNull("Username"),
-                IsSftp = connectionStringSegments.TryGetValueOrNull("IsSftp")
+                Host = TryGetValueOrNull(connectionStringSegments, "Host"),
+                Username = TryGetValueOrNull(connectionStringSegments, "Username"),
+                IsSftp = TryGetValueOrNull(connectionStringSegments, "IsSftp")
             };
 
             return new OkObjectResult(data);
@@ -224,8 +223,8 @@ namespace Web.Controllers
 
             var data = new
             {
-                Endpoint = connectionStringSegments.TryGetValueOrNull("Endpoint"),
-                Topic = connectionStringSegments.TryGetValueOrNull("Topic")
+                Endpoint = TryGetValueOrNull(connectionStringSegments, "Endpoint"),
+                Topic = TryGetValueOrNull(connectionStringSegments, "Topic")
             };
 
             return new OkObjectResult(data);
@@ -241,6 +240,15 @@ namespace Web.Controllers
             }
 
             return _connectionStringParser.Parse(connectionString);
+        }
+
+        private static TValue TryGetValueOrNull<TKey, TValue>(IDictionary<TKey, TValue> dictionary, TKey key) where TValue : class
+        {
+            bool isSuccessful = dictionary.TryGetValue(key, out var value);
+
+            return isSuccessful
+                ? value
+                : null;
         }
     }
 }

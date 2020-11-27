@@ -1,5 +1,4 @@
 ﻿using Core.Providers;
-using Extensions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -40,7 +39,7 @@ namespace Web.Testing.Integration
                 })
                 .ConfigureAppConfiguration((webBuilder, configBuilder) =>
                 {
-                    basePath ??= Path.Combine(AppDomain.CurrentDomain.BaseDirectory.SubstringBefore("tests"), "src", typeof(TStartup).Namespace);
+                    basePath ??= Path.Combine(SubstringBefore(AppDomain.CurrentDomain.BaseDirectory, "tests"), "src", typeof(TStartup).Namespace);
 
                     configBuilder
                         .SetBasePath(basePath)
@@ -63,6 +62,23 @@ namespace Web.Testing.Integration
             foreach (Type controllerType in typeof(TStartup).Assembly.GetTypes().Where(t => t.Name.EndsWith("Controller")))
             {
                 services.AddScoped(controllerType);
+            }
+        }
+
+        private static string SubstringBefore(string str, string removeAfter, bool includeRemoveAfterString = false)
+        {
+            if (str == null)
+            {
+                return null;
+            }
+
+            try
+            {
+                return str.Substring(0, str.IndexOf(removeAfter, StringComparison.Ordinal) + (includeRemoveAfterString ? 1 : 0));
+            }
+            catch
+            {
+                return str;
             }
         }
     }
