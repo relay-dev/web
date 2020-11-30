@@ -85,7 +85,7 @@ namespace Web.Rest
         {
             services = AddRestFramework(services, restConfiguration);
 
-            services.AddDbContextUtilities<TDbContext>();
+            services.AddDbContextUtilities<TDbContext>(restConfiguration);
 
             return services;
         }

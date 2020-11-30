@@ -20,8 +20,6 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using Core.Plugins.Providers;
-using Core.Providers;
 using Web.Configuration;
 using Web.Controllers;
 using Web.Middleware;
@@ -50,8 +48,8 @@ namespace Web
             services.AddAutoMapperPlugin(webConfiguration);
             services.AddAzureBlobStoragePlugin(webConfiguration);
             services.AddAzureEventGridPlugin(webConfiguration);
-            services.AddEntityFrameworkPlugin();
-            services.AddFluentValidationPlugin(mvcBuilder, webConfiguration);
+            services.AddEntityFrameworkPlugin(webConfiguration);
+            services.AddFluentValidationPlugin(webConfiguration, mvcBuilder);
             services.AddMediatRPlugin(webConfiguration);
             services.AddWarmup(webConfiguration);
 
@@ -59,7 +57,7 @@ namespace Web
             services.AddSingleton(webConfiguration);
 
             // Add Web services
-            services.AddScoped<IJsonSerializer, NewtonsoftJsonSerializer>();
+            services.Add<IJsonSerializer, NewtonsoftJsonSerializer>(webConfiguration.ServiceLifetime);
 
             // Add Diagnostics
             if (webConfiguration.IsAddDiagnostics)
@@ -114,23 +112,23 @@ namespace Web
         {
             services = AddWebFramework(services, webConfiguration);
 
-            services.AddDbContextUtilities<TDbContext>();
+            services.AddDbContextUtilities<TDbContext>(webConfiguration);
 
             return services;
         }
 
-        public static IServiceCollection AddDbContextUtilities<TDbContext>(this IServiceCollection services) where TDbContext : DbContext
+        public static IServiceCollection AddDbContextUtilities<TDbContext>(this IServiceCollection services, WebConfiguration webConfiguration) where TDbContext : DbContext
         {
             services.AddDbContext<TDbContext>();
-            services.AddScoped<DbContext, TDbContext>();
-            services.AddScoped<IDbContextProvider, DbContextProvider>();
+            services.Add<DbContext, TDbContext>(webConfiguration.ServiceLifetime);
+            services.Add<IDbContextProvider, DbContextProvider>(webConfiguration.ServiceLifetime);
 
             return services;
         }
 
-        public static IServiceCollection AddScopedApiClient<TService, TImplementation>(this IServiceCollection services, string baseUrlSettingName) where TService : class where TImplementation : class, TService
+        public static IServiceCollection AddApiClient<TService, TImplementation>(this IServiceCollection services, string baseUrlSettingName, ServiceLifetime serviceLifetime = ServiceLifetime.Scoped) where TService : class where TImplementation : class, TService
         {
-            services.AddScoped(typeof(TService), sp =>
+            services.Add<TService>(sp =>
             {
                 string apiBaseUrl = sp.GetRequiredService<IConfiguration>()[baseUrlSettingName];
 
@@ -140,12 +138,12 @@ namespace Web
                 };
 
                 return (TImplementation)Activator.CreateInstance(typeof(TImplementation), httpClient);
-            });
+            }, serviceLifetime);
 
             return services;
         }
 
-        public static IServiceCollection AddFluentValidationPlugin(this IServiceCollection services, IMvcCoreBuilder mvcCoreBuilder, PluginConfiguration pluginConfiguration)
+        public static IServiceCollection AddFluentValidationPlugin(this IServiceCollection services, PluginConfiguration pluginConfiguration, IMvcCoreBuilder mvcCoreBuilder)
         {
             if (pluginConfiguration.ValidatorAssemblies == null || !pluginConfiguration.ValidatorAssemblies.Any())
             {

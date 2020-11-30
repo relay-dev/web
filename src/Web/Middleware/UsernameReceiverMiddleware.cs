@@ -30,9 +30,7 @@ namespace Web.Middleware
         {
             bool isSuccessful = dictionary.TryGetValue(key, out var value);
 
-            return isSuccessful
-                ? value
-                : default(TValue);
+            return isSuccessful ? value : default;
         }
     }
 }

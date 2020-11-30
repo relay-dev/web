@@ -1,6 +1,5 @@
 ﻿using Core.Plugins;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Linq;
@@ -40,7 +39,7 @@ namespace Web.AzureFunctions
         {
             services = AddAzureFunctionsFramework(services, azureFunctionsConfiguration);
 
-            services.AddDbContextUtilities<TDbContext>();
+            services.AddDbContextUtilities<TDbContext>(azureFunctionsConfiguration);
 
             return services;
         }
