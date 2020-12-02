@@ -1,6 +1,7 @@
 ﻿using Core.Application;
 using Core.Framework;
 using Core.Plugins.Caching;
+using Core.Plugins.EntityFramework.Providers;
 using Core.Providers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +13,6 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Threading;
 using System.Threading.Tasks;
-using Web.Providers;
 
 namespace Web.Controllers
 {
@@ -117,7 +117,7 @@ namespace Web.Controllers
         {
             var diagnostics = new DatabaseDiagnostics();
 
-            DbContext dbContext = _dbContextProvider.Get();
+            DbContext dbContext = _dbContextProvider.Get<DbContext>();
 
             DbConnection connection = dbContext?.Database.GetDbConnection();
 

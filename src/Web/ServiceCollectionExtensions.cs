@@ -121,7 +121,6 @@ namespace Web
         {
             services.AddDbContext<TDbContext>();
             services.Add<DbContext, TDbContext>(webConfiguration.ServiceLifetime);
-            services.Add<IDbContextProvider, DbContextProvider>(webConfiguration.ServiceLifetime);
 
             return services;
         }
