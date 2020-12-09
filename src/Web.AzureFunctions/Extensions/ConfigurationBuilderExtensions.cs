@@ -5,7 +5,7 @@ namespace Web.AzureFunctions.Extensions
 {
     public static class ConfigurationBuilderExtensions
     {
-        public static AzureFunctionsConfigurationBuilder AsAzureFunctionsConfiguration(this ConfigurationBuilder configurationBuilder)
+        public static AzureFunctionsConfigurationBuilder AsAzureFunctionsConfiguration(this IConfigurationBuilder configurationBuilder)
         {
             if (new AzureFunctionsConfiguration().IsLocal())
             {
