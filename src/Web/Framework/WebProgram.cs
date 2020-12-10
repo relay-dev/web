@@ -47,6 +47,7 @@ namespace Web.Framework
             {
                 configBuilder
                     .AddJsonFile("appsettings.Local.json", true, true)
+                    .AddJsonFile("local.settings.json", true, true)
                     .AddJsonFile("C:\\Azure\\appsettings.KeyVault.json", true, true)
                     .AddUserSecrets<TStartup>(true);
             }

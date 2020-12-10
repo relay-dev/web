@@ -12,15 +12,6 @@ namespace Web.Testing.Integration
 {
     public abstract class WebIntegrationTest<TToTest> : AspNetIntegrationTest<TToTest>
     {
-        protected override void BootstrapTest()
-        {
-            base.BootstrapTest();
-
-            IUsernameProvider usernameProvider = ResolveService<IUsernameProvider>();
-
-            usernameProvider.Set(TestUsername);
-        }
-
         protected IHostBuilder CreateTestHostBuilder<TStartup>(string basePath = null) where TStartup : class =>
             Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder(new string[0])
                 .ConfigureWebHostDefaults(webBuilder =>
@@ -55,6 +46,15 @@ namespace Web.Testing.Integration
         protected virtual IServiceCollection ConfigureTestServices(IServiceCollection services)
         {
             return services;
+        }
+
+        protected override void BootstrapTest()
+        {
+            base.BootstrapTest();
+
+            IUsernameProvider usernameProvider = ResolveService<IUsernameProvider>();
+
+            usernameProvider.Set(TestUsername);
         }
 
         protected void RegisterControllers<TStartup>(IServiceCollection services)

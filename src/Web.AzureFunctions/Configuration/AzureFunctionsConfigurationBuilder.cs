@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Configuration;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -9,7 +10,12 @@ namespace Web.AzureFunctions.Configuration
 {
     public class AzureFunctionsConfigurationBuilder : AzureFunctionsConfigurationBuilder<AzureFunctionsConfigurationBuilder, AzureFunctionsConfiguration>
     {
-        
+        public AzureFunctionsConfigurationBuilder() { }
+
+        public AzureFunctionsConfigurationBuilder(IConfiguration configuration)
+        {
+            UseConfiguration(configuration);
+        }
     }
 
     public class AzureFunctionsConfigurationBuilder<TBuilder, TResult> : WebConfigurationBuilder<TBuilder, TResult> where TBuilder : class where TResult : class
