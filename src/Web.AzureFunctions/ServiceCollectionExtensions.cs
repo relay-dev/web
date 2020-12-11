@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Linq;
 using Web.AzureFunctions.Configuration;
+using Web.AzureFunctions.Framework;
 
 namespace Web.AzureFunctions
 {
@@ -31,6 +32,9 @@ namespace Web.AzureFunctions
             {
                 services.AddSingletonUsernameProvider(azureFunctionsConfiguration.ApplicationName);
             }
+
+            // Add types needed for Azure Functions
+            services.Add<IAzureFunctionsCommandExecutor, AzureFunctionsCommandExecutor>(azureFunctionsConfiguration.ServiceLifetime);
 
             return services;
         }
