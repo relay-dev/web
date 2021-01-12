@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <PackageId>Relay.Web.AzureFunctions</PackageId>
     <Version>1.0.1</Version>
     <Authors>Scott Ferguson</Authors>
