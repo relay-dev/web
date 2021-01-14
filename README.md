@@ -91,7 +91,7 @@ public class Startup
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
-        app.UseWebFramework(_restConfiguration, env);
+        app.UseWebFramework(_webConfiguration, env);
     }
 
     private WebConfiguration BuildWebConfiguration(IConfiguration configuration)
@@ -206,8 +206,6 @@ public class Startup : FunctionsStartup
     public override void Configure(IFunctionsHostBuilder builder)
     {
         builder.Services.AddAzureFunctionsFramework<AccountDbContext>(_azureFunctionsConfiguration);
-
-        builder.Services.AddSqlServerDatabaseCommander(_azureFunctionsConfiguration.Configuration);
     }
 
     private AzureFunctionsConfiguration BuildAzureFunctionsConfiguration()
