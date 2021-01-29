@@ -23,7 +23,6 @@ using System.Threading.Tasks;
 using Web.Configuration;
 using Web.Controllers;
 using Web.Middleware;
-using Web.Providers;
 using Web.Serialization;
 
 namespace Web
@@ -122,12 +121,10 @@ namespace Web
             if (webConfiguration.IsEnableRetryOnDbContextFailure)
             {
                 services.AddDbContext<TDbContext>(options => options.UseSqlServer(opt => opt.EnableRetryOnFailure()));
-                services.AddDbContextFactory<TDbContext>(options => options.UseSqlServer(opt => opt.EnableRetryOnFailure()));
             }
             else
             {
                 services.AddDbContext<TDbContext>();
-                services.AddDbContextFactory<TDbContext>();
             }
 
             services.Add<DbContext, TDbContext>(webConfiguration.ServiceLifetime);
