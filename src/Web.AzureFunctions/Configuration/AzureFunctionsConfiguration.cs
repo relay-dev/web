@@ -6,7 +6,7 @@ namespace Web.AzureFunctions.Configuration
 {
     public class AzureFunctionsConfiguration : WebConfiguration
     {
-        public AzureFunctionsConfiguration() : base(false)
+        public AzureFunctionsConfiguration() : base(false, true)
         {
             FunctionTypes = new List<Type>();
         }
