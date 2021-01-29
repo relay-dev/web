@@ -24,6 +24,13 @@ namespace Web.Configuration
             return this as TBuilder;
         }
 
+        public TBuilder EnableRetryOnDbContextFailure(bool flag = true)
+        {
+            _container.IsEnableRetryOnDbContextFailure = flag;
+
+            return this as TBuilder;
+        }
+
         public override TResult Build()
         {
             var webConfiguration = new WebConfiguration();
@@ -43,6 +50,7 @@ namespace Web.Configuration
             base.BuildUsing(webConfiguration);
 
             webConfiguration.IsAddDiagnostics = _container.IsAddDiagnostics;
+            webConfiguration.IsEnableRetryOnDbContextFailure = _container.IsEnableRetryOnDbContextFailure;
 
             return webConfiguration as TResult;
         }
