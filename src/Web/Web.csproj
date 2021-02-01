@@ -27,10 +27,10 @@
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.15.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.8" />
     <PackageReference Include="Microsoft.Azure.EventGrid" Version="3.2.0" />
-    <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="3.1.8" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.8" />
     <PackageReference Include="Microsoft.Extensions.Configuration.AzureKeyVault" Version="3.1.8" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.1.8" />
     <PackageReference Include="Microsoft.Extensions.Logging.AzureAppServices" Version="3.1.8" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.1.8" />
     <PackageReference Include="Relay.Core" Version="1.0.165" />
