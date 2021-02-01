@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
 
     <IsPackable>false</IsPackable>
   </PropertyGroup>
@@ -14,9 +14,6 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.1" />
-    <PackageReference Include="Relay.Core.Plugins" Version="1.0.243" />
-    <PackageReference Include="Relay.Core.Plugins.NUnit" Version="1.0.243" />
-    <PackageReference Include="Shouldly" Version="3.0.2" />
   </ItemGroup>
 
   <ItemGroup>

@@ -118,15 +118,7 @@ namespace Web
 
         public static IServiceCollection AddDbContextUtilities<TDbContext>(this IServiceCollection services, WebConfiguration webConfiguration) where TDbContext : DbContext
         {
-            if (webConfiguration.IsEnableRetryOnDbContextFailure)
-            {
-                services.AddDbContext<TDbContext>(options => options.UseSqlServer(opt => opt.EnableRetryOnFailure()));
-            }
-            else
-            {
-                services.AddDbContext<TDbContext>();
-            }
-
+            services.AddDbContext<TDbContext>();
             services.Add<DbContext, TDbContext>(webConfiguration.ServiceLifetime);
 
             return services;
