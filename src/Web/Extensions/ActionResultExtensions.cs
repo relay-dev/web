@@ -7,14 +7,14 @@ namespace Web.Extensions
     {
         public static TResult GetResultValue<TResult>(this IActionResult actionResult) where TResult : class
         {
-            var okResult = actionResult as OkObjectResult;
+            var okResult = actionResult as ObjectResult;
 
             return okResult?.Value as TResult;
         }
 
         public static TResult GetResultValue<TResult>(this ActionResult<TResult> actionResult) where TResult : class
         {
-            var okResult = actionResult.Result as OkObjectResult;
+            var okResult = actionResult.Result as ObjectResult;
 
             return okResult?.Value as TResult;
         }
