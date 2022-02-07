@@ -12,23 +12,19 @@ namespace Web.Samples.OrderManagement.EventHandlers
 {
     public class Startup : FunctionsStartup
     {
-        private readonly AzureFunctionsConfiguration _azureFunctionsConfiguration;
-
-        public Startup()
-        {
-            _azureFunctionsConfiguration = BuildAzureFunctionsConfiguration();
-        }
-
         public override void Configure(IFunctionsHostBuilder builder)
         {
-            builder.Services.AddAzureFunctionsFramework<OrderContext>(_azureFunctionsConfiguration);
+            var azureFunctionsConfiguration = BuildAzureFunctionsConfiguration(builder);
+
+            builder.Services.AddAzureFunctionsFramework<OrderContext>(azureFunctionsConfiguration);
         }
 
-        private AzureFunctionsConfiguration BuildAzureFunctionsConfiguration()
+        private AzureFunctionsConfiguration BuildAzureFunctionsConfiguration(IFunctionsHostBuilder builder)
         {
             return new ConfigurationBuilder()
                 .AsAzureFunctionsConfiguration()
                 .UseApplicationName("OrderManagement.EventHandlers")
+                .UseConfiguration(builder.GetContext().Configuration)
                 .UseFunctionsFromAssemblyContaining<Startup>()
                 .UseCommandHandlersFromAssemblyContaining<GetOrderByIdHandler>()
                 .AsEventHandler()
