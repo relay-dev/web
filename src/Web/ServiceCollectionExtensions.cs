@@ -143,12 +143,18 @@ namespace Web
 
         public static IServiceCollection AddFluentValidationPlugin(this IServiceCollection services, PluginConfiguration pluginConfiguration, IMvcCoreBuilder mvcCoreBuilder)
         {
-            if (pluginConfiguration.ValidatorAssemblies == null || !pluginConfiguration.ValidatorAssemblies.Any())
+            if (pluginConfiguration.ValidatorAssemblies != null && pluginConfiguration.ValidatorAssemblies.Any())
             {
-                return services;
+                mvcCoreBuilder.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblies(pluginConfiguration.ValidatorAssemblies));
             }
 
-            mvcCoreBuilder.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblies(pluginConfiguration.ValidatorAssemblies));
+            if (pluginConfiguration.ValidatorTypes != null && pluginConfiguration.ValidatorTypes.Any())
+            {
+                foreach (var validatorType in pluginConfiguration.ValidatorTypes)
+                {
+                    services.AddTransient(validatorType.Key, validatorType.Value);
+                }
+            }
 
             return services;
         }
