@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using System;
-using System.Collections.Generic;
 using System.Linq;
+using Web.AzureFunctions.Configuration.Options;
 using Web.AzureFunctions.Framework;
 using Web.Configuration;
 
@@ -19,37 +19,25 @@ namespace Web.AzureFunctions.Configuration
 
     public class AzureFunctionsConfigurationBuilder<TBuilder, TResult> : WebConfigurationBuilder<TBuilder, TResult> where TBuilder : class where TResult : class
     {
-        private readonly AzureFunctionsConfiguration _container;
+        private readonly AzureFunctionsConfiguration _azureFunctionsConfiguration;
 
         public AzureFunctionsConfigurationBuilder()
         {
-            _container = new AzureFunctionsConfiguration();
-        }
-        
-        public TBuilder UseFunctions(List<Type> functionTypes)
-        {
-            _container.FunctionTypes = functionTypes;
-
-            return this as TBuilder;
+            _azureFunctionsConfiguration = new AzureFunctionsConfiguration();
         }
 
-        public TBuilder UseFunctionsFromAssemblyContaining<TFunction>()
+        public TBuilder UseFunctions(Action<AzureFunctionsOptions> options)
         {
-            _container.FunctionAssemblies.Add(typeof(TFunction).Assembly);
+            var azureFunctionsOptions = new AzureFunctionsOptions(_azureFunctionsConfiguration);
 
-            return this as TBuilder;
-        }
-
-        public TBuilder UseFunctionsFromAssemblyContaining(Type type)
-        {
-            _container.FunctionAssemblies.Add(type.Assembly);
+            options.Invoke(azureFunctionsOptions);
 
             return this as TBuilder;
         }
 
         public TBuilder AsEventHandler()
         {
-            _container.IsEventHandler = true;
+            _azureFunctionsConfiguration.IsEventHandler = true;
 
             return this as TBuilder;
         }
@@ -72,14 +60,14 @@ namespace Web.AzureFunctions.Configuration
 
             base.BuildUsing(azureFunctionsConfiguration);
 
-            if (_container.FunctionTypes.Any())
+            if (_azureFunctionsConfiguration.FunctionTypes.Any())
             {
-                azureFunctionsConfiguration.FunctionTypes = _container.FunctionTypes;
+                azureFunctionsConfiguration.FunctionTypes = _azureFunctionsConfiguration.FunctionTypes;
             }
             
-            if (_container.FunctionAssemblies.Any())
+            if (_azureFunctionsConfiguration.FunctionAssemblies.Any())
             {
-                foreach (Type type in _container.FunctionAssemblies.SelectMany(a => a.GetTypes()))
+                foreach (Type type in _azureFunctionsConfiguration.FunctionAssemblies.SelectMany(a => a.GetTypes()))
                 {
                     if (type.IsSubclassOf(typeof(AzureFunctionBase)) || type == typeof(AzureFunctionBase))
                     {
@@ -88,7 +76,7 @@ namespace Web.AzureFunctions.Configuration
                 }
             }
 
-            azureFunctionsConfiguration.IsEventHandler = _container.IsEventHandler;
+            azureFunctionsConfiguration.IsEventHandler = _azureFunctionsConfiguration.IsEventHandler;
 
             return azureFunctionsConfiguration as TResult;
         }

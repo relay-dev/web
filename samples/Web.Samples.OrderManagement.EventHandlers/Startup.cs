@@ -25,7 +25,7 @@ namespace Web.Samples.OrderManagement.EventHandlers
                 .AsAzureFunctionsConfiguration()
                 .UseApplicationName("OrderManagement.EventHandlers")
                 .UseConfiguration(builder.GetContext().Configuration)
-                .UseFunctionsFromAssemblyContaining<Startup>()
+                .UseFunctions(options => options.FromAssemblyContaining<Startup>())
                 .UseCommandHandlers(options => options.FromAssemblyContaining<GetOrderByIdHandler>())
                 .AsEventHandler()
                 .Build();
