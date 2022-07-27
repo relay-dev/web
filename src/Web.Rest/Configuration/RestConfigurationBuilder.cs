@@ -11,11 +11,11 @@ namespace Web.Rest.Configuration
 
     public class RestConfigurationBuilder<TBuilder, TResult> : WebConfigurationBuilder<TBuilder, TResult> where TBuilder : class where TResult : class
     {
-        private readonly RestConfigurationBuilderContainer _container;
+        private readonly RestConfiguration _container;
 
         public RestConfigurationBuilder()
         {
-            _container = new RestConfigurationBuilderContainer();
+            _container = new RestConfiguration();
         }
 
         public TBuilder UseSwaggerConfiguration(SwaggerConfiguration swaggerConfiguration)
@@ -86,10 +86,5 @@ namespace Web.Rest.Configuration
                 MinorVersion = Convert.ToInt32(configuration["SwaggerConfiguration:MinorVersion"]),
                 Description = configuration["SwaggerConfiguration:Description"]
             };
-
-        internal class RestConfigurationBuilderContainer : RestConfiguration
-        {
-
-        }
     }
 }

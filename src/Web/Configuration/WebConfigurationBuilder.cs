@@ -10,11 +10,11 @@ namespace Web.Configuration
 
     public class WebConfigurationBuilder<TBuilder, TResult> : PluginConfigurationBuilder<TBuilder, TResult> where TBuilder : class where TResult : class
     {
-        private readonly WebConfigurationBuilderContainer _container;
+        private readonly WebConfiguration _container;
 
         public WebConfigurationBuilder()
         {
-            _container = new WebConfigurationBuilderContainer();
+            _container = new WebConfiguration();
         }
 
         public TBuilder UseDiagnostics(bool flag = true)
@@ -53,11 +53,6 @@ namespace Web.Configuration
             webConfiguration.IsEnableRetryOnDbContextFailure = _container.IsEnableRetryOnDbContextFailure;
 
             return webConfiguration as TResult;
-        }
-        
-        internal class WebConfigurationBuilderContainer : WebConfiguration
-        {
-            
         }
     }
 }
