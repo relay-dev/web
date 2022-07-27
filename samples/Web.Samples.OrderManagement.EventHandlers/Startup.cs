@@ -26,7 +26,7 @@ namespace Web.Samples.OrderManagement.EventHandlers
                 .UseApplicationName("OrderManagement.EventHandlers")
                 .UseConfiguration(builder.GetContext().Configuration)
                 .UseFunctionsFromAssemblyContaining<Startup>()
-                .UseCommandHandlersFromAssemblyContaining<GetOrderByIdHandler>()
+                .UseCommandHandlers(options => options.FromAssemblyContaining<GetOrderByIdHandler>())
                 .AsEventHandler()
                 .Build();
         }
