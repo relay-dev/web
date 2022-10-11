@@ -1,13 +1,15 @@
 ﻿using Core.Plugins.NUnit.Integration;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
 namespace Web.Testing.Integration
 {
-    public abstract class AspNetIntegrationTest<TToTest> : IntegrationTest<TToTest>
+    public abstract class AspNetIntegrationTest : IntegrationTest
     {
         protected HttpRequest CreateHttpRequest()
         {
@@ -47,5 +49,24 @@ namespace Web.Testing.Integration
 
             return httpRequest;
         }
+    }
+
+    public abstract class AspNetIntegrationTest<TSUT> : AspNetIntegrationTest
+    {
+        protected TSUT SUT => (TSUT)CurrentTestProperties.Get(SutKey);
+        //protected override ILogger Logger => ResolveService<ILogger<TSUT>>();
+
+        protected override void BootstrapTest()
+        {
+            //base.BootstrapTest();
+
+            //var serviceProvider = (IServiceProvider)CurrentTestProperties.Get(ServiceProviderKey);
+
+            //TSUT sut = serviceProvider.GetRequiredService<TSUT>();
+
+            //CurrentTestProperties.Set(SutKey, sut);
+        }
+
+        protected const string SutKey = "_sut";
     }
 }

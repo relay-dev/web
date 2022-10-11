@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace Web.Testing.Integration
 {
-    public abstract class WebIntegrationTest<TToTest> : AspNetIntegrationTest<TToTest>
+    public abstract class WebIntegrationTest : AspNetIntegrationTest
     {
         protected IHostBuilder CreateTestHostBuilder<TStartup>(string basePath = null) where TStartup : class =>
             Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder(new string[0])
@@ -52,9 +52,9 @@ namespace Web.Testing.Integration
         {
             base.BootstrapTest();
 
-            IUsernameProvider usernameProvider = ResolveService<IUsernameProvider>();
+            //IUsernameProvider usernameProvider = ResolveService<IUsernameProvider>();
 
-            usernameProvider.Set(TestUsername);
+            //usernameProvider.Set(TestUsername);
         }
 
         protected void RegisterControllers<TStartup>(IServiceCollection services)
@@ -81,5 +81,24 @@ namespace Web.Testing.Integration
                 return str;
             }
         }
+    }
+
+    public abstract class WebIntegrationTest<TSUT> : WebIntegrationTest
+    {
+        protected TSUT SUT => (TSUT)CurrentTestProperties.Get(SutKey);
+        //protected override ILogger Logger => ResolveService<ILogger<TSUT>>();
+
+        protected override void BootstrapTest()
+        {
+            //base.BootstrapTest();
+
+            //var serviceProvider = (IServiceProvider)CurrentTestProperties.Get(ServiceProviderKey);
+
+            //TSUT sut = serviceProvider.GetRequiredService<TSUT>();
+
+            //CurrentTestProperties.Set(SutKey, sut);
+        }
+
+        protected const string SutKey = "_sut";
     }
 }

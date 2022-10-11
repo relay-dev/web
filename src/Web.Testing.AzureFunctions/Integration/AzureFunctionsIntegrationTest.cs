@@ -4,12 +4,13 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using System;
 using Web.Testing.Integration;
 using ExecutionContext = Microsoft.Azure.WebJobs.ExecutionContext;
 
 namespace Web.Testing.AzureFunctions.Integration
 {
-    public abstract class AzureFunctionsIntegrationTest<TToTest> : AspNetIntegrationTest<TToTest>
+    public abstract class AzureFunctionsIntegrationTest : AspNetIntegrationTest
     {
         protected ExecutionContext ExecutionContext => new ExecutionContext();
 
@@ -46,5 +47,24 @@ namespace Web.Testing.AzureFunctions.Integration
         }
 
         protected virtual void ConfigureApplicationServices(IServiceCollection services) { }
+    }
+
+    public abstract class AzureFunctionsIntegrationTest<TSUT> : AzureFunctionsIntegrationTest
+    {
+        protected TSUT SUT => (TSUT)CurrentTestProperties.Get(SutKey);
+        //protected override ILogger Logger => ResolveService<ILogger<TSUT>>();
+
+        protected override void BootstrapTest()
+        {
+            //base.BootstrapTest();
+
+            //var serviceProvider = (IServiceProvider)CurrentTestProperties.Get(ServiceProviderKey);
+
+            //TSUT sut = serviceProvider.GetRequiredService<TSUT>();
+
+            //CurrentTestProperties.Set(SutKey, sut);
+        }
+
+        protected const string SutKey = "_sut";
     }
 }
