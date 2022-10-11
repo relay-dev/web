@@ -1,11 +1,15 @@
-﻿using Core.Plugins.NUnit.Integration;
+﻿using Core.Plugins.NUnit;
+using Core.Plugins.NUnit.Unit;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 
 namespace Web.Testing.Unit
 {
-    public abstract class InMemoryDbContextTest<TSUT, TDbContext> : IntegrationTest<TSUT>, IDisposable where TDbContext : DbContext, new()
+    public abstract class InMemoryDbContextTest<TCUT, TDbContext> : AutoMockTest<TCUT>, IDisposable
+        where TDbContext : DbContext
+        where TCUT : class,
+        new()
     {
         private readonly Func<DbContextOptions, TDbContext> _dbContextInitValueFactory;
         private readonly List<TDbContext> _dbContextsCreated;
@@ -55,7 +59,7 @@ namespace Web.Testing.Unit
         private const string DbContextKey = "_dbContext";
     }
 
-    public abstract class InMemoryDbContextTest<TDbContext> : IntegrationTest, IDisposable where TDbContext : DbContext, new()
+    public abstract class InMemoryDbContextTest<TDbContext> : TestBase, IDisposable where TDbContext : DbContext, new()
     {
         protected readonly TDbContext DbContext;
 
