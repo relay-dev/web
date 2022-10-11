@@ -26,7 +26,7 @@ namespace Web.Testing.Integration
                 .ConfigureServices((webBuilder, services) =>
                 {
                     RegisterControllers<TStartup>(services);
-                    ConfigureTestServices(services);
+                    ConfigureApplicationServices(services);
                 })
                 .ConfigureAppConfiguration((webBuilder, configBuilder) =>
                 {
@@ -42,11 +42,6 @@ namespace Web.Testing.Integration
                         .AddUserSecrets<TStartup>(true)
                         .AddEnvironmentVariables();
                 });
-
-        protected virtual IServiceCollection ConfigureTestServices(IServiceCollection services)
-        {
-            return services;
-        }
 
         protected override void BootstrapTest()
         {
