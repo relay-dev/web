@@ -52,9 +52,9 @@ namespace Web.Testing.Integration
         {
             base.BootstrapTest();
 
-            //IUsernameProvider usernameProvider = ResolveService<IUsernameProvider>();
+            IUsernameProvider usernameProvider = ResolveService<IUsernameProvider>();
 
-            //usernameProvider.Set(TestUsername);
+            usernameProvider.Set(TestUsername);
         }
 
         protected void RegisterControllers<TStartup>(IServiceCollection services)
@@ -86,17 +86,17 @@ namespace Web.Testing.Integration
     public abstract class WebIntegrationTest<TSUT> : WebIntegrationTest
     {
         protected TSUT SUT => (TSUT)CurrentTestProperties.Get(SutKey);
-        //protected override ILogger Logger => ResolveService<ILogger<TSUT>>();
+        protected override ILogger Logger => ResolveService<ILogger<TSUT>>();
 
         protected override void BootstrapTest()
         {
-            //base.BootstrapTest();
+            base.BootstrapTest();
 
-            //var serviceProvider = (IServiceProvider)CurrentTestProperties.Get(ServiceProviderKey);
+            var serviceProvider = (IServiceProvider)CurrentTestProperties.Get(ServiceProviderKey);
 
-            //TSUT sut = serviceProvider.GetRequiredService<TSUT>();
+            TSUT sut = serviceProvider.GetRequiredService<TSUT>();
 
-            //CurrentTestProperties.Set(SutKey, sut);
+            CurrentTestProperties.Set(SutKey, sut);
         }
 
         protected const string SutKey = "_sut";

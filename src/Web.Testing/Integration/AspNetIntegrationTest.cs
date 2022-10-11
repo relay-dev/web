@@ -1,5 +1,6 @@
 ﻿using Core.Plugins.NUnit.Integration;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
@@ -54,17 +55,17 @@ namespace Web.Testing.Integration
     public abstract class AspNetIntegrationTest<TSUT> : AspNetIntegrationTest
     {
         protected TSUT SUT => (TSUT)CurrentTestProperties.Get(SutKey);
-        //protected override ILogger Logger => ResolveService<ILogger<TSUT>>();
+        protected override ILogger Logger => ResolveService<ILogger<TSUT>>();
 
         protected override void BootstrapTest()
         {
-            //base.BootstrapTest();
+            base.BootstrapTest();
 
-            //var serviceProvider = (IServiceProvider)CurrentTestProperties.Get(ServiceProviderKey);
+            var serviceProvider = (IServiceProvider)CurrentTestProperties.Get(ServiceProviderKey);
 
-            //TSUT sut = serviceProvider.GetRequiredService<TSUT>();
+            TSUT sut = serviceProvider.GetRequiredService<TSUT>();
 
-            //CurrentTestProperties.Set(SutKey, sut);
+            CurrentTestProperties.Set(SutKey, sut);
         }
 
         protected const string SutKey = "_sut";

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <PackageId>Relay.Web.Testing</PackageId>
     <Version>1.0.1</Version>
     <Authors>Scott Ferguson</Authors>
@@ -17,14 +17,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="3.1.2" />
-    <PackageReference Include="AutoBogus" Version="2.11.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="3.1.8" />
-    <PackageReference Include="Moq" Version="4.14.5" />
-    <PackageReference Include="Moq.AutoMock" Version="2.1.0" />
-    <PackageReference Include="NUnit" Version="3.12.0" />
-    <PackageReference Include="Relay.Core.Plugins.NUnit" Version="1.0.258" />
-    <PackageReference Include="Shouldly" Version="3.0.2" />
+    <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="6.0.5" />
+    <PackageReference Include="AutoBogus" Version="2.13.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.10" />
+    <PackageReference Include="Moq" Version="4.18.2" />
+    <PackageReference Include="Moq.AutoMock" Version="3.4.0" />
+    <PackageReference Include="NUnit" Version="3.13.3" />
+    <PackageReference Include="Relay.Core.Plugins.NUnit" Version="1.0.259" />
+    <PackageReference Include="Shouldly" Version="4.1.0" />
   </ItemGroup>
 
 </Project>
