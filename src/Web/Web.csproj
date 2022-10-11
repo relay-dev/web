@@ -33,12 +33,12 @@
     <PackageReference Include="Microsoft.Extensions.Logging.AzureAppServices" Version="5.0.17" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="5.0.0" />
     <PackageReference Include="Relay.Core" Version="1.0.165" />
-    <PackageReference Include="Relay.Core.Plugins" Version="1.0.264" />
-    <PackageReference Include="Relay.Core.Plugins.AutoMapper" Version="1.0.264" />
-    <PackageReference Include="Relay.Core.Plugins.Azure" Version="1.0.264" />
-    <PackageReference Include="Relay.Core.Plugins.EntityFramework" Version="1.0.264" />
-    <PackageReference Include="Relay.Core.Plugins.FluentValidation" Version="1.0.264" />
-    <PackageReference Include="Relay.Core.Plugins.MediatR" Version="1.0.264" />
+    <PackageReference Include="Relay.Core.Plugins" Version="1.0.266" />
+    <PackageReference Include="Relay.Core.Plugins.AutoMapper" Version="1.0.266" />
+    <PackageReference Include="Relay.Core.Plugins.Azure" Version="1.0.266" />
+    <PackageReference Include="Relay.Core.Plugins.EntityFramework" Version="1.0.266" />
+    <PackageReference Include="Relay.Core.Plugins.FluentValidation" Version="1.0.266" />
+    <PackageReference Include="Relay.Core.Plugins.MediatR" Version="1.0.266" />
     <PackageReference Include="System.Collections" Version="4.3.0" />
   </ItemGroup>
 

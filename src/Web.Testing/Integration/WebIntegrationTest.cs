@@ -12,7 +12,7 @@ namespace Web.Testing.Integration
 {
     public abstract class WebIntegrationTest : AspNetIntegrationTest
     {
-        protected IHostBuilder CreateTestHostBuilder<TStartup>(string basePath = null) where TStartup : class =>
+        protected virtual IHostBuilder CreateTestHostBuilder<TStartup>(string basePath = null) where TStartup : class =>
             Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder(new string[0])
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
@@ -52,7 +52,7 @@ namespace Web.Testing.Integration
             usernameProvider.Set(TestUsername);
         }
 
-        protected void RegisterControllers<TStartup>(IServiceCollection services)
+        protected virtual void RegisterControllers<TStartup>(IServiceCollection services)
         {
             foreach (Type controllerType in typeof(TStartup).Assembly.GetTypes().Where(t => t.Name.EndsWith("Controller")))
             {

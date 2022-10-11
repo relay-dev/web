@@ -40,7 +40,7 @@ namespace Web.Testing.Unit
             base.Setup();
         }
 
-        protected TDbContext ResolveDbContext()
+        protected virtual TDbContext ResolveDbContext()
         {
             return (TDbContext)CurrentTestProperties.Get(DbContextKey);
         }

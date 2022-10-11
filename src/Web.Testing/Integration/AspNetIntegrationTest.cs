@@ -12,7 +12,7 @@ namespace Web.Testing.Integration
 {
     public abstract class AspNetIntegrationTest : IntegrationTest
     {
-        protected HttpRequest CreateHttpRequest()
+        protected virtual HttpRequest CreateHttpRequest()
         {
             var httpRequest = new DefaultHttpContext().Request;
 
@@ -21,7 +21,7 @@ namespace Web.Testing.Integration
             return httpRequest;
         }
 
-        protected HttpRequest CreateHttpRequest(string key, string val)
+        protected virtual HttpRequest CreateHttpRequest(string key, string val)
         {
             var queryStringParameters = new Dictionary<string, string>
             {
@@ -31,7 +31,7 @@ namespace Web.Testing.Integration
             return CreateHttpRequest(queryStringParameters);
         }
 
-        protected HttpRequest CreateHttpRequest(Dictionary<string, string> queryStringParameters)
+        protected virtual HttpRequest CreateHttpRequest(Dictionary<string, string> queryStringParameters)
         {
             HttpRequest request = CreateHttpRequest();
 
@@ -40,7 +40,7 @@ namespace Web.Testing.Integration
             return request;
         }
 
-        protected HttpRequest CreateHttpRequestWithBody(object body)
+        protected virtual HttpRequest CreateHttpRequestWithBody(object body)
         {
             HttpRequest httpRequest = CreateHttpRequest();
 
