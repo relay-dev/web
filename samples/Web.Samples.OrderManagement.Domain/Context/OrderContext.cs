@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using System;
 using System.Collections.Generic;
 using Web.Samples.OrderManagement.Domain.Entities;
@@ -54,5 +55,7 @@ namespace Web.Samples.OrderManagement.Domain.Context
                 OrderDate = DateTime.UtcNow
             }
         };
+
+        public override IEntityType EntityType => throw new NotImplementedException();
     }
 }

@@ -45,8 +45,6 @@ namespace Web.Testing.AzureFunctions.Integration
                         .AddEnvironmentVariables();
                 });
         }
-
-        protected virtual void ConfigureApplicationServices(IServiceCollection services) { }
     }
 
     public abstract class AzureFunctionsIntegrationTest<TSUT> : AzureFunctionsIntegrationTest
