@@ -1,18 +1,22 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Core.Plugins.NUnit;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
-using Web.Testing.Integration;
-using ExecutionContext = Microsoft.Azure.WebJobs.ExecutionContext;
 
 namespace Web.Testing.AzureFunctions.Integration
 {
-    public abstract class AzureFunctionsIntegrationTest : AspNetIntegrationTest
+    /// <summary>
+    /// Functionality to support anything needed to setup an Azure Function test run session
+    /// </summary>
+    public class FunctionIntegrationTestSetup : TestSetupBase
     {
-        protected virtual IHostBuilder CreateAzureFunctionsTestHostBuilder<TStartup>() where TStartup : FunctionsStartup, new()
+        /// <summary>
+        /// Creates a host builder using configuration from Startup.cs for function tests to run against
+        /// </summary>
+        public virtual IHostBuilder CreateFunctionsTestHostBuilder<TStartup>() where TStartup : FunctionsStartup, new()
         {
             return new HostBuilder()
                 .ConfigureWebHostDefaults(builder =>
@@ -36,33 +40,15 @@ namespace Web.Testing.AzureFunctions.Integration
                     configBuilder
                         .AddJsonFile("appsettings.json", true, true)
                         .AddJsonFile("appsettings.Development.json", true, true)
-                        .AddJsonFile("C:\\Azure\\appsettings.KeyVault.json", true, true)
-                        .AddJsonFile("appsettings.Local.json", true, true)
                         .AddJsonFile("local.settings.json", true, true)
                         .AddUserSecrets<TStartup>(true)
                         .AddEnvironmentVariables();
+
+                    foreach (var setting in GetLocalSettings<TStartup>().Values)
+                    {
+                        Environment.SetEnvironmentVariable(setting.Key, setting.Value);
+                    }
                 });
         }
-
-        protected virtual ExecutionContext ExecutionContext => new ExecutionContext();
-    }
-
-    public abstract class AzureFunctionsIntegrationTest<TSUT> : AzureFunctionsIntegrationTest
-    {
-        protected virtual TSUT SUT => (TSUT)CurrentTestProperties.Get(SutKey);
-        protected override ILogger Logger => ResolveService<ILogger<TSUT>>();
-
-        protected override void BootstrapTest()
-        {
-            base.BootstrapTest();
-
-            var serviceProvider = (IServiceProvider)CurrentTestProperties.Get(ServiceProviderKey);
-
-            TSUT sut = serviceProvider.GetRequiredService<TSUT>();
-
-            CurrentTestProperties.Set(SutKey, sut);
-        }
-
-        protected const string SutKey = "_sut";
     }
 }

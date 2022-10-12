@@ -1,99 +1,98 @@
-﻿using Core.Providers;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
+﻿using Core.Plugins.NUnit.Integration;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.IO;
-using System.Linq;
+using System.Text;
 
 namespace Web.Testing.Integration
 {
-    public abstract class WebIntegrationTest : AspNetIntegrationTest
+    /// <summary>
+    /// A test fixture that contains tests which should run against real dependenies in a local or development web environment.
+    /// This will run tests in a way that replicates the way the application will be when it's deployed by setting up an IHost to run the tests against.
+    /// </summary>
+    public abstract class WebIntegrationTest : IntegrationTest
     {
-        protected virtual IHostBuilder CreateTestHostBuilder<TStartup>(string basePath = null) where TStartup : class =>
-            Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder(new string[0])
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<TStartup>();
-                    webBuilder.ConfigureLogging((hostingContext, logging) =>
-                    {
-                        logging.AddConsole();
-                        logging.AddDebug();
-                    });
-                })
-                .ConfigureServices((webBuilder, services) =>
-                {
-                    RegisterControllers<TStartup>(services);
-                    ConfigureApplicationServices(services);
-                })
-                .ConfigureAppConfiguration((webBuilder, configBuilder) =>
-                {
-                    basePath ??= Path.Combine(SubstringBefore(AppDomain.CurrentDomain.BaseDirectory, "tests"), "src", typeof(TStartup).Namespace);
-
-                    configBuilder
-                        .SetBasePath(basePath)
-                        .AddJsonFile("appsettings.json", true, true)
-                        .AddJsonFile("appsettings.Development.json", true, true)
-                        .AddJsonFile("C:\\Azure\\appsettings.KeyVault.json", true, true)
-                        .AddJsonFile("appsettings.Local.json", true, true)
-                        .AddJsonFile("local.settings.json", true, true)
-                        .AddUserSecrets<TStartup>(true)
-                        .AddEnvironmentVariables();
-                });
-
-        protected override void BootstrapTest()
+        /// <summary>
+        /// Creates an HttpRequest
+        /// </summary>
+        protected virtual HttpRequest CreateHttpRequest()
         {
-            base.BootstrapTest();
-
-            IUsernameProvider usernameProvider = ResolveService<IUsernameProvider>();
-
-            usernameProvider.Set(TestUsername);
+            return new DefaultHttpContext().Request;
         }
 
-        protected virtual void RegisterControllers<TStartup>(IServiceCollection services)
+        /// <summary>
+        /// Creates an HttpRequest with one query string parameter
+        /// </summary>
+        protected virtual HttpRequest CreateHttpRequest(string key, string val)
         {
-            foreach (Type controllerType in typeof(TStartup).Assembly.GetTypes().Where(t => t.Name.EndsWith("Controller")))
+            var queryStringParameters = new Dictionary<string, string>
             {
-                services.AddScoped(controllerType);
-            }
+                { key, val }
+            };
+
+            return CreateHttpRequest(queryStringParameters);
         }
 
-        private static string SubstringBefore(string str, string removeAfter, bool includeRemoveAfterString = false)
+        /// <summary>
+        /// Creates an HttpRequest with query string parameters
+        /// </summary>
+        protected virtual HttpRequest CreateHttpRequest(Dictionary<string, string> queryStringParameters)
         {
-            if (str == null)
-            {
-                return null;
-            }
+            HttpRequest request = CreateHttpRequest();
 
-            try
-            {
-                return str.Substring(0, str.IndexOf(removeAfter, StringComparison.Ordinal) + (includeRemoveAfterString ? 1 : 0));
-            }
-            catch
-            {
-                return str;
-            }
+            request.QueryString = QueryString.Create(queryStringParameters);
+
+            return request;
+        }
+
+        /// <summary>
+        /// Creates an HttpRequest with a body
+        /// </summary>
+        protected virtual HttpRequest CreateHttpRequestWithBody(object body)
+        {
+            HttpRequest httpRequest = CreateHttpRequest();
+
+            string bodyAsJson = JsonConvert.SerializeObject(body);
+
+            httpRequest.Body = new MemoryStream(Encoding.ASCII.GetBytes(bodyAsJson));
+
+            return httpRequest;
         }
     }
 
+    /// <summary>
+    /// A test fixture that contains tests which should run against real dependenies in a local or development web environment where you want to speficy the type to test.
+    /// This will run tests in a way that replicates the way the application will be when it's deployed by setting up an IHost to run the tests against.
+    /// </summary>
     public abstract class WebIntegrationTest<TSUT> : WebIntegrationTest
     {
-        protected virtual TSUT SUT => (TSUT)CurrentTestProperties.Get(SutKey);
-        protected override ILogger Logger => ResolveService<ILogger<TSUT>>();
-
-        protected override void BootstrapTest()
+        public override void BootstrapTest()
         {
             base.BootstrapTest();
 
+            // Get this test's service provider. It was set on the test's current context by the BootstrapTest() method.
             var serviceProvider = (IServiceProvider)CurrentTestProperties.Get(ServiceProviderKey);
 
+            // Use this test's service provider to resolve the service of the type we are testing
             TSUT sut = serviceProvider.GetRequiredService<TSUT>();
 
+            // Set the instance on this test's context so we can reference it in SUT
             CurrentTestProperties.Set(SutKey, sut);
         }
 
+        /// <summary>
+        /// Returns a new SUT everytime it is called
+        /// </summary>
+        protected virtual TSUT SUT => (TSUT)CurrentTestProperties.Get(SutKey);
+
+        /// <summary>
+        /// Returns a new Logger everytime it is called
+        /// </summary>
+        protected override ILogger Logger => ResolveService<ILogger<TSUT>>();
         protected const string SutKey = "_sut";
     }
 }
