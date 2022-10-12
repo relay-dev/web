@@ -22,6 +22,8 @@ namespace Web.Testing.Unit
 
         protected override void BootstrapTest()
         {
+            base.BootstrapTest();
+
             var options = new DbContextOptionsBuilder<TDbContext>()
                 .UseInMemoryDatabase(Guid.NewGuid().ToString())
                 .Options;
@@ -36,8 +38,6 @@ namespace Web.Testing.Unit
             CurrentTestProperties.Set(DbContextKey, dbContext);
 
             _dbContextsCreated.Add(dbContext);
-
-            base.Setup();
         }
 
         protected virtual TDbContext ResolveDbContext()

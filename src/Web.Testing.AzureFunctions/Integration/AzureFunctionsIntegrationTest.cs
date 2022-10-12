@@ -12,9 +12,7 @@ namespace Web.Testing.AzureFunctions.Integration
 {
     public abstract class AzureFunctionsIntegrationTest : AspNetIntegrationTest
     {
-        protected ExecutionContext ExecutionContext => new ExecutionContext();
-
-        protected IHostBuilder CreateAzureFunctionsTestHostBuilder<TStartup>() where TStartup : FunctionsStartup, new()
+        protected virtual IHostBuilder CreateAzureFunctionsTestHostBuilder<TStartup>() where TStartup : FunctionsStartup, new()
         {
             return new HostBuilder()
                 .ConfigureWebHostDefaults(builder =>
@@ -45,11 +43,13 @@ namespace Web.Testing.AzureFunctions.Integration
                         .AddEnvironmentVariables();
                 });
         }
+
+        protected virtual ExecutionContext ExecutionContext => new ExecutionContext();
     }
 
     public abstract class AzureFunctionsIntegrationTest<TSUT> : AzureFunctionsIntegrationTest
     {
-        protected TSUT SUT => (TSUT)CurrentTestProperties.Get(SutKey);
+        protected virtual TSUT SUT => (TSUT)CurrentTestProperties.Get(SutKey);
         protected override ILogger Logger => ResolveService<ILogger<TSUT>>();
 
         protected override void BootstrapTest()

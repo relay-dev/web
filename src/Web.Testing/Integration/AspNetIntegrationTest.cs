@@ -54,7 +54,7 @@ namespace Web.Testing.Integration
 
     public abstract class AspNetIntegrationTest<TSUT> : AspNetIntegrationTest
     {
-        protected TSUT SUT => (TSUT)CurrentTestProperties.Get(SutKey);
+        protected virtual TSUT SUT => (TSUT)CurrentTestProperties.Get(SutKey);
         protected override ILogger Logger => ResolveService<ILogger<TSUT>>();
 
         protected override void BootstrapTest()
