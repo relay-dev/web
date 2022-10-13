@@ -12,10 +12,7 @@ namespace Web.Testing.AzureFunctions.Integration
     /// </summary>
     public abstract class FunctionIntegrationTest : WebIntegrationTest
     {
-        /// <summary>
-        /// The execution context from the current thread
-        /// </summary>
-        protected virtual ExecutionContext ExecutionContext => new ExecutionContext();
+        
     }
 
     /// <summary>
