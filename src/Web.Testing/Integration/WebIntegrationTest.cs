@@ -25,19 +25,6 @@ namespace Web.Testing.Integration
         }
 
         /// <summary>
-        /// Creates an HttpRequest with one query string parameter
-        /// </summary>
-        protected virtual HttpRequest CreateHttpRequest(string key, string val)
-        {
-            var queryStringParameters = new Dictionary<string, string>
-            {
-                { key, val }
-            };
-
-            return CreateHttpRequest(queryStringParameters);
-        }
-
-        /// <summary>
         /// Creates an HttpRequest with query string parameters
         /// </summary>
         protected virtual HttpRequest CreateHttpRequest(Dictionary<string, string> queryStringParameters)
@@ -50,15 +37,23 @@ namespace Web.Testing.Integration
         }
 
         /// <summary>
-        /// Creates an HttpRequest with a body
+        /// Creates an HttpRequest with a body as an object
         /// </summary>
         protected virtual HttpRequest CreateHttpRequestWithBody(object body)
         {
-            HttpRequest httpRequest = CreateHttpRequest();
-
             string bodyAsJson = JsonConvert.SerializeObject(body);
 
-            httpRequest.Body = new MemoryStream(Encoding.ASCII.GetBytes(bodyAsJson));
+            return CreateHttpRequestWithBody(bodyAsJson);
+        }
+
+        /// <summary>
+        /// Creates an HttpRequest with a body as a string
+        /// </summary>
+        protected virtual HttpRequest CreateHttpRequestWithBody(string body)
+        {
+            HttpRequest httpRequest = CreateHttpRequest();
+
+            httpRequest.Body = new MemoryStream(Encoding.ASCII.GetBytes(body));
 
             return httpRequest;
         }
@@ -74,10 +69,10 @@ namespace Web.Testing.Integration
         {
             base.BootstrapTest();
 
-            // Get this test's service provider. It was set on the test's current context by the BootstrapTest() method.
+            // Get this test's service provider. It was set on the test's current context by the BootstrapTest() method
             var serviceProvider = (IServiceProvider)CurrentTestProperties.Get(ServiceProviderKey);
 
-            // Use this test's service provider to resolve the service of the type we are testing
+            // Use the service provider to resolve an instance of the type under test
             TSUT sut = serviceProvider.GetRequiredService<TSUT>();
 
             // Set the instance on this test's context so we can reference it in SUT
@@ -87,6 +82,7 @@ namespace Web.Testing.Integration
         /// <summary>
         /// Returns a new SUT everytime it is called
         /// </summary>
+        /// <remarks>SUT stands for System Under Test. It's meant to convey that we are testing more than just a class. We're testing the system by executing end-to-end tests meant to mimic what happens in a deployed environment.</remarks>
         protected virtual TSUT SUT => (TSUT)CurrentTestProperties.Get(SutKey);
 
         /// <summary>
