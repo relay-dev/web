@@ -7,7 +7,10 @@ using ExecutionContext = Microsoft.Azure.WebJobs.ExecutionContext;
 namespace Web.Testing.AzureFunctions.Integration
 {
     public abstract class FunctionIntegrationTest : WebIntegrationTest
-    {       
+    {
+        /// <summary>
+        /// The execution context from the current thread
+        /// </summary>
         protected virtual ExecutionContext ExecutionContext => new ExecutionContext();
     }
 
