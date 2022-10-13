@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Logging;
 using System;
 using Web.Testing.Integration;
-using ExecutionContext = Microsoft.Azure.WebJobs.ExecutionContext;
 
 namespace Web.Testing.AzureFunctions.Integration
 {
