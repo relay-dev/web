@@ -46,9 +46,9 @@ namespace Web.Testing.AzureFunctions.Integration
 
                     var settings = GetLocalSettings<TStartup>();
 
-                    if (settings != null)
+                    if (settings != null && settings.Values != null)
                     {
-                        foreach (var setting in GetLocalSettings<TStartup>().Values)
+                        foreach (var setting in settings.Values)
                         {
                             Environment.SetEnvironmentVariable(setting.Key, setting.Value);
                         }

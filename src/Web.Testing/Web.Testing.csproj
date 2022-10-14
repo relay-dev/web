@@ -23,7 +23,7 @@
     <PackageReference Include="Moq" Version="4.18.2" />
     <PackageReference Include="Moq.AutoMock" Version="3.4.0" />
     <PackageReference Include="NUnit" Version="3.13.3" />
-    <PackageReference Include="Relay.Core.Plugins.NUnit" Version="1.0.275" />
+    <PackageReference Include="Relay.Core.Plugins.NUnit" Version="1.0.276" />
     <PackageReference Include="Shouldly" Version="4.1.0" />
   </ItemGroup>
 
