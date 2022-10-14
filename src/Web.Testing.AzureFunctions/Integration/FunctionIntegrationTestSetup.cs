@@ -44,9 +44,14 @@ namespace Web.Testing.AzureFunctions.Integration
                         .AddUserSecrets<TStartup>(true)
                         .AddEnvironmentVariables();
 
-                    foreach (var setting in GetLocalSettings<TStartup>().Values)
+                    var settings = GetLocalSettings<TStartup>();
+
+                    if (settings != null)
                     {
-                        Environment.SetEnvironmentVariable(setting.Key, setting.Value);
+                        foreach (var setting in GetLocalSettings<TStartup>().Values)
+                        {
+                            Environment.SetEnvironmentVariable(setting.Key, setting.Value);
+                        }
                     }
                 });
         }
